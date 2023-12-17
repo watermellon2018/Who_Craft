@@ -5,8 +5,11 @@ import {Layout, Menu, Spin} from 'antd';
 import CharacterSetting from "./paramsPerson";
 import ImageCanvas from "./canvas";
 import HeaderComponent from '../../main/header'
+import MenuGeneration from "./generationMenu";
 
-import {generateImageAPI, generateImageUndefinedAPI} from '../../../api/characters'
+import {generateImageAPI, 
+    generateImageUndefinedAPI, 
+    generateImage2ImgAPI} from '../../../api/characters'
 
 
 const { Content, Sider } = Layout;
@@ -60,11 +63,17 @@ export const GenerationHeroPage = () => {
 
     const onFinish = async (values: any) => {
         setIsGenerated(false);
+        console.log(values);
 
+        let response;
         // TODO:: переделать / костыль пока оставлю
-        const response = Object.keys(values).length > 2
-            ? await generateImageAPI(values)
-            : await generateImageUndefinedAPI(values);
+        if (values['url'] !== undefined){
+            response = await generateImage2ImgAPI(values);
+        }else {
+            response = (Object.keys(values).length > 2)
+                ? await generateImageAPI(values)
+                : await generateImageUndefinedAPI(values);
+        }
 
         const byteArray = response.data;
         const imageUrl = `data:image/png;base64,${byteArray}`;
@@ -95,7 +104,8 @@ export const GenerationHeroPage = () => {
                              </div>
 
                         <div className="w-1/3 p-5">
-                            <CharacterSetting onFinish={onFinish}/>
+                            <MenuGeneration onFinish={onFinish} />
+                            {/*<CharacterSetting onFinish={onFinish}/>*/}
                         </div>
 
                     </Content>
