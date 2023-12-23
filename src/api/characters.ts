@@ -14,7 +14,7 @@ interface FormData {
 }
 async function generateImageAPI(formData: FormData): Promise<any> {
     try {
-        return await axios.get(`${backendUrl}generate_image/`, {
+        return await axios.get(`${backendUrl}api/generate_image/`, {
             params: {
                 gender: formData.gender,
                 minAge: formData.min,
@@ -39,7 +39,7 @@ interface FormDataUndefined {
 
 async function generateImageUndefinedAPI(formData: FormDataUndefined): Promise<any> {
     try {
-        return await axios.get('`${backendUrl}generate_image_undefined/', {
+        return await axios.get(`${backendUrl}api/generate_image_undefined/`, {
             params: {
                 description: formData.description,
                 character: formData.character,
@@ -51,4 +51,27 @@ async function generateImageUndefinedAPI(formData: FormDataUndefined): Promise<a
 
 }
 
-export {generateImageAPI, generateImageUndefinedAPI};
+// img to img
+interface FormImg2Img {
+    url: string;
+    prompt: string;
+    character: string | null;
+}
+async function generateImage2ImgAPI(formData: FormImg2Img): Promise<any> {
+    try {
+        return await axios.get(`${backendUrl}/api/generate_image_to_image/`, {
+            params: {
+                url: formData.url,
+                prompt: formData.prompt,
+                character: formData.character,
+            }
+        });
+    } catch (error) {
+        console.error('Error generating image to image:', error);
+    }
+
+}
+
+export {generateImageAPI,
+    generateImageUndefinedAPI,
+    generateImage2ImgAPI};
