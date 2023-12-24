@@ -1,14 +1,10 @@
 import React from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button, message, Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 import './login.css';
 import { login } from '../../api/auth/login';
-
-const layout = {
-    wrapperCol: { span: 16 },
-};
 
 interface LoginFormValues {
     username: string;
@@ -39,17 +35,21 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className='login-page'>
+        <Layout className='login-page'>
             <Form
-                {...layout}
+
                 name="login-form"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 className='flex flex-col w-full'
+                labelCol={{ offset: 4, span: 2 }}
+                wrapperCol={{ offset: 1, span: 10 }}
+                autoComplete="off"
+
             >
                 <Form.Item
-                    label="Ты кто?"
+                    label="Ты кто"
                     name="username"
                     rules={[{ required: true, message: 'Please input your username!' }]}
                     className='mb-4 w-1/2'
@@ -66,13 +66,13 @@ const LoginPage: React.FC = () => {
                     <Input.Password />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ span: 16 }} className='w-1/2'>
+                <Form.Item wrapperCol={{ span: 12, offset: 15 }} className='w-1/2'>
                     <Button type="primary" htmlType="submit">
-                        Submit
+                        Войти
                     </Button>
                 </Form.Item>
             </Form>
-        </div>
+        </Layout>
     );
 };
 

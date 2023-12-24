@@ -25,14 +25,7 @@ const HeaderComponent: React.FC = () => {
                 <Link to='/profile' style={{ fontSize: '1.5rem', color: 'white', marginRight: '8px' }}>
                     <UserOutlined />
                 </Link>
-                {/*<span style={{ color: 'white' }}>KitKat</span>*/}
-
-                {/*<div className='controller'>*/}
-                {/*<Link to='/profile' className="profile-button" style={{color: 'white'}}>*/}
-                {/*    <UserOutlined />*/}
-                {/*</Link>*/}
                 <Button type="primary" key='login' onClick={handleLogout}>Выйти</Button>
-                {/*</div>*/}
             </div>
 
         </Header>
