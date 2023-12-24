@@ -1,12 +1,12 @@
-import { Form, Input, Button } from 'antd';
+import {Form, Input, Button, Layout} from 'antd';
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/auth/register'
 import './registration.css';
 
-const layout = {
-    wrapperCol: { span: 16 },
-};
+// const layout = {
+//     wrapperCol: { span: 16 },
+// };
 
 interface RegistrationValues {
     username: string;
@@ -39,15 +39,18 @@ const RegistrationPage: React.FC = () => {
     };
 
     return (
-        <div className='registration-page flex justify-center items-center h-screen'>
+        <Layout className='registration-page flex h-screen'>
             <Form
-                {...layout}
                 form={form}
                 name="register"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 className='flex flex-col w-full'
+                labelCol={{ offset: 3, span: 5 }}
+                wrapperCol={{ offset: 1, span: 10 }}
+                autoComplete="off"
+                // style={{justifyItems: 'end'}}
             >
                 <Form.Item
                     label="Username"
@@ -60,6 +63,7 @@ const RegistrationPage: React.FC = () => {
 
                 <Form.Item
                     name="email"
+                    className='mb-4 w-1/2'
                     label="E-mail"
                     rules={[
                         {
@@ -86,8 +90,9 @@ const RegistrationPage: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item
-                    name="Повторите пароль"
-                    label="Confirm Password"
+                    name="confirm-password"
+                    label="Повторите пароль"
+                    className='mb-4 w-1/2'
                     dependencies={['password']}
                     hasFeedback
                     rules={[
@@ -111,13 +116,13 @@ const RegistrationPage: React.FC = () => {
                     <Input.Password />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ span: 16 }} className='w-1/2'>
+                <Form.Item wrapperCol={{ offset: 17 }} className='w-1/2'>
                     <Button type="primary" htmlType="submit" loading={loading}>
                         Submit
                     </Button>
                 </Form.Item>
             </Form>
-        </div>
+        </Layout>
     );
 };
 
