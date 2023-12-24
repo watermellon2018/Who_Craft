@@ -1,12 +1,17 @@
 import React from 'react';
+import HeaderComponent from "./header";
+import withAuth from "../../utils/auth/check_auth";
 export const MainPage = () => {
+
     return (
+
         <div className="bg-[#1B1D22] text-white flex flex-col justify-between h-screen">
         <div className="flex flex-col h-full justify-between">
-            <header className="flex justify-between p-6">
-                <div>FRAMER</div>
-                <div>FRAMER</div>
-            </header>
+            <HeaderComponent />
+            {/*<header className="flex justify-between p-6">*/}
+            {/*    <div>FRAMER</div>*/}
+            {/*    <div>FRAMER</div>*/}
+            {/*</header>*/}
             <div className="flex flex-col items-center">
             <main className="grid grid-cols-3 gap-5 p-6 w-2/3 max-w-2xl flex justify-center items-center"
                   style={{minHeight: "300px"}}
@@ -30,4 +35,4 @@ export const MainPage = () => {
 
 
 }
-export default MainPage;
+export default withAuth(MainPage);

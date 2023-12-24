@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type {MenuProps} from 'antd';
 import {Layout, Menu, Spin} from 'antd';
 
-import CharacterSetting from "./paramsPerson";
 import ImageCanvas from "./canvas";
 import HeaderComponent from '../../main/header'
 import MenuGeneration from "./generationMenu";
@@ -10,6 +9,7 @@ import MenuGeneration from "./generationMenu";
 import {generateImageAPI, 
     generateImageUndefinedAPI, 
     generateImage2ImgAPI} from '../../../api/characters'
+import withAuth from "../../../utils/auth/check_auth";
 
 
 const { Content, Sider } = Layout;
@@ -105,7 +105,6 @@ export const GenerationHeroPage = () => {
 
                         <div className="w-1/3 p-5">
                             <MenuGeneration onFinish={onFinish} />
-                            {/*<CharacterSetting onFinish={onFinish}/>*/}
                         </div>
 
                     </Content>
@@ -115,4 +114,4 @@ export const GenerationHeroPage = () => {
     );
 
 }
-export default GenerationHeroPage;
+export default withAuth(GenerationHeroPage);
