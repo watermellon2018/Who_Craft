@@ -1,8 +1,13 @@
 import React from 'react';
 import './App.css';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import GenerationHeroPage from "./page/creation/hero/generation";
 
 import { ConfigProvider } from 'antd';
+import MainPage from "./page/main";
+import LandingPage from "./page/logIn/start";
+import RegistrationPage from "./page/logIn/register";
+import LoginPage from "./page/logIn/login";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -61,7 +66,15 @@ function App() {
       <ConfigProvider
           theme={theme}
       >
-      <GenerationHeroPage />
+          <BrowserRouter>
+              <Routes>
+                  <Route caseSensitive path="/start" element={<LandingPage />} />
+                  <Route path="/register" element={<RegistrationPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/" element={<MainPage />} />
+                  <Route path="/generating" element={<GenerationHeroPage />} />
+              </Routes>
+          </BrowserRouter>
       </ConfigProvider>
   );
 }
