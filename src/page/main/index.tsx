@@ -1,5 +1,6 @@
 import React from 'react';
 import HeaderComponent from "./header";
+import withAuth from "../../utils/auth/check_auth";
 export const MainPage = () => {
 
     return (
@@ -34,4 +35,4 @@ export const MainPage = () => {
 
 
 }
-export default MainPage;
+export default withAuth(MainPage);
