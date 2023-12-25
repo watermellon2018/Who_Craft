@@ -43,6 +43,7 @@ const theme = {
         },
         "Sidebar": {
             "textColor": "#fff",
+            // "backgroundColor": "rgba(250, 176, 5, 0.55)",
         },
         "Switch": {
             "colorPrimary": "rgb(250, 176, 5)",
@@ -58,7 +59,7 @@ const theme = {
             "colorText": "rgb(255, 255, 255)",
             "optionSelectedBg": "rgba(250, 176, 5, 0.3)",
             "colorBorder": "rgb(250, 176, 5)",
-        }
+        },
     }
 }
 function App() {
