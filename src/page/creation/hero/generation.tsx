@@ -5,6 +5,9 @@ import {Affix, Button, Layout, Menu, Spin} from 'antd';
 import {Tree, TreeDragDropEvent} from 'primereact/tree';
 // import 'primereact/resources/themes/saga-blue/theme.css';
 // import 'primereact/resources/primereact.min.css';
+import {Button, Layout, Spin} from 'antd';
+
+// import {Tree} from 'primereact/tree';
 
 import ImageCanvas from "./canvas";
 import HeaderComponent from '../../main/header'
@@ -16,6 +19,8 @@ import {generateImageAPI,
 import withAuth from "../../../utils/auth/check_auth";
 import {TreeNode} from "primereact/treenode";
 import {InputText} from "primereact/inputtext";
+// import {TreeNode} from "primereact/treenode";
+// import {InputText} from "primereact/inputtext";
 
 
 const { Content, Sider } = Layout;
@@ -127,22 +132,22 @@ export const GenerationHeroPage = () => {
                                 flexDirection: 'column',
                                }}
                     >
-                        <Tree value={data}
-                              className='md:w-30rem'
-                              dragdropScope="demo"
-                              style={{ height: 'calc(100% - 120px)'}}
-                              onDragDrop={(e: any) => setData(e.value)}
-                              onNodeClick={(e: any) => handleEditNode(e)}
+                        {/*<Tree value={data}*/}
+                        {/*      className='md:w-30rem'*/}
+                        {/*      dragdropScope="demo"*/}
+                        {/*      style={{ height: 'calc(100% - 120px)'}}*/}
+                        {/*      onDragDrop={(e: any) => setData(e.value)}*/}
+                        {/*      onNodeClick={(e: any) => handleEditNode(e)}*/}
 
-                        />
-                        {editingNodeKey && (
-                            <div>
-                                <InputText
-                                    defaultValue={data.find((node) => node.key === editingNodeKey)?.label}
-                                    onBlur={(e) => handleSaveNode(e.target.value, editingNodeKey)}
-                                />
-                            </div>
-                        )}
+                        {/*/>*/}
+                        {/*{editingNodeKey && (*/}
+                        {/*    <div>*/}
+                        {/*        /!*<InputText*!/*/}
+                        {/*        /!*    defaultValue={data.find((node) => node.key === editingNodeKey)?.label}*!/*/}
+                        {/*        /!*    onBlur={(e) => handleSaveNode(e.target.value, editingNodeKey)}*!/*/}
+                                {/*/>*/}
+                        {/*    </div>*/}
+                        {/*)}*/}
 
                         {/*<div className='mt-auto'>*/}
 

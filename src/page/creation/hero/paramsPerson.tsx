@@ -64,7 +64,7 @@ const CharacterParams: React.FC<CharacterParamsProps> = ({ onFinish }) => {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button style={{borderColor: "black"}} type="primary" htmlType="submit">
                     Генерировать
                 </Button>
             </Form.Item>
@@ -86,7 +86,7 @@ const UndefinedCreationForm: React.FC<UndefinedCharacterFormProps> = ({onFinish}
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button style={{borderColor: "black"}} type="primary" htmlType="submit">
                     Генерировать
                 </Button>
             </Form.Item>
