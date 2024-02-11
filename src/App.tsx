@@ -47,22 +47,29 @@ const theme = {
             "textColor": "#fff",
         },
         "Switch": {
-            "colorPrimary": "rgb(250, 176, 5)",
+            "colorPrimary": "rgb(27, 29, 34)",
+            "colorTextQuaternary": "rgb(27, 29, 34) !important",
             "colorPrimaryHover": "rgb(208, 154, 26)",
-            "colorPrimaryBorder": "rgb(250, 176, 5)"
+            "colorPrimaryBorder": "rgb(27, 29, 34)",
         },
         "InputNumber": {
             "colorTextPlaceholder": "rgb(250, 176, 5, 0.55)",
             "colorBorder": "rgb(250, 176, 5)",
         },
         "Select": {
-            "colorTextPlaceholder": "rgba(250, 176, 5, 0.55)",
-            "colorText": "rgb(255, 255, 255)",
-            "optionSelectedBg": "rgba(250, 176, 5, 0.3)",
-            "colorBorder": "rgb(250, 176, 5)",
+            "colorTextPlaceholder": "rgb(27, 29, 34)",
+            "colorText": "rgb(27, 29, 34)",
+            "optionSelectedBg": "rgb(27, 29, 34)",
+            "colorBorder": "rgb(27, 29, 34)",
+            "colorBgContainer": "rgb(250, 176, 5)",
+            "optionSelectedColor": "#fab005",
+            "colorBgElevated": "#fab005",
         },
         "Card": {
-            "colorBgContainer": "#fab005"
+            "colorBgContainer": "#fab005",
+            "colorText": "rgb(27, 29, 34)",
+            "colorTextHeading":  "rgb(27, 29, 34)",
+
         },
     }
 }

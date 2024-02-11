@@ -8,6 +8,8 @@ import ExitButton from "../main/exitButton";
 import LogoButton from "../main/logo";
 import './style.css'
 import {data} from "autoprefixer";
+import SettingsPage from "./settingUser";
+import UserSettings from "./settingUser";
 const { Title, Paragraph } = Typography;
 // interface ProfilePageParams {
 // }
@@ -39,8 +41,10 @@ const ProfilePage = () => {
                                 </div>
                             </div><div>
 
+                            <div className='flex space-x-3'>
                             <LogoButton />
                             <ExitButton />
+                            </div>
                         </div>
 
                         </div>
@@ -98,14 +102,13 @@ const ProfilePage = () => {
                         flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
                              >Награды</div>
                     </div>
-                {/*</div>*/}
 
                 <Divider style={{backgroundColor: "white"}} />
                 <div className="grid grid-cols-3 gap-8">
                     <div className="col-span-2">
                         <Card className="mb-6 p-4" style={{color: 'fab005 !important'}}>
-                            <h2 className="text-xl text-gray-600 font-semibold mb-2">О себе</h2>
-                            <Paragraph className="text-gray-700">
+                            <h2 className="text-xl font-semibold mb-2">О себе</h2>
+                            <p>
                                 КОКО- тут о себе, типа я супер крутой, че люблю и бла бла
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros,
                                 pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus.
@@ -118,24 +121,24 @@ const ProfilePage = () => {
                                 Phasellus bibendum turpis ut ipsum egestas, sed sollicitudin elit convallis.
                                 Cras pharetra mi tristique sapien vestibulum lobortis. Nam eget bibendum metus,
                                 non dictum mauris. Nulla at tellus sagittis, viverra est a, bibendum metus.
-                            </Paragraph>
+                            </p>
                         </Card>
 
                         <Card className="mb-6 p-4">
 
-                            <h2 className="text-xl text-gray-600 font-semibold mb-2">Experience</h2>
+                            <h2 className="text-xl font-semibold mb-2">Experience</h2>
                             <div className="mb-4">
-                                <h3 className="text-lg text-gray-600 font-semibold">Senior Frontend Developer</h3>
-                                <p className="text-gray-600">Company Name - Jan 2019 - Present</p>
-                                <p className="text-gray-700">
+                                <h3 className="text-lg font-semibold">Senior Frontend Developer</h3>
+                                <p>Company Name - Jan 2019 - Present</p>
+                                <p>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros,
                                     pulvinar facilisis justo mollis, auctor consequat urna.
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-lg text-gray-600 font-semibold">Frontend Developer</h3>
-                                <p className="text-gray-600">Company Name - Jan 2015 - Dec 2018</p>
-                                <p className="text-gray-700">
+                                <h3 className="text-lg font-semibold">Frontend Developer</h3>
+                                <p>Company Name - Jan 2015 - Dec 2018</p>
+                                <p>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros,
                                     pulvinar facilisis justo mollis, auctor consequat urna.
                                 </p>
@@ -144,8 +147,8 @@ const ProfilePage = () => {
                     </div>
                     <div>
                         <Card style={{backgroundColor: 'fab005 !important'}} className="mb-6 p-4">
-                            <h2 className="text-xl text-gray-600 font-semibold mb-2">Любимые жанры</h2>
-                            <ul className="list-disc pl-5 text-gray-700">
+                            <h2 className="text-xl font-semibold mb-2">Любимые жанры</h2>
+                            <ul className="list-disc pl-5">
                                 {movie_list.map((item: string, index: number) => (
                                     <li key={item}>{item}</li>
                                 ))}
@@ -161,16 +164,17 @@ const ProfilePage = () => {
                         {/*- настройка интерфейса*/}
 
                         <Card style={{backgroundColor: 'fab005 !important'}} className="p-4">
-                            <h2 className="text-xl text-gray-600 font-semibold mb-2">Чето</h2>
+                            <h2 className="text-xl font-semibold mb-2">Чето</h2>
 
-                            <Paragraph className="text-gray-700">
+                            <p>
                                 B.S. in Computer Science<br/>
                                 University Name<br/>
                                 2011 - 2015
-                            </Paragraph>
+                            </p>
                         </Card>
                     </div>
                 </div>
+                <UserSettings />
             </div>
         </>
     );
