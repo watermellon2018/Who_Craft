@@ -24,12 +24,12 @@ const theme = {
         "wireframe": false,
         "backgroundColor": '#1b1d22',
         "background": '#1b1d22',
-        // "fontFamily": ,
         "algorithm": true,
     },
     "components": {
         "Button": {
             "defaultBorderColor": "rgb(250, 176, 5)",
+            "colorPrimaryBorder": "rgb(27, 29, 34) !important",
             "colorPrimary": "rgb(250, 176, 5) !important",
             "colorError": "rgba(255, 77, 79, 0.57)",
             "colorTextLightSolid": "rgb(27, 29, 34)",
@@ -69,7 +69,15 @@ const theme = {
             "colorBgContainer": "#fab005",
             "colorText": "rgb(27, 29, 34)",
             "colorTextHeading":  "rgb(27, 29, 34)",
-
+        },
+        "Tabs": {
+            "itemSelectedColor":  "rgb(27, 29, 34)",
+            "itemActiveColor":  "rgb(27, 29, 34)",
+            "itemColor":  "rgb(27, 29, 34)",
+            "itemHoverColor":  "rgba(27, 29, 34, 0.7)",
+        },
+        "Form": {
+            "labelColor": "rgb(27, 29, 34)",
         },
     }
 }
