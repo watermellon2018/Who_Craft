@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
-import {Card, Switch, Select, Divider, Typography, Button} from 'antd';
-import { UserOutlined, GlobalOutlined, LockOutlined, SettingOutlined } from '@ant-design/icons';
+import {Card, Switch, Select, Divider, Button} from 'antd';
+import { GlobalOutlined, LockOutlined, SettingOutlined } from '@ant-design/icons';
 import PersonalSettingForm from "./personalSettingForm";
 
 const { Option } = Select;
-// const { Text } = Typography;
-// const { Title, Paragraph } = Typography;
 const UserSettings: React.FC = () => {
-    const [userDataEnabled, setUserDataEnabled] = useState(true);
     const [language, setLanguage] = useState('en');
     const [privacyEnabled, setPrivacyEnabled] = useState(true);
-    const [securityEnabled, setSecurityEnabled] = useState(true);
-    const [interfaceEnabled, setInterfaceEnabled] = useState(true);
 
     return (
         <div style={{ display: 'flex' }}>

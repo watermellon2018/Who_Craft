@@ -1,18 +1,13 @@
-import React, { useState } from 'react';
-import {Avatar, Card, Col, Divider, List, Row, Skeleton, Space} from "antd";
-import {AntDesignOutlined, UserOutlined} from "@ant-design/icons";
-import InfiniteScroll from 'react-infinite-scroll-component';
+import React from 'react';
+import {Avatar, Card, Col, Divider, Row} from "antd";
+import {UserOutlined} from "@ant-design/icons";
 
 import { Typography } from 'antd';
 import ExitButton from "../main/exitButton";
 import LogoButton from "../main/logo";
 import './style.css'
-import {data} from "autoprefixer";
-import SettingsPage from "./settingUser";
 import UserSettings from "./settingUser";
-const { Title, Paragraph } = Typography;
-// interface ProfilePageParams {
-// }
+const { Title } = Typography;
 const ProfilePage = () => {
     const friend_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -149,7 +144,7 @@ const ProfilePage = () => {
                         <Card style={{backgroundColor: 'fab005 !important'}} className="mb-6 p-4">
                             <h2 className="text-xl font-semibold mb-2">Любимые жанры</h2>
                             <ul className="list-disc pl-5">
-                                {movie_list.map((item: string, index: number) => (
+                                {movie_list.map((item: string) => (
                                     <li key={item}>{item}</li>
                                 ))}
                             </ul>
