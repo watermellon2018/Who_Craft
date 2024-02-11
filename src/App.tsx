@@ -8,6 +8,7 @@ import MainPage from "./page/main";
 import LandingPage from "./page/logIn/start";
 import RegistrationPage from "./page/logIn/register";
 import LoginPage from "./page/logIn/login";
+import ProfilePage from "./page/profile/user";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -22,6 +23,7 @@ const theme = {
         "borderRadius": 3,
         "wireframe": false,
         "backgroundColor": '#1b1d22',
+        "background": '#1b1d22',
         // "fontFamily": ,
         "algorithm": true,
     },
@@ -58,7 +60,10 @@ const theme = {
             "colorText": "rgb(255, 255, 255)",
             "optionSelectedBg": "rgba(250, 176, 5, 0.3)",
             "colorBorder": "rgb(250, 176, 5)",
-        }
+        },
+        "Card": {
+            "colorBgContainer": "#fab005"
+        },
     }
 }
 function App() {
@@ -73,6 +78,7 @@ function App() {
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/" element={<MainPage />} />
                   <Route path="/generating" element={<GenerationHeroPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
               </Routes>
           </BrowserRouter>
       </ConfigProvider>
