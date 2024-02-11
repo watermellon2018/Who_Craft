@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import {Form, Input, Select, Button, Switch, InputNumber} from 'antd';
+import React from 'react';
+import {Form, Input, Select, Button} from 'antd';
 
-
-const { Option } = Select;
 
 interface Img2ImgProps {
     onFinish: (values: any) => void;
