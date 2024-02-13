@@ -1,60 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import type {MenuProps} from 'antd';
 import {Affix, Button, Layout, Menu, Spin} from 'antd';
-
-import {Tree, TreeDragDropEvent} from 'primereact/tree';
+import NodeTree from './tree/node';
+// import {Tree, TreeDragDropEvent} from 'primereact/tree';
 // import 'primereact/resources/themes/saga-blue/theme.css';
 // import 'primereact/resources/primereact.min.css';
-import {Button, Layout, Spin} from 'antd';
 
 // import {Tree} from 'primereact/tree';
 
 import ImageCanvas from "./canvas";
 import HeaderComponent from '../../main/header'
 import MenuGeneration from "./generationMenu";
-
+import { Tree } from "react-arborist";
 import {generateImageAPI,
     generateImageUndefinedAPI,
     generateImage2ImgAPI} from '../../../api/characters'
 import withAuth from "../../../utils/auth/check_auth";
-import {TreeNode} from "primereact/treenode";
-import {InputText} from "primereact/inputtext";
+import {CaretRightOutlined} from "@ant-design/icons";
+
+import './style.css'
+import CreaterWrapper from "./tree/createrWrapper";
+// import {TreeNode} from "primereact/treenode";
+// import {InputText} from "primereact/inputtext";
 // import {TreeNode} from "primereact/treenode";
 // import {InputText} from "primereact/inputtext";
 
-
+// Component for tree project structure
+// https://blog.logrocket.com/using-react-arborist-create-tree-components/
 const { Content, Sider } = Layout;
 
 
 export const GenerationHeroPage = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const treeRef = useRef(null);
 
     const [data, setData] = useState([
         {
             key: 'main_hero',
-            label: 'Главные',
+            id: 'main_hero',
+            name: 'Главные',
             children: [
                 {
+                    id: 'first_ser',
                     key: 'first_ser',
-                    label: '1 серия',
+                    name: '1 серия',
                 },
                 {
+                    id: 'second_ser',
                     key: 'second_ser',
-                    label: '2 серия',
+                    name: '2 серия',
                 },
             ],
         },
         {
+            id: 'second_hero',
             key: 'second_hero',
-            label: 'Второстепенные',
+            name: 'Второстепенные',
             children: [
-                { key: '1_ser_second', label: '1 серия' },
-                { key: '2_ser_second', label: '2 серия' },
+                { id: '1_ser_second', key: '1_ser_second', name: '1 серия' },
+                { id: '2_ser_second', key: '2_ser_second', name: '2 серия' },
             ],
         },
         {
+            id: 'background_hero',
             key: 'background_hero',
-            label: 'Фоновые',
+            name: 'Фоновые',
         },
     ]);
 
@@ -87,34 +97,7 @@ export const GenerationHeroPage = () => {
         setIsGenerated(true);
     };
 
-    const [newNodeLabel, setNewNodeLabel] = useState('');
-    const handleCreateNode = () => {
-        const newNode = {
-            key: `${new Date().getTime()}`, // Create a unique key (you can adjust as needed)
-            label: 'Test node',
-        };
 
-        setData([...data, newNode]);
-        setNewNodeLabel('');
-    };
-
-    const [editingNodeKey, setEditingNodeKey] = useState(null);
-
-    const handleEditNode = (nodeKey: any) => {
-        setEditingNodeKey(nodeKey.node.key);
-    };
-    const handleSaveNode = (editedLabel: any, nodeKey: any) => {
-        // Update the label of the edited node
-        const updatedTreeData: any = data.map((node) =>
-            node.key === nodeKey ? { ...node, label: editedLabel } : node
-        );
-
-        // Set the updated tree data
-        setData(updatedTreeData);
-
-        // Clear the editing state
-        setEditingNodeKey(null);
-    };
     return (
 
         <Layout style={{ minHeight: '100vh' }}>
@@ -132,31 +115,13 @@ export const GenerationHeroPage = () => {
                                 flexDirection: 'column',
                                }}
                     >
-                        {/*<Tree value={data}*/}
-                        {/*      className='md:w-30rem'*/}
-                        {/*      dragdropScope="demo"*/}
-                        {/*      style={{ height: 'calc(100% - 120px)'}}*/}
-                        {/*      onDragDrop={(e: any) => setData(e.value)}*/}
-                        {/*      onNodeClick={(e: any) => handleEditNode(e)}*/}
+                        <div className="folderFileActions"><CreaterWrapper treeRef={treeRef}/></div>
+                        <Tree className='tree' initialData={data} ref={treeRef}>
+                            {({ node, style, dragHandle, tree }) => (
+                                <NodeTree node={node} style={style} dragHandle={dragHandle} tree={tree} />
+                            )}
+                        </Tree>
 
-                        {/*/>*/}
-                        {/*{editingNodeKey && (*/}
-                        {/*    <div>*/}
-                        {/*        /!*<InputText*!/*/}
-                        {/*        /!*    defaultValue={data.find((node) => node.key === editingNodeKey)?.label}*!/*/}
-                        {/*        /!*    onBlur={(e) => handleSaveNode(e.target.value, editingNodeKey)}*!/*/}
-                                {/*/>*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
-
-                        {/*<div className='mt-auto'>*/}
-
-                        <Button type="primary" className='p-1 w-1/2'
-                                // style={{flex: '1 0 auto'}}
-                                onClick={handleCreateNode}>
-                            Создать
-                        </Button>
-                        {/*</div>*/}
                     </Sider>
                 </div>
 

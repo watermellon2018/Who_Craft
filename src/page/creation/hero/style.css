@@ -1,0 +1,15 @@
+/*.tree div:last-child span {*/
+/*    color: red !important;*/
+/*}*/
+
+.tree {
+    color: rgb(208, 154, 26);
+    width: auto !important;
+}
+
+.ant-layout-sider-children > * {
+    max-width: 100%;
+    white-space: nowrap; /* Чтобы предотвратить перенос строки */
+    overflow: hidden; /* Чтобы скрыть превышающее содержимое */
+    text-overflow: ellipsis; /* Отображение многоточия в случае обрезки */
+}
