@@ -7,6 +7,10 @@ import {
     LockOutlined
 } from "@ant-design/icons";
 import React from "react";
+import {
+    deleteCharacterFromTree,
+    get_all_character_for_project
+} from "../../../../api/generation/characters/tree_structure";
 // https://blog.logrocket.com/using-react-arborist-create-tree-components/
 interface NodeProps {
     node: any;
@@ -20,6 +24,20 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
         if (node.isInternal) {
             node.toggle();
         }
+    };
+
+    const handleDelete = () => {
+        const idNodeToDel: number = node.id
+        const deleteNode = async () => {
+            const response = await deleteCharacterFromTree(idNodeToDel);
+            if(response.status !== 200){
+                console.log('Ошибка при удалении. Статус '+response.status)
+            }
+
+        };
+
+        deleteNode();
+
     };
 
     return (
@@ -65,7 +83,7 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
                     <button onClick={() => node.edit()} title="Rename...">
                         <EditOutlined />
                     </button>
-                    <button onClick={() => tree.delete(node.id)} title="Delete">
+                    <button onClick={handleDelete} title="Delete">
                         <CloseOutlined />
                     </button>
                 </div>
