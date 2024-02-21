@@ -65,7 +65,6 @@ export const GenerationHeroPage = () => {
         setIsGenerated(true);
     };
 
-    console.log(data);
 
     return (
 

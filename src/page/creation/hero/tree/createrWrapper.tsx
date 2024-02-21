@@ -1,16 +1,10 @@
 import {
-    CaretRightOutlined,
-    SettingOutlined,
-    LockOutlined,
-    PlusOutlined,
     FolderAddOutlined,
     FileAddOutlined
 } from "@ant-design/icons";
 import React from "react";
 import {
     createCharacterFromTreeAPI,
-    deleteCharacterFromTree,
-    get_all_character_for_project
 } from "../../../../api/generation/characters/tree_structure";
 // https://blog.logrocket.com/using-react-arborist-create-tree-components/
 
@@ -68,9 +62,6 @@ const CreaterWrapper = (treeRef: any) => {
         const newID = Math.max(...ids) + 1;
 
         await treeRef.treeRef.current.createLeaf(treeRef.treeRef.current.root.id)
-        // const newNode = treeRef.treeRef.current.focusedNode;
-        // console.log(newNode);
-        // const newId = newNode.data.id;
         const waitForChange = async () => {
             return new Promise<void>((resolve) => {
                 const checkChange = () => {
@@ -88,9 +79,7 @@ const CreaterWrapper = (treeRef: any) => {
         // Ждем изменения имени
         await waitForChange();
         const newData = treeRef.treeRef.current.focusedNode.data;
-        // const countElement = treeRef.treeRef.current.list.current.props.itemCount
         newData.id = newID
-        // console.log(newData.id);
         const createCharacter = async () => {
             const parentNode = treeRef.treeRef.current.focusedNode.parent;
             if(parentNode.level !== -1){
@@ -105,7 +94,6 @@ const CreaterWrapper = (treeRef: any) => {
 
     };
 
-// Вызываем функцию
 
     return (
         <>

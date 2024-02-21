@@ -1,15 +1,12 @@
 import {
-    CaretRightOutlined,
     CloseOutlined,
     EditOutlined, FileImageOutlined,
     FolderOpenOutlined, FolderOutlined,
-    GlobalOutlined,
-    LockOutlined
 } from "@ant-design/icons";
 import React from "react";
 import {
     deleteCharacterFromTree,
-    get_all_character_for_project, renameCharacterFromTree
+    renameCharacterFromTree
 } from "../../../../api/generation/characters/tree_structure";
 // https://blog.logrocket.com/using-react-arborist-create-tree-components/
 interface NodeProps {
@@ -20,15 +17,9 @@ interface NodeProps {
 }
 
 const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
-    const handleClick = (event: any) => {
-        // console.log(e)
-        // console.log(node.isInternal);
-        // console.log(event.target.id);
-        // console.log(event);
-        // console.log(node.tree);
+    const handleClick = () => {
         if (node.isInternal) {
             node.toggle()
-            // console.log(a);
         }
     };
 
@@ -47,7 +38,7 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
 
     };
 
-    const handleEdit = async (event: any) => {
+    const handleEdit = async () => {
         const newValueNode = await node.edit();
         const isCancel = newValueNode['cancelled']
         if(!isCancel){
