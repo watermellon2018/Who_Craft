@@ -1,3 +1,4 @@
+// https://blog.logrocket.com/using-react-arborist-create-tree-components/
 import {
     CloseOutlined,
     EditOutlined, FileImageOutlined,
@@ -8,12 +9,14 @@ import {
     deleteCharacterFromTree,
     renameCharacterFromTree
 } from "../../../../api/generation/characters/tree_structure";
-// https://blog.logrocket.com/using-react-arborist-create-tree-components/
+import {NodeApi, TreeApi} from "react-arborist";
+import {TreeNode} from "primereact/treenode";
+
 interface NodeProps {
-    node: any;
+    node: NodeApi;
     style: React.CSSProperties;
     dragHandle?: ((el: (HTMLDivElement | null)) => void) | undefined;
-    tree: any; // тип дерева можно заменить на конкретный, если известен
+    tree: TreeApi<any>; // тип дерева можно заменить на конкретный, если известен
 }
 
 const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
@@ -23,24 +26,21 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
         }
     };
 
-    const handleDelete = () => {
-        const idNodeToDel: number = node.id
-        const deleteNode = async () => {
-            const response = await deleteCharacterFromTree(idNodeToDel);
-            if(response.status !== 200){
-                console.log('Ошибка при удалении. Статус '+response.status)
-            }
+    const handleDelete = async () => {
+        const idNodeToDel: string = node.id
 
-        };
-
-        deleteNode();
-        tree.delete(node.id)
+        const response = await deleteCharacterFromTree(idNodeToDel);
+        if(response.status !== 200)
+            console.log('Ошибка при удалении. Статус '+response.status)
+        else
+            tree.delete(node.id)
 
     };
 
     const handleEdit = async () => {
         const newValueNode = await node.edit();
         const isCancel = newValueNode['cancelled']
+
         if(!isCancel){
             const newName = newValueNode['value']
             const response = await renameCharacterFromTree(node.id, newName);

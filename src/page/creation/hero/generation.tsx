@@ -14,7 +14,6 @@ import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import CreaterWrapper from "./tree/createrWrapper";
 
-// https://blog.logrocket.com/using-react-arborist-create-tree-components/
 const { Content, Sider } = Layout;
 
 
@@ -27,7 +26,8 @@ export const GenerationHeroPage = () => {
 
     useEffect(() => {
         const getCharacters = async () => {
-            const response = await get_all_character_for_project(); // Вызываем функцию для получения данных при загрузке компонента
+            // Вызываем функцию для получения данных при загрузке компонента
+            const response = await get_all_character_for_project();
             const data = response.data;
             setData(data);
         };
@@ -87,7 +87,6 @@ export const GenerationHeroPage = () => {
                             <CreaterWrapper treeRef={treeRef}/>
                         </div>
                         <Tree
-                            openByDefault={false}
                             key='tree_characters'
                             height={600}
                             className='tree'

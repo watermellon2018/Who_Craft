@@ -15,7 +15,7 @@ async function get_all_character_for_project(): Promise<any> {
 
 }
 
-async function deleteCharacterFromTree(id: number): Promise<any> {
+async function deleteCharacterFromTree(id: string): Promise<any> {
     try {
         return await axios.post(`${backendUrl}/api/delete/`, {
             'id': id,
