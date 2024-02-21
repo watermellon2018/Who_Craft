@@ -1,54 +1,40 @@
-import React, { useState } from 'react';
-import {Button, Layout, Spin} from 'antd';
-
-// import {Tree} from 'primereact/tree';
+import React, { useState, useRef, useEffect } from 'react';
+import {Layout, Spin} from 'antd';
+import NodeTree from './tree/node';
+import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
 
 import ImageCanvas from "./canvas";
 import HeaderComponent from '../../main/header'
 import MenuGeneration from "./generationMenu";
-
+import { Tree } from "react-arborist";
 import {generateImageAPI,
     generateImageUndefinedAPI,
     generateImage2ImgAPI} from '../../../api/characters'
 import withAuth from "../../../utils/auth/check_auth";
-// import {TreeNode} from "primereact/treenode";
-// import {InputText} from "primereact/inputtext";
-
+import './style.css'
+import CreaterWrapper from "./tree/createrWrapper";
 
 const { Content, Sider } = Layout;
 
 
 export const GenerationHeroPage = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const treeRef = useRef(null);
 
-    const [data, setData] = useState([
-        {
-            key: 'main_hero',
-            label: 'Главные',
-            children: [
-                {
-                    key: 'first_ser',
-                    label: '1 серия',
-                },
-                {
-                    key: 'second_ser',
-                    label: '2 серия',
-                },
-            ],
-        },
-        {
-            key: 'second_hero',
-            label: 'Второстепенные',
-            children: [
-                { key: '1_ser_second', label: '1 серия' },
-                { key: '2_ser_second', label: '2 серия' },
-            ],
-        },
-        {
-            key: 'background_hero',
-            label: 'Фоновые',
-        },
-    ]);
+    const [data, setData] = useState();
+
+
+    useEffect(() => {
+        const getCharacters = async () => {
+            // Вызываем функцию для получения данных при загрузке компонента
+            const response = await get_all_character_for_project();
+            const data = response.data;
+            setData(data);
+        };
+
+        getCharacters();
+
+    }, []);
 
 
 
@@ -79,34 +65,7 @@ export const GenerationHeroPage = () => {
         setIsGenerated(true);
     };
 
-    const [newNodeLabel, setNewNodeLabel] = useState('');
-    const handleCreateNode = () => {
-        const newNode = {
-            key: `${new Date().getTime()}`, // Create a unique key (you can adjust as needed)
-            label: 'Test node',
-        };
 
-        setData([...data, newNode]);
-        setNewNodeLabel('');
-    };
-
-    const [editingNodeKey, setEditingNodeKey] = useState(null);
-
-    const handleEditNode = (nodeKey: any) => {
-        setEditingNodeKey(nodeKey.node.key);
-    };
-    const handleSaveNode = (editedLabel: any, nodeKey: any) => {
-        // Update the label of the edited node
-        const updatedTreeData: any = data.map((node) =>
-            node.key === nodeKey ? { ...node, label: editedLabel } : node
-        );
-
-        // Set the updated tree data
-        setData(updatedTreeData);
-
-        // Clear the editing state
-        setEditingNodeKey(null);
-    };
     return (
 
         <Layout style={{ minHeight: '100vh' }}>
@@ -124,31 +83,20 @@ export const GenerationHeroPage = () => {
                                 flexDirection: 'column',
                                }}
                     >
-                        {/*<Tree value={data}*/}
-                        {/*      className='md:w-30rem'*/}
-                        {/*      dragdropScope="demo"*/}
-                        {/*      style={{ height: 'calc(100% - 120px)'}}*/}
-                        {/*      onDragDrop={(e: any) => setData(e.value)}*/}
-                        {/*      onNodeClick={(e: any) => handleEditNode(e)}*/}
+                        <div className="folderFileActions">
+                            <CreaterWrapper treeRef={treeRef}/>
+                        </div>
+                        <Tree
+                            key='tree_characters'
+                            height={600}
+                            className='tree'
+                            initialData={data}
+                            ref={treeRef}>
+                            {({ node, style, dragHandle, tree }) => (
+                                <NodeTree node={node} style={style} dragHandle={dragHandle} tree={tree} />
+                            )}
+                        </Tree>
 
-                        {/*/>*/}
-                        {/*{editingNodeKey && (*/}
-                        {/*    <div>*/}
-                        {/*        /!*<InputText*!/*/}
-                        {/*        /!*    defaultValue={data.find((node) => node.key === editingNodeKey)?.label}*!/*/}
-                        {/*        /!*    onBlur={(e) => handleSaveNode(e.target.value, editingNodeKey)}*!/*/}
-                                {/*/>*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
-
-                        {/*<div className='mt-auto'>*/}
-
-                        <Button type="primary" className='p-1 w-1/2'
-                                // style={{flex: '1 0 auto'}}
-                                onClick={handleCreateNode}>
-                            Создать
-                        </Button>
-                        {/*</div>*/}
                     </Sider>
                 </div>
 

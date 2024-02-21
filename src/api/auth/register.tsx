@@ -11,7 +11,7 @@ async function register(values: any): Promise<any> {
     const body = JSON.stringify(values);
 
     try {
-        const res = await axios.post(`${backendUrl}api/register/`, body, config);
+        const res = await axios.post(`${backendUrl}api/auth/register/`, body, config);
         return res.data;
     } catch (err: any) {
         throw err.response.data;
