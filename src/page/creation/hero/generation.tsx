@@ -65,18 +65,7 @@ export const GenerationHeroPage = () => {
         setIsGenerated(true);
     };
 
-    const onCreateHandle = async (opts: any) => {
-        console.log(treeRef.current);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        await treeRef.current.create(opts);
-
-        // console.log('Созданный элемент:', createdNode);
-        console.log('fdfdf');
-
-        // return createdNode;
-    };
-
+    console.log(data);
 
     return (
 
@@ -99,13 +88,11 @@ export const GenerationHeroPage = () => {
                             <CreaterWrapper treeRef={treeRef}/>
                         </div>
                         <Tree
+                            openByDefault={false}
                             key='tree_characters'
                             height={600}
                             className='tree'
                             initialData={data}
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            // onCreate={onCreateHandle}
                             ref={treeRef}>
                             {({ node, style, dragHandle, tree }) => (
                                 <NodeTree node={node} style={style} dragHandle={dragHandle} tree={tree} />

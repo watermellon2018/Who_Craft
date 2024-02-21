@@ -18,7 +18,7 @@ async function get_all_character_for_project(): Promise<any> {
 async function deleteCharacterFromTree(id: number): Promise<any> {
     try {
         return await axios.post(`${backendUrl}/api/delete/`, {
-                'id': id,
+            'id': id,
         });
     } catch (error) {
         console.error('Error generating image to image:', error);
@@ -40,5 +40,21 @@ async function createCharacterFromTreeAPI(id: number | string, name: string, typ
 
 }
 
+async function renameCharacterFromTree(id: string,
+                                       name: string,
+): Promise<any> {
+    try {
+        return await axios.post(`${backendUrl}/api/rename/`, {
+            'id': id,
+            'name': name,
+        });
+    } catch (error) {
+        console.error('Error generating image to image:', error);
+    }
 
-export {get_all_character_for_project, deleteCharacterFromTree, createCharacterFromTreeAPI};
+}
+
+export {get_all_character_for_project,
+    deleteCharacterFromTree,
+    createCharacterFromTreeAPI,
+    renameCharacterFromTree};

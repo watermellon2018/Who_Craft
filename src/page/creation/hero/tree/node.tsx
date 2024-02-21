@@ -9,7 +9,7 @@ import {
 import React from "react";
 import {
     deleteCharacterFromTree,
-    get_all_character_for_project
+    get_all_character_for_project, renameCharacterFromTree
 } from "../../../../api/generation/characters/tree_structure";
 // https://blog.logrocket.com/using-react-arborist-create-tree-components/
 interface NodeProps {
@@ -20,9 +20,15 @@ interface NodeProps {
 }
 
 const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
-    const handleClick = () => {
+    const handleClick = (event: any) => {
+        // console.log(e)
+        // console.log(node.isInternal);
+        // console.log(event.target.id);
+        // console.log(event);
+        // console.log(node.tree);
         if (node.isInternal) {
-            node.toggle();
+            node.toggle()
+            // console.log(a);
         }
     };
 
@@ -37,28 +43,43 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
         };
 
         deleteNode();
+        tree.delete(node.id)
 
     };
 
+    const handleEdit = async (event: any) => {
+        const newValueNode = await node.edit();
+        const isCancel = newValueNode['cancelled']
+        if(!isCancel){
+            const newName = newValueNode['value']
+            const response = await renameCharacterFromTree(node.id, newName);
+            if(response.status !== 200){
+                console.log('Ошибка при переименовании. Статус '+response.status)
+            }
+        }
+    }
+
     return (
         <div className="node-container flex justify-between" style={style} ref={dragHandle}>
-            <div className="node-content" onClick={handleClick}>
+            <div className="node-content"
+                 onClick={handleClick}
+            >
                 {node.isLeaf ? (
                     <>
-                        <span className="arrow"></span>
-                        <span className="file-folder-icon">
+                        <span id={'span_arrow_tree_character_'+node.id} className="arrow"></span>
+                        <span id={'span_icon_tree__character'+node.id} className="file-folder-icon">
                             <FileImageOutlined color="#6bc7f6" />
                         </span>
                     </>
                 ) : (
                     <>
-                        <span className="arrow">
+                        <span id={'span_arrow_tree_character_'+node.id} className="arrow">
                             {node.isOpen ? <FolderOpenOutlined /> : <FolderOutlined />}
                         </span>
                     </>
                 )}
 
-                <span className="node-text">
+                <span id={'span_text_node_tree_character_'+node.id} className="node-text">
                     {node.isEditing ? (
                         <input
                             type="text"
@@ -72,7 +93,7 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
                             autoFocus
                         />
                     ) : (
-                        <span>{node.data.name}</span>
+                        <span id={'span_name_node_tree_character_'+node.id}>{node.data.name}</span>
                     )}
 
                 </span>
@@ -80,7 +101,7 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
 
             <div className="file-actions">
                 <div className="folderFileActions">
-                    <button onClick={() => node.edit()} title="Rename...">
+                    <button onClick={handleEdit} title="Rename...">
                         <EditOutlined />
                     </button>
                     <button onClick={handleDelete} title="Delete">
