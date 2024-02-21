@@ -64,16 +64,16 @@ const CreaterWrapper = (treeRef: any) => {
         const newID = getNewID();
         await treeRef.treeRef.current.createInternal(treeRef.treeRef.current.root.id);
 
-        const newData = setNewID(newID);
-        createCharacter(newData, 'node');
+        const newData = await setNewID(newID);
+        await createCharacter(newData, 'node');
     }
 
     const createFileClick = async () => {
         const newID = getNewID()
         await treeRef.treeRef.current.createLeaf(treeRef.treeRef.current.root.id)
 
-        const newData = setNewID(newID)
-        createCharacter(newData, 'leaf');
+        const newData = await setNewID(newID);
+        await createCharacter(newData, 'leaf');
     };
 
 

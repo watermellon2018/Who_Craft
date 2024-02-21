@@ -5,7 +5,7 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 async function get_all_character_for_project(): Promise<any> {
     try {
-        return await axios.get(`${backendUrl}/api/characters/`, {
+        return await axios.get(`${backendUrl}/api/character/select/`, {
             params: {
             }
         });
@@ -17,7 +17,7 @@ async function get_all_character_for_project(): Promise<any> {
 
 async function deleteCharacterFromTree(id: string): Promise<any> {
     try {
-        return await axios.post(`${backendUrl}/api/delete/`, {
+        return await axios.post(`${backendUrl}/api/character/delete/`, {
             'id': id,
         });
     } catch (error) {
@@ -26,9 +26,13 @@ async function deleteCharacterFromTree(id: string): Promise<any> {
 
 }
 
-async function createCharacterFromTreeAPI(id: number | string, name: string, type: 'leaf' | 'node', parentId: string|null = null): Promise<any> {
+async function createCharacterFromTreeAPI(id: number | string,
+                                          name: string,
+                                          type: 'leaf' | 'node',
+                                          parentId: string|null = null)
+    : Promise<any> {
     try {
-        return await axios.post(`${backendUrl}/api/create/`, {
+        return await axios.post(`${backendUrl}/api/character/create/`, {
             'id': id,
             'name': name,
             'type': type,
@@ -41,10 +45,10 @@ async function createCharacterFromTreeAPI(id: number | string, name: string, typ
 }
 
 async function renameCharacterFromTree(id: string,
-                                       name: string,
+                                       name: string
 ): Promise<any> {
     try {
-        return await axios.post(`${backendUrl}/api/rename/`, {
+        return await axios.post(`${backendUrl}/api/character/rename/`, {
             'id': id,
             'name': name,
         });
@@ -54,7 +58,9 @@ async function renameCharacterFromTree(id: string,
 
 }
 
-export {get_all_character_for_project,
+export {
+    get_all_character_for_project,
     deleteCharacterFromTree,
     createCharacterFromTreeAPI,
-    renameCharacterFromTree};
+    renameCharacterFromTree
+};

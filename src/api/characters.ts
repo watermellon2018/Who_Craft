@@ -14,7 +14,7 @@ interface FormData {
 }
 async function generateImageAPI(formData: FormData): Promise<any> {
     try {
-        return await axios.get(`${backendUrl}api/generate_image/`, {
+        return await axios.get(`${backendUrl}api/generate/generate_image/`, {
             params: {
                 gender: formData.gender,
                 minAge: formData.min,
@@ -39,7 +39,7 @@ interface FormDataUndefined {
 
 async function generateImageUndefinedAPI(formData: FormDataUndefined): Promise<any> {
     try {
-        return await axios.get(`${backendUrl}api/generate_image_undefined/`, {
+        return await axios.get(`${backendUrl}api/generate/generate_image_undefined/`, {
             params: {
                 description: formData.description,
                 character: formData.character,
@@ -59,7 +59,7 @@ interface FormImg2Img {
 }
 async function generateImage2ImgAPI(formData: FormImg2Img): Promise<any> {
     try {
-        return await axios.get(`${backendUrl}/api/generate_image_to_image/`, {
+        return await axios.get(`${backendUrl}/api/generate/generate_image_to_image/`, {
             params: {
                 url: formData.url,
                 prompt: formData.prompt,

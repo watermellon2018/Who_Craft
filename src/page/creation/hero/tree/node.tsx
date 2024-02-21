@@ -27,7 +27,7 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
     };
 
     const handleDelete = async () => {
-        const idNodeToDel: string = node.id
+        const idNodeToDel: string = node.data.id
 
         const response = await deleteCharacterFromTree(idNodeToDel);
         if(response.status !== 200)
