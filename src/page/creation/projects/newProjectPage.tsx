@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import HeaderComponent from "../../main/header";
+import { useNavigate } from 'react-router-dom';
 
-import { Input, Button, Select, Upload, message } from 'antd';
+import {Input, Button, Select, Upload, message, Tooltip, notification} from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -14,77 +15,49 @@ interface Genre {
     value: string;
 }
 
-const audienceOptions = ['Дети', 'Подростки', 'Молодежь', 'Взрослые', 'Пожилые люди'];
-const allAudienceOption = 'Все';
-import { Tag } from 'antd';
+
 import {get_all_genres} from "../../../api/projects/properties/genres";
-const AudienceSelect: React.FC = () => {
-    const [selectedAudience, setSelectedAudience] = useState<string[]>([]);
+import AudienceSelect from "./selectAudience";
+import {create_new_project} from "../../../api/projects/properties/project";
+import withAuth from "../../../utils/auth/check_auth";
 
-
-    const handleAudienceClick = (audience: string) => {
-        if (audience === allAudienceOption) {
-            setSelectedAudience(selectedAudience.length === audienceOptions.length ? [] : audienceOptions);
-        } else {
-            setSelectedAudience((prevSelectedAudience) => {
-                if (prevSelectedAudience.includes(audience)) {
-                    return prevSelectedAudience.filter((item) => item !== audience);
-                } else {
-                    return [...prevSelectedAudience, audience];
-                }
-            });
-        }
-    };
-
-
-
-    return (
-        <div>
-            <Tag.CheckableTag
-                checked={selectedAudience.length === audienceOptions.length}
-                onChange={() => handleAudienceClick(allAudienceOption)}
-            >
-                {allAudienceOption}
-            </Tag.CheckableTag>
-            {audienceOptions.map((audience) => (
-
-                <Tag.CheckableTag
-                    key={audience}
-                    checked={selectedAudience.includes(audience)}
-                    onChange={() => handleAudienceClick(audience)}
-                >
-                    {audience}
-                </Tag.CheckableTag>
-            ))}
-        </div>
-    );
-};
+// TODO:: its for testing
+const BOTTOM_LEN_ANNOT = 0 // 300
+const UP_LEN_ANNOT = 800
+const BOTTOM_LEN_DESC = 0 //700
+const UP_LEN_DESC = 2000
 
 export const ProjectCreatePage = () => {
-    const [genres, setGenres] = useState<Genre[]>([]);
+    const navigate = useNavigate();
+
+    const [image, setImage] = useState<File>();
+
+
 
     const handleUpload = (file: File) => {
-        // Логика обработки загруженного файла
-        console.log('Загружен файл:', file);
+        setImage(file);
         message.success('Постер успешно загружен');
     };
 
+    const [genresList, setGenresList] = useState<Genre[]>([]);
+
     const [title, setTitle] = useState<string>('');
-    const [description, setDescription] = useState<string>('');
+    const [genre, setGenre] = useState<string[] | undefined>(undefined);
     const [format, setFormat] = useState<string>('');
-    const [audience, setAudience] = useState<string>('');
+    const [annotation, setAnnotation] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [selectedAudience, setSelectedAudience] = useState<string[]>([]);
 
-    const [genre, setGenre] = useState<string | undefined>(undefined);
+    const [errorTitle, setErrorTitle] = useState<boolean>(false);
+    const [errorDesc, setErrorDesc] = useState<boolean>(false);
+    const [errorAnnot, setErrorAnnot] = useState<boolean>(false);
 
-    const handleChange = (value: string) => {
-        setGenre(value);
-    };
 
     useEffect(() => {
         const fetchGenres = async () => {
             try {
                 const response = await get_all_genres();
-                setGenres(response.data);
+                setGenresList(response.data);
             } catch (error) {
                 console.error('Ошибка при получении списка жанров:', error);
             }
@@ -93,6 +66,95 @@ export const ProjectCreatePage = () => {
         fetchGenres();
     }, []);
 
+    const openNotificationWithIcon = (mes: string) => {
+        notification['error']({
+            message: 'Ошибка в заполнении',
+            description: mes,
+        });
+    };
+
+    const createHandle = async (event: any) => {
+
+        event.preventDefault();
+        if (!title) {
+            setErrorTitle(true);
+            openNotificationWithIcon('Поле "Название" обязательно для заполнения');
+            return;
+        }
+
+        if (!genre) {
+            openNotificationWithIcon('Выберите жанры');
+            return;
+        }
+
+        if (!annotation || annotation.length < BOTTOM_LEN_ANNOT) {
+            setErrorAnnot(true);
+            openNotificationWithIcon('Поле "Аннотации" должно содержать не менее' + BOTTOM_LEN_ANNOT+' символов');
+            return;
+        }
+        if (!annotation || annotation.length > UP_LEN_ANNOT) {
+            setErrorAnnot(true);
+            openNotificationWithIcon('Поле "Аннотации" должно содержать не более'+ UP_LEN_ANNOT +' символов');
+            return;
+        }
+        if (!description || description.length < BOTTOM_LEN_DESC) {
+            setErrorDesc(true);
+            openNotificationWithIcon('Поле "Синопсис" должно содержать не менее' + BOTTOM_LEN_DESC +' символов');
+            return;
+        }
+        if (!description || description.length > UP_LEN_ANNOT) {
+            setErrorDesc(true);
+            openNotificationWithIcon('Поле "Синопсис" должно содержать не более' + UP_LEN_DESC + ' символов');
+            return;
+        }
+        if (selectedAudience.length == 0) {
+            openNotificationWithIcon('Выберите целевую аудиторию');
+            return;
+        }
+
+
+        // оправим новый проект на бэк пусть создаться
+        const data = {
+            'genre': genre,
+            'format': format,
+            'title': title,
+            'desc': description,
+            'annot': annotation,
+            'audience': selectedAudience,
+            'image': image,
+        };
+
+        try {
+            const response = await create_new_project(data);
+            if(response.status == 200){
+                openNotificationWithIcon('Проект успешно создался!');
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Ошибка при получении списка жанров:', error);
+        }
+    };
+
+    const handleAnnotationsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setAnnotation(e.target.value);
+        const len = e.target.value.length;
+        if (len >= BOTTOM_LEN_ANNOT && len <= UP_LEN_ANNOT) {
+            setErrorAnnot(false);
+        }
+    };
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescription(e.target.value);
+        const len = e.target.value.length;
+        if (len >= BOTTOM_LEN_DESC && len <= UP_LEN_DESC) {
+            setErrorDesc(false);
+        }
+    };
+
+    const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.target.value);
+        setErrorTitle(false);
+    };
 
 
     return (
@@ -126,8 +188,8 @@ export const ProjectCreatePage = () => {
                                     <Input
                                         placeholder="Введите название"
                                         value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
-                                        style={{ marginBottom: '10px', maxWidth: '300px' }}
+                                        onChange={handleTitle}
+                                        style={{ marginBottom: '10px', maxWidth: '300px', borderColor: errorTitle ? 'red' : ''  }}
                                     />
                                     <h3 className="text-xl mb-2">Формат</h3>
                                     <Select
@@ -148,10 +210,10 @@ export const ProjectCreatePage = () => {
                                         tokenSeparators={[',']}
                                         allowClear
                                         value={genre}
-                                        onChange={handleChange}
+                                        onChange={setGenre}
                                         style={{ marginBottom: '10px', maxWidth: '300px', width: '-webkit-fill-available' }}
                                     >
-                                        {genres.map(genre => (
+                                        {genresList.map(genre => (
                                             <Option key={genre.key} value={genre.value}>{genre.name}</Option>
                                         ))}
 
@@ -159,7 +221,8 @@ export const ProjectCreatePage = () => {
                                 </div>
                                 <div>
                                     <h3 className="text-xl mb-2">Целевая аудитория</h3>
-                                    <AudienceSelect />
+                                    <AudienceSelect selectedAudience={selectedAudience}
+                                                    setSelectedAudience={setSelectedAudience} />
                                 </div>
                             </div>
                         </div>
@@ -172,9 +235,9 @@ export const ProjectCreatePage = () => {
                                         rows={4}
                                         maxLength={800}
                                         minLength={300}
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        style={{ marginBottom: '10px',  }}
+                                        value={annotation}
+                                        onChange={handleAnnotationsChange}
+                                        style={{ marginBottom: '10px', borderColor: errorAnnot ? 'red' : '' }}
                                     />
                                 </div>
                                 <div>
@@ -184,13 +247,17 @@ export const ProjectCreatePage = () => {
                                         minLength={700}
                                         maxLength={2000}
                                         value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        style={{ marginBottom: '10px'}}
+                                        onChange={handleDescriptionChange}
+                                        style={{ marginBottom: '10px', borderColor: errorDesc ? 'red' : '' }}
                                     />
                                 </div>
                                 <div></div>
-                                <Button type="primary" style={{ marginTop: '10px' }}>
-                                    Сохранить
+                                <Button
+                                    type="primary"
+                                    onClick={createHandle}
+                                    style={{ marginTop: '10px' }}
+                                >
+                                    Создать
                                 </Button>
                             </div>
                         </div>
@@ -207,5 +274,5 @@ export const ProjectCreatePage = () => {
     );
 }
 
-export default ProjectCreatePage;
+export default withAuth(ProjectCreatePage);
 
