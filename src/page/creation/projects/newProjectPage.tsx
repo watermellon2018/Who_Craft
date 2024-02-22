@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HeaderComponent from "../../main/header";
 
 import { Input, Button, Select, Upload, message } from 'antd';
@@ -8,12 +8,19 @@ const { Option } = Select;
 const { Dragger } = Upload;
 // import './main.css'
 
+interface Genre {
+    key: string;
+    name: string;
+    value: string;
+}
 
 const audienceOptions = ['Дети', 'Подростки', 'Молодежь', 'Взрослые', 'Пожилые люди'];
 const allAudienceOption = 'Все';
 import { Tag } from 'antd';
+import {get_all_genres} from "../../../api/projects/properties/genres";
 const AudienceSelect: React.FC = () => {
     const [selectedAudience, setSelectedAudience] = useState<string[]>([]);
+
 
     const handleAudienceClick = (audience: string) => {
         if (audience === allAudienceOption) {
@@ -29,6 +36,8 @@ const AudienceSelect: React.FC = () => {
         }
     };
 
+
+
     return (
         <div>
             <Tag.CheckableTag
@@ -38,6 +47,7 @@ const AudienceSelect: React.FC = () => {
                 {allAudienceOption}
             </Tag.CheckableTag>
             {audienceOptions.map((audience) => (
+
                 <Tag.CheckableTag
                     key={audience}
                     checked={selectedAudience.includes(audience)}
@@ -51,6 +61,7 @@ const AudienceSelect: React.FC = () => {
 };
 
 export const ProjectCreatePage = () => {
+    const [genres, setGenres] = useState<Genre[]>([]);
 
     const handleUpload = (file: File) => {
         // Логика обработки загруженного файла
@@ -68,6 +79,21 @@ export const ProjectCreatePage = () => {
     const handleChange = (value: string) => {
         setGenre(value);
     };
+
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const response = await get_all_genres();
+                setGenres(response.data);
+            } catch (error) {
+                console.error('Ошибка при получении списка жанров:', error);
+            }
+        };
+
+        fetchGenres();
+    }, []);
+
+
 
     return (
         <>
@@ -105,13 +131,13 @@ export const ProjectCreatePage = () => {
                                     />
                                     <h3 className="text-xl mb-2">Формат</h3>
                                     <Select
-                                        placeholder="Формат"
-                                        value={format}
+                                        placeholder="Выберите формат"
+                                        defaultValue="full-movie"
                                         onChange={(value) => setFormat(value)}
                                         style={{ marginBottom: '10px', maxWidth: '300px', width: '-webkit-fill-available' }}
                                     >
-                                        <Option value="full">Полнометражный фильм</Option>
-                                        <Option value="short">Короткометражный фильм</Option>
+                                        <Option value="full-movie">Полнометражный фильм</Option>
+                                        <Option value="short-movie">Короткометражка</Option>
                                         <Option value="series">Сериал</Option>
                                         <Option value="marketing">Реклама</Option>
                                     </Select>
@@ -125,10 +151,10 @@ export const ProjectCreatePage = () => {
                                         onChange={handleChange}
                                         style={{ marginBottom: '10px', maxWidth: '300px', width: '-webkit-fill-available' }}
                                     >
-                                        <Option value="action">Боевик</Option>
-                                        <Option value="comedy">Комедия</Option>
-                                        <Option value="drama">Драма</Option>
-                                        {/* Другие варианты жанров */}
+                                        {genres.map(genre => (
+                                            <Option key={genre.key} value={genre.value}>{genre.name}</Option>
+                                        ))}
+
                                     </Select>
                                 </div>
                                 <div>
