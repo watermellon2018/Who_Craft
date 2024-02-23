@@ -9,7 +9,7 @@ interface ProjectI {
     desc: string;
     annot: string;
     audience: string[];
-    image: File | undefined;
+    image: any;
 }
 
 async function create_new_project(data: ProjectI): Promise<any> {
@@ -17,6 +17,10 @@ async function create_new_project(data: ProjectI): Promise<any> {
         return await axios.post(`${backendUrl}/api/projects/create/`, {
             data: {
                 ...data
+            },
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
             }
         });
     } catch (error) {

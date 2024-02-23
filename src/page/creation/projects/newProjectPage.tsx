@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import {Input, Button, Select, Upload, message, Tooltip, notification} from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
+import type { UploadFile, UploadProps } from 'antd';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -31,10 +32,13 @@ export const ProjectCreatePage = () => {
     const navigate = useNavigate();
 
     const [image, setImage] = useState<File>();
+    const [imageUrl, setImageUrl] = useState<string>();
 
 
 
-    const handleUpload = (file: File) => {
+    const handleUpload = (file: any) => {
+        // file = file.file;
+        // console.log(file)
         setImage(file);
         message.success('Постер успешно загружен');
     };
@@ -43,7 +47,7 @@ export const ProjectCreatePage = () => {
 
     const [title, setTitle] = useState<string>('');
     const [genre, setGenre] = useState<string[] | undefined>(undefined);
-    const [format, setFormat] = useState<string>('');
+    const [format, setFormat] = useState<string>('full-movie');
     const [annotation, setAnnotation] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [selectedAudience, setSelectedAudience] = useState<string[]>([]);
@@ -66,10 +70,12 @@ export const ProjectCreatePage = () => {
         fetchGenres();
     }, []);
 
-    const openNotificationWithIcon = (mes: string) => {
-        notification['error']({
-            message: 'Ошибка в заполнении',
-            description: mes,
+    const openNotificationWithIcon = (desc: React.ReactNode,
+                                      mes: React.ReactNode = "Ошибка в заполнении",
+                                      type: 'success' | 'info' | 'error' | 'warning' ='error') => {
+        notification[type]({
+            message: mes,
+            description: desc,
         });
     };
 
@@ -121,14 +127,16 @@ export const ProjectCreatePage = () => {
             'desc': description,
             'annot': annotation,
             'audience': selectedAudience,
-            'image': image,
+            'image': imageUrl,
         };
 
         try {
             const response = await create_new_project(data);
             if(response.status == 200){
-                openNotificationWithIcon('Проект успешно создался!');
-                navigate('/');
+                openNotificationWithIcon('Проект успешно создался!',
+                                        'Ура!',
+                                        'success');
+                // navigate('/');
             }
         } catch (error) {
             console.error('Ошибка при получении списка жанров:', error);
@@ -156,6 +164,42 @@ export const ProjectCreatePage = () => {
         setErrorTitle(false);
     };
 
+    const beforeUpload = (file: any) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            message.error('You can only upload JPG/PNG file!');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error('Image must smaller than 2MB!');
+        }
+        return isJpgOrPng && isLt2M;
+    };
+
+
+
+    const getBase64 = (img: any, callback: (url: string) => void) => {
+        // console.log(img);
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result as string));
+        reader.readAsDataURL(img);
+    };
+    // const [loading, setLoading] = useState(false);
+
+    const handleChange: UploadProps['onChange'] = (info) => {
+        // console.log(info.file);
+        // if (info.file.status === 'uploading') {
+        //     setLoading(true);
+        //     return;
+        // }
+        // if (info.file.status === 'done') { // originFileObj
+            // Get this url from response in real world.
+        getBase64(info.file, (url) => {
+            // setLoading(false);
+            setImageUrl(url);
+        });
+        // }
+    }
 
     return (
         <>
@@ -165,17 +209,27 @@ export const ProjectCreatePage = () => {
                 <div className="grid grid-cols-3 gap-4">
                     <div className="col-span-1">
                         <Dragger
+                            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                            listType='picture-card'
+                            showUploadList={false}
+                            onChange={handleChange}
                             accept=".jpg,.png"
                             beforeUpload={(file) => {
                                 handleUpload(file);
+                                beforeUpload(file); // display
                                 return false;
                             }}
                             className="w-full h-auto mb-4"
                         >
+                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+                                :
+                                <>
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
                             </p>
                             <p className="ant-upload-text">Нажмите или перетащите файл сюда для загрузки постера</p>
+                                    </>
+                            }
                         </Dragger>
 
                     </div>
