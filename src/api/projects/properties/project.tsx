@@ -39,5 +39,20 @@ async function get_all_list_projects(): Promise<any> {
 
 }
 
+async function delete_project_by_id(id: string): Promise<any> {
+    try {
+        return await axios.get(`${backendUrl}/api/projects/delete-project-by-id/`, {
+            params: {
+                "id": id,
+            }
+        });
+    } catch (error) {
+        console.error('Error creating project:', error);
+    }
+
+}
+
 export { create_new_project,
-    get_all_list_projects}
+    get_all_list_projects,
+    delete_project_by_id
+}

@@ -4,10 +4,12 @@ import withAuth from "../../../../utils/auth/check_auth";
 import HeaderComponent from "../../../main/header";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './style.css';
-import {get_all_list_projects} from "../../../../api/projects/properties/project";
+import {delete_project_by_id, get_all_list_projects} from "../../../../api/projects/properties/project";
+import {useNavigate} from "react-router-dom";
 
 
 interface ProjectCard {
+    id: string;
     src: string;
     title: string
 }
@@ -18,10 +20,8 @@ const ProjectListPage = () => {
         const getAllProjects = async () => {
             try {
                 const response: any = await get_all_list_projects();
-                // setProjectList(response.data);
-                console.log(response.data);
-                // const src = 'data:image/jpeg;base64,' + proj.image;
                 const ar = response.data.map((proj:ProjectCard) => ({
+                    id: proj.id,
                     src: proj.src ? 'data:image/jpeg;base64,' + proj.src : 'https://placehold.co/195x147',
                     title: proj.title,
                 }));
@@ -34,6 +34,22 @@ const ProjectListPage = () => {
 
         getAllProjects();
     }, []);
+
+    const deleteProject = async (id: string) => {
+
+        try {
+            const response = await delete_project_by_id(id);
+            const updatedList = projectsList.filter(project => project.id !== id);
+            setProjectList(updatedList);
+        } catch (error) {
+            console.error('Ошибка при получении списка проектов:', error);
+            setProjectList([]);
+        }
+    }
+    const navigate = useNavigate();
+    const editProject = () => {
+        navigate('/')
+    }
 
     return (
         <>
@@ -53,8 +69,8 @@ const ProjectListPage = () => {
                                          alt={`Poster movie ${index + 1}`}
                                           />
                                     <div className="text-right absolute top-0 right-0">
-                                        <EditOutlined className="text-white text-xl p-2" />
-                                        <DeleteOutlined className="text-white text-xl p-2" />
+                                        <EditOutlined onClick={editProject} className="text-white text-xl p-2" />
+                                        <DeleteOutlined onClick={() => deleteProject(project.id)} className="text-white text-xl p-2" />
                                     </div>
                                 </>
                                 }
