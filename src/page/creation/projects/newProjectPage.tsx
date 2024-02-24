@@ -136,7 +136,7 @@ export const ProjectCreatePage = () => {
                 openNotificationWithIcon('Проект успешно создался!',
                                         'Ура!',
                                         'success');
-                // navigate('/');
+                navigate('/project-list');
             }
         } catch (error) {
             console.error('Ошибка при получении списка жанров:', error);

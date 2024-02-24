@@ -1,0 +1,7 @@
+.bottom-card {
+    background-color: transparent;
+    border: none;
+}
+.ant-card-body {
+    padding: 6px 3px !important;
+}
