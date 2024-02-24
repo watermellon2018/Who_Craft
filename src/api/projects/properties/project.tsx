@@ -29,4 +29,15 @@ async function create_new_project(data: ProjectI): Promise<any> {
 
 }
 
-export { create_new_project }
+async function get_all_list_projects(): Promise<any> {
+    try {
+        return await axios.get(`${backendUrl}/api/projects/get-list-projects/`, {
+        });
+    } catch (error) {
+        console.error('Error creating project:', error);
+    }
+
+}
+
+export { create_new_project,
+    get_all_list_projects}

@@ -4,6 +4,7 @@ import withAuth from "../../../../utils/auth/check_auth";
 import HeaderComponent from "../../../main/header";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './style.css';
+import {get_all_list_projects} from "../../../../api/projects/properties/project";
 
 
 interface ProjectCard {
@@ -14,12 +15,24 @@ const ProjectListPage = () => {
     const [projectsList, setProjectList] = useState<ProjectCard[]>([]);
 
     useEffect(() => {
-        const ar = Array.from({ length: 6 }).map((_, index) => ({
-            src: 'https://placehold.co/200x300',
-            title: 'www.instagram.com',
-        }));
+        const getAllProjects = async () => {
+            try {
+                const response: any = await get_all_list_projects();
+                // setProjectList(response.data);
+                console.log(response.data);
+                // const src = 'data:image/jpeg;base64,' + proj.image;
+                const ar = response.data.map((proj:ProjectCard) => ({
+                    src: proj.src ? 'data:image/jpeg;base64,' + proj.src : 'https://placehold.co/195x147',
+                    title: proj.title,
+                }));
+                setProjectList(ar);
+        } catch (error) {
+                console.error('Ошибка при получении списка проектов:', error);
+                setProjectList([]);
+            }
+        };
 
-        setProjectList(ar);
+        getAllProjects();
     }, []);
 
     return (
