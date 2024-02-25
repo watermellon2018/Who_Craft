@@ -26,7 +26,6 @@ export const GenerationHeroPage = () => {
 
     useEffect(() => {
         const getCharacters = async () => {
-            // Вызываем функцию для получения данных при загрузке компонента
             const response = await get_all_character_for_project();
             const data = response.data;
             setData(data);
@@ -77,11 +76,8 @@ export const GenerationHeroPage = () => {
 
                     {/* TODO:: в отдельный компонент вынести */}
                     <Sider  collapsible={false} onDoubleClick={toggleCollapsed} theme="dark"
-                            className="h-screen flex flex-col pt-4 pl-3 pb-5"
+                            className="h-screen flex flex-col select-none pt-4 pl-3 pr-1 pb-5"
                             collapsed={collapsed}
-                            style={{userSelect: 'none', display: 'flex',
-                                flexDirection: 'column',
-                               }}
                     >
                         <div className="folderFileActions">
                             <CreaterWrapper treeRef={treeRef}/>
@@ -89,7 +85,7 @@ export const GenerationHeroPage = () => {
                         <Tree
                             key='tree_characters'
                             height={600}
-                            className='tree'
+                            className='tree sidebar-container'
                             initialData={data}
                             ref={treeRef}>
                             {({ node, style, dragHandle, tree }) => (
@@ -102,7 +98,7 @@ export const GenerationHeroPage = () => {
 
                 <Layout>
 
-                    <Content style={{ margin: '0 16px'}} className="flex">
+                    <Content className="flex m-0 16px">
                         <div className="flex-grow p-5">
                             <div className="h-full w-full flex items-center justify-center">
                                 {isGenerated ?
