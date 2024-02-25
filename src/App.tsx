@@ -9,6 +9,8 @@ import LandingPage from "./page/logIn/start";
 import RegistrationPage from "./page/logIn/register";
 import LoginPage from "./page/logIn/login";
 import ProfilePage from "./page/profile/user";
+import ProjectCreatePage from "./page/creation/projects/newProjectPage";
+import ProjectListPage from "./page/movie/library/own/list";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -94,6 +96,8 @@ function App() {
                   <Route path="/" element={<MainPage />} />
                   <Route path="/generating" element={<GenerationHeroPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/create-project" element={<ProjectCreatePage />} />
+                  <Route path="/project-list" element={<ProjectListPage />} />
               </Routes>
           </BrowserRouter>
       </ConfigProvider>
