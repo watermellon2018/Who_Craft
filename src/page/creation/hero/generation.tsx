@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Empty, Layout, Spin} from 'antd';
+import {Button, Empty, Layout, Spin} from 'antd';
 import NodeTree from './tree/node';
 import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
 
@@ -106,9 +106,16 @@ export const GenerationHeroPage = () => {
 
                     <Content className="flex m-0 16px">
                         <div className="flex-grow p-5">
+                            <div className='flex justify-between'>
                                 <p style={{color: 'white', position: "relative"}}>
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
+                                {imageGeneratedUrl ?
+                                <Button>Сохранить</Button> :
+                                    <></>
+                                }
+                            </div>
+
                             <div className="h-full w-full flex items-center justify-center">
 
                                 {imageGeneratedUrl == '' ?
