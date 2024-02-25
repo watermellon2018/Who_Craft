@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import HeaderComponent from "../../main/header";
 import { useNavigate } from 'react-router-dom';
 
-import {Input, Button, Select, Upload, message, Tooltip, notification} from 'antd';
+import {Input, Button, Select, Upload, message, notification} from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import type { UploadFile, UploadProps } from 'antd';
+import type { UploadProps } from 'antd';
 
 const { Option } = Select;
 const { Dragger } = Upload;
-// import './main.css'
 
 interface Genre {
     key: string;
@@ -23,7 +22,7 @@ import {create_new_project} from "../../../api/projects/properties/project";
 import withAuth from "../../../utils/auth/check_auth";
 
 // TODO:: its for testing
-const BOTTOM_LEN_ANNOT = 0 // 300
+const BOTTOM_LEN_ANNOT = 0 // 300 # TODO: заглушка
 const UP_LEN_ANNOT = 800
 const BOTTOM_LEN_DESC = 0 //700
 const UP_LEN_DESC = 2000
@@ -31,26 +30,15 @@ const UP_LEN_DESC = 2000
 export const ProjectCreatePage = () => {
     const navigate = useNavigate();
 
-    const [image, setImage] = useState<File>();
-    const [imageUrl, setImageUrl] = useState<string>();
-
-
-
-    const handleUpload = (file: any) => {
-        // file = file.file;
-        // console.log(file)
-        setImage(file);
-        message.success('Постер успешно загружен');
-    };
-
     const [genresList, setGenresList] = useState<Genre[]>([]);
 
+    const [imageUrl, setImageUrl] = useState<string>();
     const [title, setTitle] = useState<string>('');
     const [genre, setGenre] = useState<string[] | undefined>(undefined);
     const [format, setFormat] = useState<string>('full-movie');
+    const [selectedAudience, setSelectedAudience] = useState<string[]>([]);
     const [annotation, setAnnotation] = useState<string>('');
     const [description, setDescription] = useState<string>('');
-    const [selectedAudience, setSelectedAudience] = useState<string[]>([]);
 
     const [errorTitle, setErrorTitle] = useState<boolean>(false);
     const [errorDesc, setErrorDesc] = useState<boolean>(false);
@@ -118,8 +106,6 @@ export const ProjectCreatePage = () => {
             return;
         }
 
-
-        // оправим новый проект на бэк пусть создаться
         const data = {
             'genre': genre,
             'format': format,
@@ -179,26 +165,15 @@ export const ProjectCreatePage = () => {
 
 
     const getBase64 = (img: any, callback: (url: string) => void) => {
-        // console.log(img);
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result as string));
         reader.readAsDataURL(img);
     };
-    // const [loading, setLoading] = useState(false);
 
     const handleChange: UploadProps['onChange'] = (info) => {
-        // console.log(info.file);
-        // if (info.file.status === 'uploading') {
-        //     setLoading(true);
-        //     return;
-        // }
-        // if (info.file.status === 'done') { // originFileObj
-            // Get this url from response in real world.
         getBase64(info.file, (url) => {
-            // setLoading(false);
             setImageUrl(url);
         });
-        // }
     }
 
     return (
@@ -215,19 +190,21 @@ export const ProjectCreatePage = () => {
                             onChange={handleChange}
                             accept=".jpg,.png"
                             beforeUpload={(file) => {
-                                handleUpload(file);
-                                beforeUpload(file); // display
+                                beforeUpload(file);
                                 return false;
                             }}
                             className="w-full h-auto mb-4"
                         >
-                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+                            {imageUrl ?
+                                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
                                 :
                                 <>
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
                             </p>
-                            <p className="ant-upload-text">Нажмите или перетащите файл сюда для загрузки постера</p>
+                            <p className="ant-upload-text">
+                                Нажмите или перетащите файл сюда для загрузки постера
+                            </p>
                                     </>
                             }
                         </Dragger>
@@ -240,17 +217,19 @@ export const ProjectCreatePage = () => {
                                 <div>
                                     <h3 className="text-xl mb-2">Название</h3>
                                     <Input
+                                        className="mb-10 max-w-300"
                                         placeholder="Введите название"
                                         value={title}
                                         onChange={handleTitle}
-                                        style={{ marginBottom: '10px', maxWidth: '300px', borderColor: errorTitle ? 'red' : ''  }}
+                                        style={{ borderColor: errorTitle ? 'red' : ''  }}
                                     />
                                     <h3 className="text-xl mb-2">Формат</h3>
                                     <Select
                                         placeholder="Выберите формат"
                                         defaultValue="full-movie"
                                         onChange={(value) => setFormat(value)}
-                                        style={{ marginBottom: '10px', maxWidth: '300px', width: '-webkit-fill-available' }}
+                                        className="mb-10 max-w-300"
+                                        style={{ width: '-webkit-fill-available' }}
                                     >
                                         <Option value="full-movie">Полнометражный фильм</Option>
                                         <Option value="short-movie">Короткометражка</Option>
@@ -265,7 +244,8 @@ export const ProjectCreatePage = () => {
                                         allowClear
                                         value={genre}
                                         onChange={setGenre}
-                                        style={{ marginBottom: '10px', maxWidth: '300px', width: '-webkit-fill-available' }}
+                                        className="mb-10 max-w-300"
+                                        style={{ width: '-webkit-fill-available' }}
                                     >
                                         {genresList.map(genre => (
                                             <Option key={genre.key} value={genre.value}>{genre.name}</Option>
@@ -291,7 +271,8 @@ export const ProjectCreatePage = () => {
                                         minLength={300}
                                         value={annotation}
                                         onChange={handleAnnotationsChange}
-                                        style={{ marginBottom: '10px', borderColor: errorAnnot ? 'red' : '' }}
+                                        className="mb-10"
+                                        style={{ borderColor: errorAnnot ? 'red' : '' }}
                                     />
                                 </div>
                                 <div>
@@ -302,14 +283,15 @@ export const ProjectCreatePage = () => {
                                         maxLength={2000}
                                         value={description}
                                         onChange={handleDescriptionChange}
-                                        style={{ marginBottom: '10px', borderColor: errorDesc ? 'red' : '' }}
+                                        className="mb-10"
+                                        style={{ borderColor: errorDesc ? 'red' : '' }}
                                     />
                                 </div>
                                 <div></div>
                                 <Button
                                     type="primary"
                                     onClick={createHandle}
-                                    style={{ marginTop: '10px' }}
+                                    className="mt-10"
                                 >
                                     Создать
                                 </Button>

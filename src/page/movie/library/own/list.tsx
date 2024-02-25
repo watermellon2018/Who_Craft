@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Space , Card } from 'antd';
+import { Card } from 'antd';
 import withAuth from "../../../../utils/auth/check_auth";
 import HeaderComponent from "../../../main/header";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -20,6 +20,7 @@ const ProjectListPage = () => {
         const getAllProjects = async () => {
             try {
                 const response: any = await get_all_list_projects();
+
                 const ar = response.data.map((proj:ProjectCard) => ({
                     id: proj.id,
                     src: proj.src ? 'data:image/jpeg;base64,' + proj.src : 'https://placehold.co/195x147',
@@ -38,7 +39,7 @@ const ProjectListPage = () => {
     const deleteProject = async (id: string) => {
 
         try {
-            const response = await delete_project_by_id(id);
+            await delete_project_by_id(id);
             const updatedList = projectsList.filter(project => project.id !== id);
             setProjectList(updatedList);
         } catch (error) {
