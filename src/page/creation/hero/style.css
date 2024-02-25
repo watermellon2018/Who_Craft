@@ -15,3 +15,30 @@
     overflow: hidden; /* Чтобы скрыть превышающее содержимое */
     text-overflow: ellipsis; /* Отображение многоточия в случае обрезки */
 }
+
+.sidebar-container {
+    overflow-x: auto;
+    white-space: nowrap;
+
+    width: 250px;
+
+}
+
+.sidebar-container > .tree{
+    display: flex;
+    overflow-x: auto;
+}
+
+
+.sidebar-container::-webkit-scrollbar {
+    height: 3px;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 1px;
+}
+
+.sidebar-container::-webkit-scrollbar-track {
+    background-color: transparent;
+}
