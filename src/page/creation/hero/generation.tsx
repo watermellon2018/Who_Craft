@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Layout, Spin} from 'antd';
+import {Empty, Layout, Spin} from 'antd';
 import NodeTree from './tree/node';
 import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
 
@@ -22,12 +22,14 @@ export const GenerationHeroPage = () => {
     const treeRef = useRef(null);
 
     const [data, setData] = useState();
+    const [curCharacter, setCurCharacter] = useState<{id: string, name: string}>({id: '', name: ''});
 
 
     useEffect(() => {
         const getCharacters = async () => {
             const response = await get_all_character_for_project();
             const data = response.data;
+            console.log(data);
             setData(data);
         };
 
@@ -63,8 +65,6 @@ export const GenerationHeroPage = () => {
         setImageGeneratedUrl(imageUrl);
         setIsGenerated(true);
     };
-
-
     return (
 
         <Layout style={{ minHeight: '100vh' }}>
@@ -78,6 +78,7 @@ export const GenerationHeroPage = () => {
                     <Sider  collapsible={false} onDoubleClick={toggleCollapsed} theme="dark"
                             className="h-screen flex flex-col select-none pt-4 pl-3 pr-1 pb-5"
                             collapsed={collapsed}
+                            style={{height: '100%'}}
                     >
                         <div className="folderFileActions">
                             <CreaterWrapper treeRef={treeRef}/>
@@ -89,7 +90,12 @@ export const GenerationHeroPage = () => {
                             initialData={data}
                             ref={treeRef}>
                             {({ node, style, dragHandle, tree }) => (
-                                <NodeTree node={node} style={style} dragHandle={dragHandle} tree={tree} />
+                                <NodeTree node={node}
+                                          style={style}
+                                          dragHandle={dragHandle}
+                                          tree={tree}
+                                          setCurCharacter={setCurCharacter}
+                                />
                             )}
                         </Tree>
 
@@ -100,11 +106,21 @@ export const GenerationHeroPage = () => {
 
                     <Content className="flex m-0 16px">
                         <div className="flex-grow p-5">
+                                <p style={{color: 'white', position: "relative"}}>
+                                    Текущий персонаж: {curCharacter['name']}
+                                </p>
                             <div className="h-full w-full flex items-center justify-center">
-                                {isGenerated ?
+
+                                {imageGeneratedUrl == '' ?
+                                <Empty description='Персонаж не сгенерирован'
+                                       className='text-yellow'
+                                       image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
+                                isGenerated ?
                                     <ImageCanvas imageUrl={imageGeneratedUrl} /> :
                                     <Spin />
+
                                 }
+
                             </div>
                         </div>
 

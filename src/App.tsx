@@ -81,6 +81,10 @@ const theme = {
         "Form": {
             "labelColor": "rgb(27, 29, 34)",
         },
+        "Empty": {
+            "colorText": "#fab005",
+            "colorTextDisabled": "#fab005",
+        }
     }
 }
 function App() {

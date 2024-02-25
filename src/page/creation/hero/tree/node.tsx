@@ -17,14 +17,27 @@ interface NodeProps {
     style: React.CSSProperties;
     dragHandle?: ((el: (HTMLDivElement | null)) => void) | undefined;
     tree: TreeApi<any>; // тип дерева можно заменить на конкретный, если известен
+    setCurCharacter: (el: {id: string, name: string }) => void;
 }
 
-const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
+const NodeTree: React.FC<NodeProps> = ({ node,
+                                           style,
+                                           dragHandle,
+                                           tree,
+                                           setCurCharacter
+}) => {
     const handleClick = () => {
         if (node.isInternal) {
             node.toggle()
         }
+
+        // скажем страницы, что сейчас мы на этом персонаже
+        if (node.data.name !== ''){
+            setCurCharacter({'id': node.data.id,
+                                'name': node.data.name});
+        }
     };
+
 
     const handleDelete = async () => {
         const idNodeToDel: string = node.data.id
@@ -51,9 +64,14 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
     }
 
     return (
-        <div className="node-container flex justify-between" style={style} ref={dragHandle}>
-            <div className="node-content"
+        <div
+             className={`flex justify-between node-container ${node.state.isSelected ? "bg-blue-100 bg-opacity-10" : ""}`}
+             style={style}
+             ref={dragHandle}>
+            <div
+                className="node-content"
                  onClick={handleClick}
+                 // onFocus={handleSelect}
             >
                 {node.isLeaf ? (
                     <>

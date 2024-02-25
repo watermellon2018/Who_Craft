@@ -16,6 +16,9 @@ const CreaterWrapper = (treeRef: any) => {
     const getNewID = () => {
         const idToIndex = treeRef.treeRef.current.idToIndex
         const ids = Object.keys(idToIndex).map(Number);
+        if(ids.length == 0)
+            return '0'
+
         const newID: string = (Math.max(...ids) + 1).toString();
 
         return newID
@@ -37,6 +40,8 @@ const CreaterWrapper = (treeRef: any) => {
         });
     };
 
+    // TODO:: добавить, чтобы пустые не создавались, если вдруг мы передумали, а то при удалении
+    // будет ошибка status
     const createCharacter = async (newData: any, type: 'leaf' | 'node') => {
         const parentNode = treeRef.treeRef.current.focusedNode.parent;
         if(parentNode.level !== -1){
@@ -74,6 +79,7 @@ const CreaterWrapper = (treeRef: any) => {
 
         const newData = await setNewID(newID);
         await createCharacter(newData, 'leaf');
+
     };
 
 
