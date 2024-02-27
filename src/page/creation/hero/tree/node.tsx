@@ -65,10 +65,12 @@ const NodeTree: React.FC<NodeProps> = ({ node,
 
     return (
         <div
+             key={'div_block_tree_character_'+node.id}
              className={`flex justify-between node-container ${node.state.isSelected ? "bg-blue-100 bg-opacity-10" : ""}`}
              style={style}
              ref={dragHandle}>
             <div
+                key={'div_content_tree_character_'+node.id}
                 className="node-content"
                  onClick={handleClick}
                  // onFocus={handleSelect}

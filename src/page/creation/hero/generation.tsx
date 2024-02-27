@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect, useMemo} from 'react';
 import {Button, Empty, Layout, Spin} from 'antd';
 import NodeTree from './tree/node';
 import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
@@ -6,7 +6,7 @@ import {get_all_character_for_project} from '../../../api/generation/characters/
 import ImageCanvas from "./canvas";
 import HeaderComponent from '../../main/header'
 import MenuGeneration from "./generationMenu";
-import { Tree } from "react-arborist";
+import {Tree} from "react-arborist";
 import {generateImageAPI,
     generateImageUndefinedAPI,
     generateImage2ImgAPI} from '../../../api/characters'
@@ -24,6 +24,9 @@ export const GenerationHeroPage = () => {
     const [data, setData] = useState();
     const [curCharacter, setCurCharacter] = useState<{id: string, name: string}>({id: '', name: ''});
 
+    const memoizedSetCurCharacter = useMemo(() => {
+        return setCurCharacter;
+    }, []);
 
     useEffect(() => {
         const getCharacters = async () => {
@@ -65,6 +68,8 @@ export const GenerationHeroPage = () => {
         setImageGeneratedUrl(imageUrl);
         setIsGenerated(true);
     };
+
+
     return (
 
         <Layout style={{ minHeight: '100vh' }}>
@@ -94,11 +99,10 @@ export const GenerationHeroPage = () => {
                                           style={style}
                                           dragHandle={dragHandle}
                                           tree={tree}
-                                          setCurCharacter={setCurCharacter}
+                                          setCurCharacter={memoizedSetCurCharacter}
                                 />
                             )}
                         </Tree>
-
                     </Sider>
                 </div>
 
@@ -110,8 +114,11 @@ export const GenerationHeroPage = () => {
                                 <p style={{color: 'white', position: "relative"}}>
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
-                                {imageGeneratedUrl ?
-                                <Button>Сохранить</Button> :
+                                {!imageGeneratedUrl ?
+                                    <div>
+                                        <Button className='mr-5'>Настройки персонажа</Button>
+                                        <Button>Сохранить</Button>
+                                    </div> :
                                     <></>
                                 }
                             </div>
@@ -119,21 +126,23 @@ export const GenerationHeroPage = () => {
                             <div className="h-full w-full flex items-center justify-center">
 
                                 {imageGeneratedUrl == '' ?
-                                <Empty description='Персонаж не сгенерирован'
-                                       className='text-yellow'
-                                       image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
-                                isGenerated ?
-                                    <ImageCanvas imageUrl={imageGeneratedUrl} /> :
-                                    <Spin />
+                                    <Empty description='Персонаж не сгенерирован'
+                                           className='text-yellow'
+                                           image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
+                                    isGenerated ?
+                                        <ImageCanvas imageUrl={imageGeneratedUrl} /> :
+                                        <Spin />
 
                                 }
 
                             </div>
                         </div>
 
-                        <div className="w-1/3 p-5">
-                            <MenuGeneration onFinish={onFinish} />
-                        </div>
+                        {curCharacter.id!=='' ?
+                            <div className="w-1/3 p-5">
+                                <MenuGeneration onFinish={onFinish} />
+                            </div> : <></>
+                        }
 
                     </Content>
                 </Layout>

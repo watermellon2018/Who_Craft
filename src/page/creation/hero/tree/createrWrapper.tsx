@@ -6,6 +6,9 @@ import React from "react";
 import {
     createCharacterFromTreeAPI,
 } from "../../../../api/generation/characters/tree_structure";
+import {type} from "os";
+import { v4 as uuidv4 } from 'uuid';
+
 // https://blog.logrocket.com/using-react-arborist-create-tree-components/
 
 const CreaterWrapper = (treeRef: any) => {
@@ -14,28 +17,39 @@ const CreaterWrapper = (treeRef: any) => {
     /*Берем самый большой ID, прибавляем 1
      и присваиваем новому элементу дерева */
     const getNewID = () => {
-        const idToIndex = treeRef.treeRef.current.idToIndex
-        const ids = Object.keys(idToIndex).map(Number);
-        if(ids.length == 0)
-            return '0'
+        // console.log(treeRef.treeRef.current);
+        // console.log(Object.keys(treeRef.treeRef.current.idToIndex));
+        // const id: string = treeRef.treeRef.current.props.data.length.toString();
+        // const len: number = Object.keys(treeRef.treeRef.current.idToIndex).length;
+        // console.log(len);
+        // const id: string = (len + 1).toString();
+        const id: string = uuidv4();
+        return id;
 
-        const newID: string = (Math.max(...ids) + 1).toString();
-
-        return newID
     }
 
     /*Библиотека с компонентом дерева, предлагает ввести пользователю имя объекта
     * Чтобы отправить запрос на сохранение в БД, нужно дождаться ввода пользователя */
     const waitForChange = async () => {
+
         return new Promise<void>((resolve) => {
             const checkChange = () => {
                 const newNode = treeRef.treeRef.current.focusedNode;
-                if (newNode.data.name.length > 0) {
-                    resolve();
-                } else {
-                    setTimeout(checkChange, 100); // Проверяем каждые 100 миллисекунд
+                if (newNode === null){
+                    setTimeout(checkChange, 100);
+                }else {
+
+                    if (newNode.data.name.length > 0)
+                        resolve();
+                    else if (!newNode.isEditing && newNode.isSelected) {
+                        // фокус сместился, мы либо ввели имя, либо нет
+                        resolve();
+                    } else {
+                        setTimeout(checkChange, 100); // Проверяем каждые 100 миллисекунд
+                    }
                 }
             };
+
             checkChange();
         });
     };
@@ -60,25 +74,63 @@ const CreaterWrapper = (treeRef: any) => {
     const setNewID = async (newID: string) => {
         // Ждем изменения имени
         await waitForChange();
-        const newData = treeRef.treeRef.current.focusedNode.data;
-        newData.id = newID
-        return newData;
+        const tree = treeRef.treeRef.current
+        const nodeCur = tree.focusedNode;
+        const newData = nodeCur.data;
+        if (newData.name.length == 0) {
+            // узел не создался
+            tree.delete(nodeCur.id);
+            return false;
+        }else {
+            // nodeCur.id = newID;
+            newData.id = newID;
+        //     treeRef.treeRef.current.focusedNode.data.id = newID;
+        //     treeRef.treeRef.current.focusedNode.id = newID;
+        //
+        }
+        return true;
     }
 
     const createFolderClick  = async () => {
+        // console.log(treeRef.treeRef.current.focusedNode?.id);
+        // console.log(treeRef.treeRef.current.selectedIds);
         const newID = getNewID();
-        await treeRef.treeRef.current.createInternal(treeRef.treeRef.current.root.id);
+        console.log(newID);
 
-        const newData = await setNewID(newID);
-        await createCharacter(newData, 'node');
+        await treeRef.treeRef.current.createInternal();
+
+        const status = await setNewID(newID);
+        if(status) {
+            const newData = treeRef.treeRef.current.focusedNode.data;
+            console.log(newData);
+            await createCharacter(newData, 'node');
+        //     const f = treeRef.treeRef.current.focusedNode;
+        //     treeRef.treeRef.current.selectedIds.clear()
+        //     treeRef.treeRef.current.selectedIds.add(f.id)
+        //     console.log(treeRef.treeRef.current.selectedIds);
+        //     treeRef.treeRef.current.reset();
+        //     // console.log(treeRef.treeRef.current);
+        //     // console.log(f);
+        //     // console.log(f.id);
+        //     treeRef.treeRef.current.onFocus();
+        //     // treeRef.treeRef.current.focus(f);
+        //     // treeRef.treeRef.current.selectedIds.add(f.id);
+        //     // treeRef.treeRef.current.focus(f);
+        //     // treeRef.treeRef.current.select(f);
+        //     // treeRef.treeRef.current.activate(f);
+        }
     }
 
     const createFileClick = async () => {
         const newID = getNewID()
-        await treeRef.treeRef.current.createLeaf(treeRef.treeRef.current.root.id)
+        await treeRef.treeRef.current.createLeaf();
+        console.log(newID);
 
-        const newData = await setNewID(newID);
-        await createCharacter(newData, 'leaf');
+        const status = await setNewID(newID);
+        if(status) {
+            const newData = treeRef.treeRef.current.focusedNode.data;
+            await createCharacter(newData, 'leaf');
+        }
 
     };
 
