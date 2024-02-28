@@ -22,7 +22,10 @@ export const GenerationHeroPage = () => {
     const treeRef = useRef(null);
 
     const [data, setData] = useState();
-    const [curCharacter, setCurCharacter] = useState<{id: string, name: string}>({id: '', name: ''});
+    const [curCharacter, setCurCharacter] = useState<{id: string,
+        name: string,
+        is_folder: boolean}>
+    ({id: '', name: '', is_folder: true});
 
     const memoizedSetCurCharacter = useMemo(() => {
         return setCurCharacter;
@@ -138,7 +141,7 @@ export const GenerationHeroPage = () => {
                             </div>
                         </div>
 
-                        {curCharacter.id!=='' ?
+                        {!curCharacter.is_folder ?
                             <div className="w-1/3 p-5">
                                 <MenuGeneration onFinish={onFinish} />
                             </div> : <></>

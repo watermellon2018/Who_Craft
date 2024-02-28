@@ -17,7 +17,7 @@ interface NodeProps {
     style: React.CSSProperties;
     dragHandle?: ((el: (HTMLDivElement | null)) => void) | undefined;
     tree: TreeApi<any>; // тип дерева можно заменить на конкретный, если известен
-    setCurCharacter: (el: {id: string, name: string }) => void;
+    setCurCharacter: (el: {id: string, name: string, is_folder: boolean }) => void;
 }
 
 const NodeTree: React.FC<NodeProps> = ({ node,
@@ -32,9 +32,12 @@ const NodeTree: React.FC<NodeProps> = ({ node,
         }
 
         // скажем страницы, что сейчас мы на этом персонаже
+        console.log(node.isLeaf);
         if (node.data.name !== ''){
             setCurCharacter({'id': node.data.id,
-                                'name': node.data.name});
+                                'name': node.data.name,
+                                'is_folder': !node.isLeaf
+            });
         }
     };
 
