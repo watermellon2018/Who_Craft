@@ -7,6 +7,7 @@ import HeaderComponent from "../../main/header";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import {Divider} from "antd/lib";
+import pathConstant from "../../../routes/pathConstant";
 
 interface ProjectCard {
     id: string;
@@ -57,18 +58,10 @@ const LocationsCard = () => {
     const deleteProject = async (id: string) => {
         console.log(id);
 
-        // try {
-        //     await delete_project_by_id(id);
-        //     const updatedList = projectsList.filter(project => project.id !== id);
-        //     setProjectList(updatedList);
-        // } catch (error) {
-        //     console.error('Ошибка при получении списка проектов:', error);
-        //     setProjectList([]);
-        // }
     }
     const navigate = useNavigate();
     const editProject = () => {
-        navigate('/')
+        navigate(pathConstant.HOME)
     }
 
     const clickProjectHandle = () => {

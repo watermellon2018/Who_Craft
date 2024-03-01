@@ -14,6 +14,8 @@ import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import CreaterWrapper from "./tree/createrWrapper";
 import Cookies from 'js-cookie';
+import {useNavigate} from "react-router-dom";
+import PathConstants from "../../../routes/pathConstant";
 const { Content, Sider } = Layout;
 
 
@@ -76,14 +78,18 @@ export const GenerationHeroPage = () => {
         setImageGeneratedUrl(imageUrl);
         setIsGenerated(true);
     };
+    const navigate = useNavigate();
+    const settingHeroHandle = () => {
+        navigate(PathConstants.SETTING_HERO);
+    };
 
 
     return (
 
-        <Layout style={{ minHeight: '100vh' }}>
+        <>
 
             <HeaderComponent />
-            <Layout>
+            <Layout style={{height: '100%'}}>
 
                 <div>
 
@@ -124,7 +130,7 @@ export const GenerationHeroPage = () => {
                                 </p>
                                 {imageGeneratedUrl!='' ?
                                     <div>
-                                        <Button className='mr-5'>Настройки персонажа</Button>
+                                        <Button onClick={settingHeroHandle} className='mr-5'>Настройки персонажа</Button>
                                         <Button onClick={saveCharacterHandle}>Сохранить</Button>
                                     </div> :
                                     <></>
@@ -155,7 +161,7 @@ export const GenerationHeroPage = () => {
                     </Content>
                 </Layout>
             </Layout>
-        </Layout>
+        </>
     );
 
 }

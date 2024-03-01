@@ -6,6 +6,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './style.css';
 import {delete_project_by_id, get_all_list_projects} from "../../../../api/projects/properties/project";
 import {useNavigate} from "react-router-dom";
+import PathConstants from "../../../../routes/pathConstant";
 
 
 interface ProjectCard {
@@ -49,11 +50,11 @@ const ProjectListPage = () => {
     }
     const navigate = useNavigate();
     const editProject = () => {
-        navigate('/')
+        navigate(PathConstants.HOME);
     }
 
     const handleClickCard = () => {
-        navigate('project');
+        navigate(PathConstants.PROJECT_PAGE);
     }
 
     return (

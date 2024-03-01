@@ -7,6 +7,7 @@ import HeaderComponent from "../../main/header";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import {Divider} from "antd/lib";
+import PathConstants from "../../../routes/pathConstant";
 
 interface ProjectCard {
     id: string;
@@ -30,24 +31,6 @@ const MusicsCard = () => {
             },
         ]
         setMusicList(mus);
-
-        // const getAllProjects = async () => {
-        //     try {
-        //         const response: any = await get_all_list_projects();
-        //
-        //         const ar = response.data.map((proj:ProjectCard) => ({
-        //             id: proj.id,
-        //             src: proj.src ? 'data:image/jpeg;base64,' + proj.src : 'https://placehold.co/195x147',
-        //             title: proj.title,
-        //         }));
-        //         setProjectList(ar);
-        //     } catch (error) {
-        //         console.error('Ошибка при получении списка проектов:', error);
-        //         setProjectList([]);
-        //     }
-        // };
-        //
-        // getAllProjects();
     }, []);
 
     const deleteProject = async (id: string) => {
@@ -64,7 +47,7 @@ const MusicsCard = () => {
     }
     const navigate = useNavigate();
     const editProject = () => {
-        navigate('/')
+        navigate(PathConstants.HOME);
     }
 
     const clickProjectHandle = () => {

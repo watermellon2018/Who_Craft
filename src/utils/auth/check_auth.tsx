@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Cookies from 'js-cookie';
+import pathConstant from "../../routes/pathConstant";
+import PathConstants from "../../routes/pathConstant";
 
 
 
@@ -11,7 +13,7 @@ const withAuth = (Component: any) => {
 
         useEffect(() => {
             if (!isLoggedIn) {
-                navigate('/start');
+                navigate(PathConstants.AUTH);
             }
         }, [isLoggedIn, navigate]);
 

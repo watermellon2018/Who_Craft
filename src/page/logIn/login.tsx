@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 
 import './login.css';
 import { login } from '../../api/auth/login';
+import PathConstants from "../../routes/pathConstant";
 
 interface LoginFormValues {
     username: string;
@@ -20,7 +21,7 @@ const LoginPage: React.FC = () => {
                 if (data.status === 'success') {
                     Cookies.set('id', data.refresh, { expires: 7 });
                     // Cookies.set('id', data.refresh, { expires: 7 });
-                    navigate('/');
+                    navigate(PathConstants.HOME);
                 } else {
                     message.error('Пользователь не найден в базе');
                 }

@@ -4,6 +4,7 @@ import {EditOutlined, DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {useNavigate} from "react-router-dom";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
+import pathConstant from "../../../routes/pathConstant";
 
 interface ProjectCard {
     id: string;
@@ -74,11 +75,11 @@ const CharactersCard = () => {
     }
     const navigate = useNavigate();
     const editProject = () => {
-        navigate('/')
+        navigate(pathConstant.HOME)
     }
 
     const clickProjectHandle = () => {
-        navigate('../generating')
+        navigate(pathConstant.GENERATING)
     };
 
     return (

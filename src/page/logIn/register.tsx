@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/auth/register'
 import './registration.css';
 import Cookies from "js-cookie";
+import PathConstants from "../../routes/pathConstant";
 
 // const layout = {
 //     wrapperCol: { span: 16 },
@@ -28,7 +29,7 @@ const RegistrationPage: React.FC = () => {
             .then((data) => {
                 setLoading(false);
                 Cookies.set('id', data.refresh, { expires: 7 });
-                navigate('/');
+                navigate(PathConstants.HOME);
             })
             .catch((error: any) => {
                 console.error(error);
