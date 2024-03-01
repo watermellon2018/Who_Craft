@@ -52,6 +52,10 @@ const ProjectListPage = () => {
         navigate('/')
     }
 
+    const handleClickCard = () => {
+        navigate('project');
+    }
+
     return (
         <>
             <HeaderComponent />
@@ -62,11 +66,13 @@ const ProjectListPage = () => {
                     <div className="grid grid-cols-4 gap-4">
                         {projectsList.map((project, index) => (
                             <Card
+                                onClick={handleClickCard}
                                 hoverable
                                 className='bottom-card'
                                 key={'my-movie-'+index}
                                 cover={<>
                                     <img src={project.src}
+                                         onClick={handleClickCard}
                                          alt={`Poster movie ${index + 1}`}
                                           />
                                     <div className="text-right absolute top-0 right-0">

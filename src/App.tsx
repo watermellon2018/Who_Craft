@@ -11,6 +11,7 @@ import LoginPage from "./page/logIn/login";
 import ProfilePage from "./page/profile/user";
 import ProjectCreatePage from "./page/creation/projects/newProjectPage";
 import ProjectListPage from "./page/movie/library/own/list";
+import ProjectPage from "./page/movie/projectPage/projectPage";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -102,6 +103,7 @@ function App() {
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/create-project" element={<ProjectCreatePage />} />
                   <Route path="/project-list" element={<ProjectListPage />} />
+                  <Route path="/project-list/project" element={<ProjectPage />} />
               </Routes>
           </BrowserRouter>
       </ConfigProvider>
