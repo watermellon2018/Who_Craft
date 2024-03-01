@@ -6,7 +6,6 @@ import React from "react";
 import {
     createCharacterFromTreeAPI,
 } from "../../../../api/generation/characters/tree_structure";
-import {type} from "os";
 import { v4 as uuidv4 } from 'uuid';
 
 // https://blog.logrocket.com/using-react-arborist-create-tree-components/
@@ -58,6 +57,7 @@ const CreaterWrapper = (treeRef: any) => {
     // будет ошибка status
     const createCharacter = async (newData: any, type: 'leaf' | 'node') => {
         const parentNode = treeRef.treeRef.current.focusedNode.parent;
+
         if(parentNode.level !== -1){
             const parentId = parentNode.data.id;
             await createCharacterFromTreeAPI(newData.id, newData.name, type, parentId);

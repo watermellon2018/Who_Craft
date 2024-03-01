@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Space} from 'antd';
+import {Card} from 'antd';
 import {EditOutlined, DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {useNavigate} from "react-router-dom";
-import {delete_project_by_id, get_all_list_projects} from "../../../api/projects/properties/project";
-import HeaderComponent from "../../main/header";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
-import {Divider} from "antd/lib";
 
 interface ProjectCard {
     id: string;
@@ -81,7 +78,7 @@ const CharactersCard = () => {
     }
 
     const clickProjectHandle = () => {
-        const a = 5;
+        navigate('../generating')
     };
 
     return (
@@ -99,7 +96,7 @@ const CharactersCard = () => {
                                     className='fixed-size'
                                     // src={character.src}
                                     src='https://placehold.co/195x147'
-                                    onClick={clickProjectHandle}
+
                                     alt={`Poster movie ${index + 1}`}
                                 />
                                 <div className="text-right absolute top-0 right-0">
@@ -113,6 +110,7 @@ const CharactersCard = () => {
                         </Card>
                     ))}
                     <Card
+                        onClick={clickProjectHandle}
                         hoverable
                         className='bottom-card add-new-card'
                         cover={<PlusOutlined />}

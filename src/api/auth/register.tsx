@@ -13,7 +13,6 @@ async function register(values: any): Promise<any> {
     try {
         const res = await axios.post(`${backendUrl}api/auth/register/`, body, config);
         const userId = res.data.token;
-        console.log(userId)
         localStorage.setItem('userId', userId);
 
         return res;

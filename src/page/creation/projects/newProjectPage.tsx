@@ -122,6 +122,7 @@ export const ProjectCreatePage = () => {
                 openNotificationWithIcon('Проект успешно создался!',
                                         'Ура!',
                                         'success');
+                localStorage.setItem('curProject', JSON.stringify(data));
                 navigate('/project-list');
             }
         } catch (error) {
