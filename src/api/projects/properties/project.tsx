@@ -14,9 +14,11 @@ interface ProjectI {
 
 async function create_new_project(data: ProjectI): Promise<any> {
     try {
+        const token = localStorage.getItem('userId');
         return await axios.post(`${backendUrl}/api/projects/create/`, {
             data: {
-                ...data
+                ...data,
+                'token_user': token,
             },
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -31,7 +33,12 @@ async function create_new_project(data: ProjectI): Promise<any> {
 
 async function get_all_list_projects(): Promise<any> {
     try {
+        const token = localStorage.getItem('userId');
+        console.log(token)
         return await axios.get(`${backendUrl}/api/projects/get-list-projects/`, {
+            params: {
+                'token_user': token,
+            }
         });
     } catch (error) {
         console.error('Error creating project:', error);
@@ -41,9 +48,11 @@ async function get_all_list_projects(): Promise<any> {
 
 async function delete_project_by_id(id: string): Promise<any> {
     try {
+        const token = localStorage.getItem('userId');
         return await axios.get(`${backendUrl}/api/projects/delete-project-by-id/`, {
             params: {
                 "id": id,
+                'token_user': token,
             }
         });
     } catch (error) {

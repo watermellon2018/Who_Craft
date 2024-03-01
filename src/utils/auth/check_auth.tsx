@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 const withAuth = (Component: any) => {
     const WithAuth = (props: any) => {
         const navigate = useNavigate();
-        const isLoggedIn = !!Cookies.get('token');
+        const isLoggedIn = !!Cookies.get('id');
 
         useEffect(() => {
             if (!isLoggedIn) {

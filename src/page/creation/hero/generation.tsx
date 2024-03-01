@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useMemo} from 'react';
+import React, {useState, useRef, useEffect, useMemo, useId} from 'react';
 import {Button, Empty, Layout, Spin} from 'antd';
 import NodeTree from './tree/node';
 import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
@@ -13,7 +13,7 @@ import {generateImageAPI,
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import CreaterWrapper from "./tree/createrWrapper";
-
+import Cookies from 'js-cookie';
 const { Content, Sider } = Layout;
 
 
@@ -42,6 +42,11 @@ export const GenerationHeroPage = () => {
         getCharacters();
 
     }, []);
+
+    const saveCharacterHandle = () => {
+        const a = 5
+    }
+    console.log(useId());
 
 
 
@@ -117,10 +122,10 @@ export const GenerationHeroPage = () => {
                                 <p style={{color: 'white', position: "relative"}}>
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
-                                {!imageGeneratedUrl ?
+                                {imageGeneratedUrl!='' ?
                                     <div>
                                         <Button className='mr-5'>Настройки персонажа</Button>
-                                        <Button>Сохранить</Button>
+                                        <Button onClick={saveCharacterHandle}>Сохранить</Button>
                                     </div> :
                                     <></>
                                 }

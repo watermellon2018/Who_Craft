@@ -18,7 +18,8 @@ const LoginPage: React.FC = () => {
         login(values)
             .then((data: any) => {
                 if (data.status === 'success') {
-                    Cookies.set('token', data.refresh, { expires: 7 });
+                    Cookies.set('id', data.refresh, { expires: 7 });
+                    // Cookies.set('id', data.refresh, { expires: 7 });
                     navigate('/');
                 } else {
                     message.error('Пользователь не найден в базе');

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/auth/register'
 import './registration.css';
+import Cookies from "js-cookie";
 
 // const layout = {
 //     wrapperCol: { span: 16 },
@@ -24,8 +25,9 @@ const RegistrationPage: React.FC = () => {
         setLoading(true);
 
         register(values)
-            .then(() => {
+            .then((data) => {
                 setLoading(false);
+                Cookies.set('id', data.refresh, { expires: 7 });
                 navigate('/');
             })
             .catch((error: any) => {
@@ -50,8 +52,8 @@ const RegistrationPage: React.FC = () => {
                 labelCol={{ offset: 3, span: 5 }}
                 wrapperCol={{ offset: 1, span: 10 }}
                 autoComplete="off"
-                // style={{justifyItems: 'end'}}
             >
+
                 <Form.Item
                     label="Username"
                     name="username"
@@ -61,24 +63,7 @@ const RegistrationPage: React.FC = () => {
                     <Input />
                 </Form.Item>
 
-                <Form.Item
-                    name="email"
-                    className='mb-4 w-1/2'
-                    label="E-mail"
-                    rules={[
-                        {
-                            type: 'email',
-                            message: 'The input is not a valid E-mail!',
-                        },
-                        {
-                            required: true,
-                            message: 'Please input your E-mail!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
+                <p>Пароль</p>
                 <Form.Item
                     label="Пароль"
                     name="password"
@@ -89,6 +74,7 @@ const RegistrationPage: React.FC = () => {
                     <Input.Password />
                 </Form.Item>
 
+                <p>Повторите пароль</p>
                 <Form.Item
                     name="confirm-password"
                     label="Повторите пароль"
