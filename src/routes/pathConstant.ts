@@ -5,11 +5,11 @@ const PathConstants = {
     LOGIN: "/login",
 
     GENERATING: '/generating',
-    SETTING_HERO: '/generating/setting-hero',
+    SETTING_HERO: 'generating/setting-hero',
 
-    PROFILE: '/profile',
+    PROFILE: 'profile',
 
-    CREATE_PROJECT: '/create-project',
+    CREATE_PROJECT: 'create-project',
     PROJECTS: '/project-list',
     PROJECT_PAGE: '/project-list/project'
 
