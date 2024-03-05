@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Form, Input, Row, Col} from 'antd';
 import './style.css'
 import {Gutter} from "antd/es/grid/row";
 
+interface ChildProps {
+    formData: any;
+    setFormData: (newState: string) => void;
+}
 
-const PersonalCharacterData = () => {
-    const [formData, setFormData] = useState<any>({});
-
+const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 
     const handleFormChange = (changedValues: any, allValues: any) => {
         setFormData({ ...formData, ...allValues });
@@ -25,7 +27,7 @@ const PersonalCharacterData = () => {
 
     return (
         <>
-            <Form onValuesChange={handleFormChange}>
+            <Form onValuesChange={handleFormChange} initialValues={formData}>
                 <Row gutter={gutter}>
                     <Col span={labelSpan}>
                         Имя

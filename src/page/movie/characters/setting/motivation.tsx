@@ -1,13 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Form, Input, Row, Col} from 'antd';
 import './style.css'
 import {Gutter} from "antd/es/grid/row";
 import TextArea from "antd/es/input/TextArea";
 
+interface ChildProps {
+    formData: any;
+    setFormData: (newState: string) => void;
+}
 
-const MotivationCharacterData = () => {
-    const [formData, setFormData] = useState<any>({});
 
+const MotivationCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 
     const handleFormChange = (changedValues: any, allValues: any) => {
         setFormData({ ...formData, ...allValues });
@@ -20,7 +23,7 @@ const MotivationCharacterData = () => {
 
     return (
         <>
-            <Form onValuesChange={handleFormChange}>
+            <Form onValuesChange={handleFormChange} initialValues={formData}>
                 <Row gutter={gutter}>
                     <Col span={labelSpan}>
                         Зачем этот персонаж?

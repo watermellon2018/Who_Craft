@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Form, Row, Col} from 'antd';
 import './style.css'
 import TextArea from "antd/es/input/TextArea";
 
+interface ChildProps {
+    formData: any;
+    setFormData: (newState: string) => void;
+}
 
-const PsychologyCharacterData = () => {
-    const [formData, setFormData] = useState<any>({});
+const PsychologyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 
     const handleFormChange = (changedValues: any, allValues: any) => {
         setFormData({ ...formData, ...allValues });
@@ -16,7 +19,7 @@ const PsychologyCharacterData = () => {
 
     return (
         <>
-            <Form onValuesChange={handleFormChange}>
+            <Form onValuesChange={handleFormChange} initialValues={formData}>
                 <Row>
                     <Col span={labelSpan}>
                         Характер

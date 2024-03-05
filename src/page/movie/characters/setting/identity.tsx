@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Form, Input, Row, Col} from 'antd';
 import './style.css'
 import TextArea from "antd/es/input/TextArea";
 
-
-const IdentifyCharacterData = () => {
-    const [formData, setFormData] = useState<any>({});
+interface ChildProps {
+    formData: any;
+    setFormData: (newState: string) => void;
+}
+const IdentifyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 
 
     const handleFormChange = (changedValues: any, allValues: any) => {
@@ -17,7 +19,7 @@ const IdentifyCharacterData = () => {
 
     return (
         <>
-            <Form onValuesChange={handleFormChange}>
+            <Form onValuesChange={handleFormChange} initialValues={formData}>
                 <Row>
                     <Col span={labelSpan}>
                         Внешние особенности

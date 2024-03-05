@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Form, Row, Col} from 'antd';
 import './style.css'
 import {Gutter} from "antd/es/grid/row";
 import TextArea from "antd/es/input/TextArea";
 
-
-const InsideCharacterData = () => {
-    const [formData, setFormData] = useState<any>({});
+interface ChildProps {
+    formData: any;
+    setFormData: (newState: string) => void;
+}
+const InsideCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 
 
     const handleFormChange = (changedValues: any, allValues: any) => {
@@ -20,13 +22,13 @@ const InsideCharacterData = () => {
 
     return (
         <>
-            <Form onValuesChange={handleFormChange}>
+            <Form onValuesChange={handleFormChange} initialValues={formData}>
                 <Row gutter={gutter}>
                     <Col span={labelSpan}>
                         Личные черты
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="for-what">
+                        <Form.Item name="personal-traits">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -36,7 +38,7 @@ const InsideCharacterData = () => {
                         Характер
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="goal">
+                        <Form.Item name="character">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -46,7 +48,7 @@ const InsideCharacterData = () => {
                         Силы и слабости
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="philosophy">
+                        <Form.Item name="strengths-weaknesses">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
