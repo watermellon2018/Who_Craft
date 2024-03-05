@@ -3,10 +3,11 @@ import {Form, Row, Col} from 'antd';
 import './style.css'
 import {Gutter} from "antd/es/grid/row";
 import TextArea from "antd/es/input/TextArea";
+import {InsideI} from "../../../../api/characters/interfaceHero";
 
 interface ChildProps {
-    formData: any;
-    setFormData: (newState: string) => void;
+    formData: InsideI | undefined;
+    setFormData: (newState: InsideI) => void;
 }
 const InsideCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 
@@ -28,7 +29,7 @@ const InsideCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) =>
                         Личные черты
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="personal-traits">
+                        <Form.Item name="personalTraits">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -48,7 +49,7 @@ const InsideCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) =>
                         Силы и слабости
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="strengths-weaknesses">
+                        <Form.Item name="strengthsWeaknesses">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>

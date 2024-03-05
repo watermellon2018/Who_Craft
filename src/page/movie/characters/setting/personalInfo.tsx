@@ -2,10 +2,11 @@ import React from 'react';
 import {Form, Input, Row, Col} from 'antd';
 import './style.css'
 import {Gutter} from "antd/es/grid/row";
+import {PersonalDataI} from "../../../../api/characters/interfaceHero";
 
 interface ChildProps {
-    formData: any;
-    setFormData: (newState: string) => void;
+    formData: PersonalDataI | undefined;
+    setFormData: (newState: PersonalDataI) => void;
 }
 
 const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {

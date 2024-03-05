@@ -2,10 +2,11 @@ import React from 'react';
 import {Form, Input, Row, Col} from 'antd';
 import './style.css'
 import TextArea from "antd/es/input/TextArea";
+import {CompetitionI} from "../../../../api/characters/interfaceHero";
 
 interface ChildProps {
-    formData: any;
-    setFormData: (newState: string) => void;
+    formData: CompetitionI | undefined;
+    setFormData: (newState: CompetitionI) => void;
 }
 const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 
@@ -55,7 +56,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Интеллектуальные способности
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="mind-info">
+                        <Form.Item name="mindInfo">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -67,7 +68,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Физические особенности
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="sport-info">
+                        <Form.Item name="sportInfo">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>

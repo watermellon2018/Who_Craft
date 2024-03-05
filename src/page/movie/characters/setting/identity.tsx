@@ -2,10 +2,11 @@ import React from 'react';
 import {Form, Input, Row, Col} from 'antd';
 import './style.css'
 import TextArea from "antd/es/input/TextArea";
+import {IdentifyI} from "../../../../api/characters/interfaceHero";
 
 interface ChildProps {
-    formData: any;
-    setFormData: (newState: string) => void;
+    formData: IdentifyI | undefined;
+    setFormData: (newState: IdentifyI) => void;
 }
 const IdentifyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
 

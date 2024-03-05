@@ -2,10 +2,11 @@ import React from 'react';
 import {Form, Row, Col} from 'antd';
 import './style.css'
 import TextArea from "antd/es/input/TextArea";
+import {PsyhoI} from "../../../../api/characters/interfaceHero";
 
 interface ChildProps {
-    formData: any;
-    setFormData: (newState: string) => void;
+    formData: PsyhoI | undefined;
+    setFormData: (newState: PsyhoI) => void;
 }
 
 const PsychologyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) => {
@@ -35,7 +36,7 @@ const PsychologyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Внутренние конфликты
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="inside-conflict">
+                        <Form.Item name="insideConflict">
                             <TextArea rows={4} />
                         </Form.Item>
                     </Col>

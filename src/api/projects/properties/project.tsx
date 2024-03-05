@@ -34,7 +34,6 @@ async function create_new_project(data: ProjectI): Promise<any> {
 async function get_all_list_projects(): Promise<any> {
     try {
         const token = localStorage.getItem('userId');
-        console.log(token)
         return await axios.get(`${backendUrl}/api/projects/get-list-projects/`, {
             params: {
                 'token_user': token,

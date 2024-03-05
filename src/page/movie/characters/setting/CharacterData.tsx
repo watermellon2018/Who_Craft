@@ -14,37 +14,57 @@ import InsideCharacterData from "./personal";
 import CompetionsCharacterData from "./competations";
 import IdentifyCharacterData from "./identity";
 import PsychologyCharacterData from "./psychologyData";
+import PathConstants from "../../../../routes/pathConstant";
+import {create_new_hero} from "../../../../api/characters/basic";
+import psychologyData from "./psychologyData";
+import {useLocation} from "react-router-dom";
+import {
+    CompetitionI,
+    IdentifyI,
+    InsideI,
+    MotivateI,
+    PersonalDataI,
+    PsyhoI, SettingHero
+} from "../../../../api/characters/interfaceHero";
 
 
 const { Step } = Steps;
 
-const CharacterData = (is_edit=false) => {
+const CharacterData = () => {
+
+    const location = useLocation();
+    const is_edit = location.state?.is_edit;
+    const project_id = location.state?.project_id;
+
     // Значения, которыми мы инициализируем формы при загрузке,
     // подтягивая данные с сервера
     // Затем используется для сохранения предыдущего состояния формы,
     // чтобы отправлять данные той формы, которую обновили и не обращаться ко многим БД
-    const [formDataPersonalInit, setFormPersonalInit] = useState<any>({});
-    const [formDataMotivateInit, setFormMotivateInit] = useState<any>({});
-    const [formDataInsideHeroInit, setFormInsideHeroInit] = useState<any>({});
-    const [formDataCompetitionInit, setFormCompetitionInit] = useState<any>({});
-    const [formDataIdentifyInit, setFormIdentifyInit] = useState<any>({});
-    const [formDataPsychologyInit, setFormPsychologyInit] = useState<any>({});
+    const [formDataPersonalInit, setFormPersonalInit] = useState<PersonalDataI>();
+    const [formDataMotivateInit, setFormMotivateInit] = useState<MotivateI>();
+    const [formDataInsideHeroInit, setFormInsideHeroInit] = useState<InsideI>();
+    const [formDataCompetitionInit, setFormCompetitionInit] = useState<CompetitionI>();
+    const [formDataIdentifyInit, setFormIdentifyInit] = useState<IdentifyI>();
+    const [formDataPsychologyInit, setFormPsychologyInit] = useState<PsyhoI>();
 
-    const [developmentHeroTextInit, setDevelopmentHeroTextInit] = useState('');
-    const [additInfoTextInit, setAdditInfoTextInit] = useState('');
-    const [biographyTextInit, setBiographyTextInit] = useState('');
+    const [developmentHeroTextInit, setDevelopmentHeroTextInit] = useState<string>('');
+    const [additInfoTextInit, setAdditInfoTextInit] = useState<string>('');
+    const [biographyTextInit, setBiographyTextInit] = useState<string>('');
+    const [relationshipTextInit, setRelationshipTextInit] = useState<string>('');
 
 
-    const [formDataPersonal, setFormPersonal] = useState<any>({});
-    const [formDataMotivate, setFormMotivate] = useState<any>({});
-    const [formDataInsideHero, setFormInsideHero] = useState<any>({});
-    const [formDataCompetition, setFormCompetition] = useState<any>({});
-    const [formDataIdentify, setFormIdentify] = useState<any>({});
-    const [formDataPsychology, setFormPsychology] = useState<any>({});
+    const [formDataPersonal, setFormPersonal] = useState<PersonalDataI>();
+    const [formDataMotivate, setFormMotivate] = useState<MotivateI>();
+    const [formDataInsideHero, setFormInsideHero] = useState<InsideI>();
+    const [formDataCompetition, setFormCompetition] = useState<CompetitionI>();
+    const [formDataIdentify, setFormIdentify] = useState<IdentifyI>();
+    const [formDataPsychology, setFormPsychology] = useState<PsyhoI>();
 
     const [developmentHeroText, setDevelopmentHeroText] = useState<string>('');
     const [additInfoText, setAdditInfoText] = useState<string>('');
     const [biographyText, setBiographyText] = useState<string>('');
+    const [relationshipText, setRelationshipText] = useState<string>('');
+
 
     const [imgUrl, setImgUrl] = useState<string>('');
     const [imgUrlInit, setImgUrlInit] = useState<string>('');
@@ -65,56 +85,68 @@ const CharacterData = (is_edit=false) => {
         };
         setFormPersonalInit(initialValues);
 
-        setFormMotivateInit({
-            'for-what': '',
+        const data2 = {
+            forWhat: '',
             goal: '',
             philosophy: '',
-        })
+        }
+        setFormMotivateInit(data2)
 
-        setFormInsideHeroInit({
-            'personal-traits': '',
+        const data3 = {
+            personalTraits: '',
             character: '',
-            'strengths-weaknesses': '',
-        });
+            strengthsWeaknesses: '',
+        }
+        setFormInsideHeroInit(data3);
 
-        setFormCompetitionInit({
+        const data4 = {
             profession: '',
             hobby: '',
             talents: '',
-            'mind-info': '',
-            'sport-info': '',
-        });
+            mindInfo: '',
+            sportInfo: '',
+        }
+        setFormCompetitionInit(data4);
 
-        setFormIdentifyInit({
+        const data5 = {
             appearance: '',
             style: '',
             complexs: '',
             speech: ''
-        });
+        }
+        setFormIdentifyInit(data5);
 
-        setFormPsychologyInit({
+        const data6 = {
             character: '',
-            'inside-conflict': ''
-        });
+            insideConflict: ''
+        }
+        setFormPsychologyInit(data6);
 
-        setDevelopmentHeroTextInit('');
-        setAdditInfoTextInit('');
-        setBiographyTextInit('')
+        const dev = ''
+        const addit = ''
+        const bio = ''
+        const rel = ''
+        setDevelopmentHeroTextInit(dev);
+        setAdditInfoTextInit(addit);
+        setBiographyTextInit(bio);
+        setRelationshipText(rel);
+
 
 
         // Так как выше это инициализация начального (прошлого состояния), которое
         // применяется лишь при сравнении сохранения, а не заполнении форму
         // необходимо заполнить значения, которые отвечают за форму
-        setFormPersonal(formDataPersonalInit);
-        setFormMotivate(formDataMotivateInit);
-        setFormInsideHero(formDataInsideHeroInit);
-        setFormCompetition(formDataCompetitionInit);
-        setFormIdentify(formDataIdentifyInit);
-        setFormPsychology(formDataPsychologyInit);
+        setFormPersonal(initialValues);
+        setFormMotivate(data2);
+        setFormInsideHero(data3);
+        setFormCompetition(data4);
+        setFormIdentify(data5);
+        setFormPsychology(data6);
 
-        setDevelopmentHeroText(developmentHeroTextInit);
-        setAdditInfoText(additInfoTextInit);
-        setBiographyText(biographyTextInit);
+        setDevelopmentHeroText(dev);
+        setAdditInfoText(addit);
+        setBiographyText(bio);
+        setRelationshipText(rel);
 
     }, [])
 
@@ -137,7 +169,7 @@ const CharacterData = (is_edit=false) => {
         setCurrentStep(currentStep - 1);
     };
 
-    const isEqual = (obj1: Record<string, any>, obj2: Record<string, any>): boolean => {
+    const isEqual = (obj1: any, obj2: any): boolean => {
         // Сравниваем количество ключей у объектов
         const keys1 = Object.keys(obj1);
         const keys2 = Object.keys(obj2);
@@ -155,59 +187,98 @@ const CharacterData = (is_edit=false) => {
         return true;
     }
 
+    const createCreateNewHero = async () => {
+        try {
+            const data: SettingHero = {
+                image: imgUrl,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                personal: formDataPersonal!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                motivate: formDataMotivate!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                insideHero: formDataInsideHero!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                competition: formDataCompetition!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                identify: formDataIdentify!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                psyho: formDataPsychology!,
+                development: developmentHeroText,
+                additInfo: additInfoText,
+                bio: biographyText,
+                relationship: relationshipText,
+            }
+            const response = await create_new_hero(data, project_id);
+            if(response.status == 200){
+                // openNotificationWithIcon('Герой успешно создался!',
+                //     'Ура!',
+                //     'success');
+                // localStorage.setItem('curProject', JSON.stringify(data));
+                // navigate(PathConstants.PROJECTS);
+            }
+        } catch (error) {
+            console.error('Ошибка при получении списка жанров:', error);
+        }
+    }
+
     const handleSaveSettingHero = () => {
-        // if (!is_edit) {
-        //
-        // }
+
+        if (!is_edit) {
+            createCreateNewHero();
+        }
         console.log('Save');
         if (imgUrl !== imgUrlInit){
             // send data
             setImgUrlInit(imgUrl);
         }
-        console.log(formDataPersonal);
+        // console.log(formDataPersonal);
         if (!isEqual(formDataPersonal, formDataPersonalInit)) {
             // saveFormData(formData1);
             setFormPersonalInit(formDataPersonal);
         }
-        console.log(formDataMotivate);
+        // console.log(formDataMotivate);
         if (!isEqual(formDataMotivate, formDataMotivateInit)) {
             // saveFormData(formData1);
             setFormMotivateInit(formDataMotivate);
         }
-        console.log(formDataInsideHero);
+        // console.log(formDataInsideHero);
         if (!isEqual(formDataInsideHero, formDataInsideHeroInit)) {
             // saveFormData(formData1);
             setFormInsideHeroInit(formDataInsideHero);
         }
-        console.log(formDataCompetition);
+        // console.log(formDataCompetition);
         if (!isEqual(formDataCompetition, formDataCompetitionInit)) {
             // saveFormData(formData1);
             setFormCompetitionInit(formDataCompetition);
         }
-        console.log(formDataIdentify);
+        // console.log(formDataIdentify);
         if (!isEqual(formDataIdentify, formDataIdentifyInit)) {
             // saveFormData(formData1);
             setFormIdentifyInit(formDataIdentify);
         }
-        console.log(formDataPsychology);
+        // console.log(formDataPsychology);
         if (!isEqual(formDataPsychology, formDataPsychologyInit)) {
             // saveFormData(formData1);
             setFormPsychologyInit(formDataPsychology);
         }
-        console.log(developmentHeroText);
+        // console.log(developmentHeroText);
         if (developmentHeroText !== developmentHeroTextInit) {
             // saveFormData(formData1);
             setDevelopmentHeroTextInit(developmentHeroText);
         }
-        console.log(additInfoText);
+        // console.log(additInfoText);
         if (additInfoText !== additInfoTextInit) {
             // saveFormData(formData1);
             setAdditInfoTextInit(additInfoText);
         }
-        console.log(biographyText);
+        // console.log(biographyText);
         if (biographyText !== biographyTextInit) {
             // saveFormData(formData1);
             setBiographyTextInit(biographyText);
+        }
+        if (relationshipText !== relationshipTextInit) {
+            // saveFormData(formData1);
+            setRelationshipTextInit(relationshipText);
         }
     }
 
@@ -239,13 +310,16 @@ const CharacterData = (is_edit=false) => {
                                 </Steps>
                                 <div className="form-data-character">
                                     {currentRequiredF === 0 && (
-                                        <PersonalCharacterData formData={formDataPersonal} setFormData={setFormPersonal} />
+                                        <PersonalCharacterData formData={formDataPersonal}
+                                                               setFormData={setFormPersonal} />
                                     )}
                                     {currentRequiredF === 1 && (
-                                        <MotivationCharacterData formData={formDataMotivate} setFormData={setFormMotivate} />
+                                        <MotivationCharacterData formData={formDataMotivate}
+                                                                 setFormData={setFormMotivate} />
                                     )}
                                     {currentRequiredF === 2 && (
-                                        <InsideCharacterData formData={formDataInsideHero} setFormData={setFormInsideHero} />
+                                        <InsideCharacterData formData={formDataInsideHero}
+                                                             setFormData={setFormInsideHero} />
                                     )}
                                 </div>
                             </div>
@@ -267,7 +341,11 @@ const CharacterData = (is_edit=false) => {
 
                             <h1 className="text-2xl font-bold mb-4">Отношения с другими героями</h1>
                             <Card className="card-form ">
-                                <TextArea rows={6} />
+                                <TextArea
+                                    value={relationshipText}
+                                    onChange={(e) => setRelationshipText(e.target.value)}
+                                    rows={6}
+                                />
                             </Card>
                         </div>
 

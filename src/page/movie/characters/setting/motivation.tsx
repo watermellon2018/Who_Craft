@@ -3,10 +3,11 @@ import {Form, Input, Row, Col} from 'antd';
 import './style.css'
 import {Gutter} from "antd/es/grid/row";
 import TextArea from "antd/es/input/TextArea";
+import {MotivateI} from "../../../../api/characters/interfaceHero";
 
 interface ChildProps {
-    formData: any;
-    setFormData: (newState: string) => void;
+    formData: MotivateI | undefined;
+    setFormData: (newState: MotivateI) => void;
 }
 
 
@@ -29,7 +30,7 @@ const MotivationCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Зачем этот персонаж?
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="for-what">
+                        <Form.Item name="forWhat">
                             <Input />
                         </Form.Item>
                     </Col>

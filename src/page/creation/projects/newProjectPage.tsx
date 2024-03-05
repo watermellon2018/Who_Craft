@@ -123,8 +123,9 @@ export const ProjectCreatePage = () => {
                 openNotificationWithIcon('Проект успешно создался!',
                                         'Ура!',
                                         'success');
-                localStorage.setItem('curProject', JSON.stringify(data));
-                navigate(PathConstants.PROJECTS);
+                // localStorage.setItem('curProject', JSON.stringify(data));
+                const project_id = response.data['project_id']
+                navigate(PathConstants.PROJECTS, { state: { is_edit: false , project_id: project_id} });
             }
         } catch (error) {
             console.error('Ошибка при получении списка жанров:', error);
