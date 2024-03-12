@@ -29,7 +29,7 @@ const InsideCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) =>
                         Личные черты
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="personalTraits">
+                        <Form.Item initialValue={formData?.personalTraits || ''} name="personalTraits">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -39,7 +39,7 @@ const InsideCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) =>
                         Характер
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="character">
+                        <Form.Item initialValue={formData?.character || ''} name="character">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -49,7 +49,7 @@ const InsideCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) =>
                         Силы и слабости
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="strengthsWeaknesses">
+                        <Form.Item initialValue={formData?.strengthsWeaknesses || ''} name="strengthsWeaknesses">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>

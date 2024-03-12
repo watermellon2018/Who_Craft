@@ -25,7 +25,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Профессия
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="profession">
+                        <Form.Item initialValue={formData?.profession} name="profession">
                             <Input className='long-input' />
                         </Form.Item>
                     </Col>
@@ -35,7 +35,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Увлечения
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="hobby">
+                        <Form.Item initialValue={formData?.hobby} name="hobby">
                             <Input className='long-input' />
                         </Form.Item>
                     </Col>
@@ -45,7 +45,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Таланты
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="talents">
+                        <Form.Item initialValue={formData?.talents} name="talents">
                             <TextArea rows={4} />
                         </Form.Item>
                     </Col>
@@ -56,7 +56,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Интеллектуальные способности
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="mindInfo">
+                        <Form.Item initialValue={formData?.mindInfo} name="mindInfo">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -68,7 +68,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Физические особенности
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="sportInfo">
+                        <Form.Item initialValue={formData?.sportInfo} name="sportInfo">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>

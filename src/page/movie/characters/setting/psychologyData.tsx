@@ -26,7 +26,7 @@ const PsychologyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Характер
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="character">
+                        <Form.Item initialValue={formData?.character || ''} name="character">
                             <TextArea rows={7} />
                         </Form.Item>
                     </Col>
@@ -36,7 +36,7 @@ const PsychologyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Внутренние конфликты
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="insideConflict">
+                        <Form.Item initialValue={formData?.insideConflict || ''} name="insideConflict">
                             <TextArea rows={4} />
                         </Form.Item>
                     </Col>

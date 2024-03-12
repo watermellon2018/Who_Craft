@@ -6,7 +6,6 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 async function create_new_hero(data: SettingHero, project_id: number): Promise<any> {
     try {
-
         return await axios.post(`${backendUrl}/api/projects/hero/create/`, {
             data: {
                 projectId: project_id,

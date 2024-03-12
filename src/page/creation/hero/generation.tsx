@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useMemo, useId} from 'react';
+import React, {useState, useRef, useEffect, useMemo} from 'react';
 import {Button, Empty, Layout, Spin} from 'antd';
 import NodeTree from './tree/node';
 import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
@@ -13,8 +13,7 @@ import {generateImageAPI,
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import CreaterWrapper from "./tree/createrWrapper";
-import Cookies from 'js-cookie';
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../routes/pathConstant";
 const { Content, Sider } = Layout;
 
@@ -37,7 +36,6 @@ export const GenerationHeroPage = () => {
         const getCharacters = async () => {
             const response = await get_all_character_for_project();
             const data = response.data;
-            console.log(data);
             setData(data);
         };
 
@@ -48,7 +46,6 @@ export const GenerationHeroPage = () => {
     const saveCharacterHandle = () => {
         const a = 5
     }
-    console.log(useId());
 
 
 
@@ -79,8 +76,10 @@ export const GenerationHeroPage = () => {
         setIsGenerated(true);
     };
     const navigate = useNavigate();
+    const location = useLocation();
+    const { is_edit, project_id } = location.state || {};
     const settingHeroHandle = () => {
-        navigate(PathConstants.SETTING_HERO);
+        navigate(PathConstants.SETTING_HERO, { state: { is_edit: is_edit , project_id: project_id} });
     };
 
 

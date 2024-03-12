@@ -34,7 +34,7 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Имя
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="name">
+                        <Form.Item initialValue={formData?.name || ''} name="name">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -44,7 +44,7 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Фамилия
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="lastName">
+                        <Form.Item initialValue={formData?.lastName || ''} name="lastName">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -54,7 +54,7 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Отчество
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="middleName">
+                        <Form.Item initialValue={formData?.middleName || ''} name="middleName">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -65,6 +65,7 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                     </Col>
                     <Col span={fieldSpan}>
                         <Form.Item
+                            initialValue={formData?.dob || ''}
                             rules={[
                                 {
                                     required: true,
@@ -84,7 +85,7 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Откуда герой
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="town">
+                        <Form.Item initialValue={formData?.town || ''} name="town">
                             <Input />
                         </Form.Item>
                     </Col>

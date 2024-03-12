@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Card} from 'antd';
 import {EditOutlined, DeleteOutlined, PlusOutlined} from '@ant-design/icons';
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import pathConstant from "../../../routes/pathConstant";
@@ -14,6 +14,8 @@ interface ProjectCard {
 }
 const CharactersCard = () => {
     const [characterList, setCharacterList] = useState<ProjectCard[]>([]);
+    const location = useLocation();
+    const { is_edit, project_id } = location.state || {};
 
     useEffect(() => {
         const data = [
@@ -79,7 +81,7 @@ const CharactersCard = () => {
     }
 
     const clickProjectHandle = () => {
-        navigate(pathConstant.GENERATING)
+        navigate(pathConstant.GENERATING, { state: { is_edit: false , project_id: project_id} })
     };
 
     return (

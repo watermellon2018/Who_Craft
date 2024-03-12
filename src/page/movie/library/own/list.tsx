@@ -5,7 +5,7 @@ import HeaderComponent from "../../../main/header";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './style.css';
 import {delete_project_by_id, get_all_list_projects} from "../../../../api/projects/properties/project";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../../routes/pathConstant";
 
 
@@ -16,6 +16,8 @@ interface ProjectCard {
 }
 const ProjectListPage = () => {
     const [projectsList, setProjectList] = useState<ProjectCard[]>([]);
+    const location = useLocation();
+    const { is_edit, project_id } = location.state || {};
 
     useEffect(() => {
         const getAllProjects = async () => {
@@ -52,9 +54,8 @@ const ProjectListPage = () => {
     const editProject = () => {
         navigate(PathConstants.HOME);
     }
-
     const handleClickCard = () => {
-        navigate(PathConstants.PROJECT_PAGE);
+        navigate(PathConstants.PROJECT_PAGE, { state: { is_edit: false , project_id: project_id} });
     }
 
     return (

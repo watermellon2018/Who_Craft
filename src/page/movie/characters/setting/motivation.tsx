@@ -30,7 +30,7 @@ const MotivationCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Зачем этот персонаж?
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="forWhat">
+                        <Form.Item initialValue={formData?.forWhat || ''} name="forWhat">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -40,7 +40,7 @@ const MotivationCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Цель
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="goal">
+                        <Form.Item initialValue={formData?.goal || ''} name="goal">
                             <Input />
                         </Form.Item>
                     </Col>
@@ -50,7 +50,7 @@ const MotivationCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
                         Философия жизни
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="philosophy">
+                        <Form.Item initialValue={formData?.philosophy || ''} name="philosophy">
                             <TextArea rows={5} />
                         </Form.Item>
                     </Col>

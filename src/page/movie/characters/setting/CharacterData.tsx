@@ -14,9 +14,7 @@ import InsideCharacterData from "./personal";
 import CompetionsCharacterData from "./competations";
 import IdentifyCharacterData from "./identity";
 import PsychologyCharacterData from "./psychologyData";
-import PathConstants from "../../../../routes/pathConstant";
 import {create_new_hero} from "../../../../api/characters/basic";
-import psychologyData from "./psychologyData";
 import {useLocation} from "react-router-dom";
 import {
     CompetitionI,
@@ -29,12 +27,18 @@ import {
 
 
 const { Step } = Steps;
-
+interface LocationState {
+    is_edit?: boolean;
+    project_id?: number;
+}
 const CharacterData = () => {
 
     const location = useLocation();
-    const is_edit = location.state?.is_edit;
-    const project_id = location.state?.project_id;
+    const { is_edit, project_id } = location.state as LocationState || {};
+    console.log(is_edit, project_id);
+
+    // const is_edit = location.state?.is_edit;
+    // const project_id = location.state?.project_id;
 
     // Значения, которыми мы инициализируем формы при загрузке,
     // подтягивая данные с сервера
@@ -76,14 +80,14 @@ const CharacterData = () => {
         setImgUrl(url);
         setImgUrlInit(url);
 
-        const initialValues = {
+        const data1 = {
             name: '',
             lastName: '',
             middleName: '',
             dob: '',
             town: '',
         };
-        setFormPersonalInit(initialValues);
+        setFormPersonalInit(data1);
 
         const data2 = {
             forWhat: '',
@@ -136,7 +140,7 @@ const CharacterData = () => {
         // Так как выше это инициализация начального (прошлого состояния), которое
         // применяется лишь при сравнении сохранения, а не заполнении форму
         // необходимо заполнить значения, которые отвечают за форму
-        setFormPersonal(initialValues);
+        setFormPersonal(data1);
         setFormMotivate(data2);
         setFormInsideHero(data3);
         setFormCompetition(data4);
@@ -149,6 +153,8 @@ const CharacterData = () => {
         setRelationshipText(rel);
 
     }, [])
+
+
 
 
 
@@ -187,7 +193,7 @@ const CharacterData = () => {
         return true;
     }
 
-    const createCreateNewHero = async () => {
+    const createCreateNewHero = async (project_id: number) => {
         try {
             const data: SettingHero = {
                 image: imgUrl,
@@ -222,56 +228,48 @@ const CharacterData = () => {
     }
 
     const handleSaveSettingHero = () => {
-
         if (!is_edit) {
-            createCreateNewHero();
+            if(project_id !== undefined){
+                createCreateNewHero(project_id);
+            }
         }
         console.log('Save');
         if (imgUrl !== imgUrlInit){
             // send data
             setImgUrlInit(imgUrl);
         }
-        // console.log(formDataPersonal);
         if (!isEqual(formDataPersonal, formDataPersonalInit)) {
             // saveFormData(formData1);
             setFormPersonalInit(formDataPersonal);
         }
-        // console.log(formDataMotivate);
         if (!isEqual(formDataMotivate, formDataMotivateInit)) {
             // saveFormData(formData1);
             setFormMotivateInit(formDataMotivate);
         }
-        // console.log(formDataInsideHero);
         if (!isEqual(formDataInsideHero, formDataInsideHeroInit)) {
             // saveFormData(formData1);
             setFormInsideHeroInit(formDataInsideHero);
         }
-        // console.log(formDataCompetition);
         if (!isEqual(formDataCompetition, formDataCompetitionInit)) {
             // saveFormData(formData1);
             setFormCompetitionInit(formDataCompetition);
         }
-        // console.log(formDataIdentify);
         if (!isEqual(formDataIdentify, formDataIdentifyInit)) {
             // saveFormData(formData1);
             setFormIdentifyInit(formDataIdentify);
         }
-        // console.log(formDataPsychology);
         if (!isEqual(formDataPsychology, formDataPsychologyInit)) {
             // saveFormData(formData1);
             setFormPsychologyInit(formDataPsychology);
         }
-        // console.log(developmentHeroText);
         if (developmentHeroText !== developmentHeroTextInit) {
             // saveFormData(formData1);
             setDevelopmentHeroTextInit(developmentHeroText);
         }
-        // console.log(additInfoText);
         if (additInfoText !== additInfoTextInit) {
             // saveFormData(formData1);
             setAdditInfoTextInit(additInfoText);
         }
-        // console.log(biographyText);
         if (biographyText !== biographyTextInit) {
             // saveFormData(formData1);
             setBiographyTextInit(biographyText);

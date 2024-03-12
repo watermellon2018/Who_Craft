@@ -10,7 +10,6 @@ import {
     renameCharacterFromTree
 } from "../../../../api/generation/characters/tree_structure";
 import {NodeApi, TreeApi} from "react-arborist";
-import {TreeNode} from "primereact/treenode";
 
 interface NodeProps {
     node: NodeApi;
@@ -32,7 +31,6 @@ const NodeTree: React.FC<NodeProps> = ({ node,
         }
 
         // скажем страницы, что сейчас мы на этом персонаже
-        console.log(node.isLeaf);
         if (node.data.name !== ''){
             setCurCharacter({'id': node.data.id,
                                 'name': node.data.name,

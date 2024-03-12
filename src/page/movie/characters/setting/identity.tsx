@@ -26,7 +26,7 @@ const IdentifyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Внешние особенности
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="appearance">
+                        <Form.Item initialValue={formData?.appearance || ''} name="appearance">
                             <TextArea rows={5} />
                         </Form.Item>
                     </Col>
@@ -36,7 +36,7 @@ const IdentifyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Индивидуальный стиль
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="style">
+                        <Form.Item initialValue={formData?.style || ''} name="style">
                             <TextArea rows={5} />
                         </Form.Item>
                     </Col>
@@ -46,7 +46,7 @@ const IdentifyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Комплексы
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="complexs">
+                        <Form.Item initialValue={formData?.complexs || ''} name="complexs">
                             <TextArea rows={3} />
                         </Form.Item>
                     </Col>
@@ -57,7 +57,7 @@ const IdentifyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
                         Особенности речи
                     </Col>
                     <Col span={fieldSpan}>
-                        <Form.Item name="speech">
+                        <Form.Item initialValue={formData?.speech || ''} name="speech">
                             <Input className='long-input' />
                         </Form.Item>
                     </Col>
