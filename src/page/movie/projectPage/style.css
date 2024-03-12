@@ -31,3 +31,9 @@
 .container-card:not(:last-child) {
     margin-bottom: 8vh;
 }
+
+.div-card-seq .ant-card {
+    width: inherit;
+    height: inherit;
+    min-width: inherit !important;
+}

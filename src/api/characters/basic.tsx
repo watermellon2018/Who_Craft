@@ -3,6 +3,17 @@ import {SettingHero} from "./interfaceHero";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
+async function get_all_heros_project(project_id: number): Promise<any> {
+    try {
+        return await axios.get(`${backendUrl}/api/projects/hero/select/`, {
+            params: {
+                projectId: project_id,
+            }
+        });
+    }catch (error){
+        console.error('Error select all heros for project:', error);
+    }
+}
 
 async function create_new_hero(data: SettingHero, project_id: number): Promise<any> {
     try {
@@ -45,9 +56,9 @@ async function create_new_hero(data: SettingHero, project_id: number): Promise<a
             }
         });
     } catch (error) {
-        console.error('Error generating image to image:', error);
+        console.error('Error create new hero for project:', error);
     }
 
 }
 
-export { create_new_hero }
+export { create_new_hero, get_all_heros_project }

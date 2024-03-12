@@ -16,7 +16,7 @@ const ProjectPage = () => {
         }
         const obj: any = JSON.parse(curProjectStr);
         setCurProject(obj);
-    });
+    }, []);
 
 
     return (

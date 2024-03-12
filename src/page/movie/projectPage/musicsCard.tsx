@@ -58,7 +58,7 @@ const MusicsCard = () => {
         <>
             <div className="p-4 container-card">
                 <h1 className="text-xl font-bold mb-4">Музыка</h1>
-                <div className="grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <div className="div-card-seq grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {musicList.map((sound, index) => (
                         <Card
                             hoverable
