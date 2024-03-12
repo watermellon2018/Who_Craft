@@ -9,7 +9,7 @@ const PathConstants = {
 
     PROFILE: 'profile',
 
-    CREATE_PROJECT: 'create-project',
+    CREATE_PROJECT: '/create-project',
     PROJECTS: '/project-list',
     PROJECT_PAGE: '/project-list/project'
 
