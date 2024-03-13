@@ -15,6 +15,20 @@ async function get_all_heros_project(project_id: number): Promise<any> {
     }
 }
 
+async function delete_hero_by_id(project_id: string, character_id: string): Promise<any> {
+    try {
+        return await axios.get(`${backendUrl}/api/projects/hero/delete_by_id/`, {
+            params: {
+                projectId: project_id,
+                characterId: character_id,
+            }
+        });
+
+    } catch (error) {
+        console.error('Ошибка при удалении персонажа:', error);
+    }
+}
+
 async function select_info_hero_by_id(project_id: number | undefined,
                                       character_id: string | undefined): Promise<any> {
     if(project_id === undefined || character_id === undefined){
@@ -83,4 +97,5 @@ export {
     create_new_hero,
     get_all_heros_project,
     select_info_hero_by_id,
+    delete_hero_by_id,
 }
