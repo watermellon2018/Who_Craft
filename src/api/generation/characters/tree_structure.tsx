@@ -3,10 +3,11 @@ import axios from 'axios';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 
-async function get_all_character_for_project(): Promise<any> {
+async function get_all_character_for_project(project_id: number): Promise<any> {
     try {
         return await axios.get(`${backendUrl}/api/character/select/`, {
             params: {
+                projectId: project_id,
             }
         });
     } catch (error) {

@@ -26,6 +26,7 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
         return Promise.resolve();
     };
 
+
     return (
         <>
             <Form onValuesChange={handleFormChange} initialValues={formData}>

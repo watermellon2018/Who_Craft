@@ -23,7 +23,7 @@ interface HeroCard {
 const CharactersCard = () => {
     const [characterList, setCharacterList] = useState<ProjectCard[]>([]);
     const location = useLocation();
-    const { is_edit, project_id } = location.state || {};
+    const { project_id, title } = location.state || {};
 
     useEffect(() => {
         // const data = [
@@ -93,6 +93,14 @@ const CharactersCard = () => {
         navigate(pathConstant.GENERATING, { state: { is_edit: false , project_id: project_id} })
     };
 
+    const cardClickHandle = (id_character: string) => {
+        navigate(pathConstant.SETTING_HERO,
+            { state: { is_edit: true ,
+                    project_id: project_id,
+                    character_id: id_character,
+            } })
+    };
+
     return (
         <>
             <div className="p-4 container-card">
@@ -100,6 +108,7 @@ const CharactersCard = () => {
                 <div className="div-card-seq grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {characterList.map((character, index) => (
                         <Card
+                            onClick={() => cardClickHandle(character.id)}
                             hoverable
                             className='bottom-card'
                             key={'my-movie-'+index}
@@ -109,7 +118,7 @@ const CharactersCard = () => {
                                     // src={character.src}
                                     src='https://placehold.co/195x147'
 
-                                    alt={`Poster movie ${index + 1}`}
+                                    alt={`Poster hero ${index + 1}`}
                                 />
                                 <div className="text-right absolute top-1 right-0">
                                     <EditOutlined onClick={editProject} className="text-white text-xl p-2" />

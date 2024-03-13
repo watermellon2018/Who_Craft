@@ -16,8 +16,6 @@ interface ProjectCard {
 }
 const ProjectListPage = () => {
     const [projectsList, setProjectList] = useState<ProjectCard[]>([]);
-    const location = useLocation();
-    const { is_edit } = location.state || {};
 
     useEffect(() => {
         const getAllProjects = async () => {
@@ -54,8 +52,8 @@ const ProjectListPage = () => {
     const editProject = () => {
         navigate(PathConstants.HOME);
     }
-    const handleClickCard = (project_id: string) => {
-        navigate(PathConstants.PROJECT_PAGE, { state: { is_edit: false , project_id: project_id} });
+    const handleClickCard = (project_id: string, title: string) => {
+        navigate(PathConstants.PROJECT_PAGE, { state: { project_id: project_id, title: title} });
     }
 
     return (
@@ -68,13 +66,13 @@ const ProjectListPage = () => {
                     <div className="grid grid-cols-4 gap-4 projects-div">
                         {projectsList.map((project, index) => (
                             <Card
-                                onClick={() => {handleClickCard(project.id)}}
+                                onClick={() => {handleClickCard(project.id, project.title)}}
                                 hoverable
                                 className='bottom-card'
                                 key={'my-movie-'+index}
                                 cover={<>
                                     <img src={project.src}
-                                         onClick={() => {handleClickCard(project.id)}}
+                                         onClick={() => {handleClickCard(project.id, project.title)}}
                                          alt={`Poster movie ${index + 1}`}
                                           />
                                     <div className="text-right absolute top-0 right-0">

@@ -19,6 +19,10 @@ const { Content, Sider } = Layout;
 
 
 export const GenerationHeroPage = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { is_edit, project_id } = location.state || {};
+
     const [collapsed, setCollapsed] = useState(false);
     const treeRef = useRef(null);
 
@@ -34,7 +38,7 @@ export const GenerationHeroPage = () => {
 
     useEffect(() => {
         const getCharacters = async () => {
-            const response = await get_all_character_for_project();
+            const response = await get_all_character_for_project(project_id);
             const data = response.data;
             setData(data);
         };
@@ -75,9 +79,7 @@ export const GenerationHeroPage = () => {
         setImageGeneratedUrl(imageUrl);
         setIsGenerated(true);
     };
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { is_edit, project_id } = location.state || {};
+
     const settingHeroHandle = () => {
         navigate(PathConstants.SETTING_HERO, { state: { is_edit: is_edit , project_id: project_id} });
     };
