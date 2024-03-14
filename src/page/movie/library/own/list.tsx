@@ -5,7 +5,8 @@ import HeaderComponent from "../../../main/header";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './style.css';
 import {delete_project_by_id, get_all_list_projects} from "../../../../api/projects/properties/project";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import PathConstants from "../../../../routes/pathConstant";
 
 
 interface ProjectCard {
@@ -49,7 +50,10 @@ const ProjectListPage = () => {
     }
     const navigate = useNavigate();
     const editProject = () => {
-        navigate('/')
+        navigate(PathConstants.HOME);
+    }
+    const handleClickCard = (project_id: string, title: string) => {
+        navigate(PathConstants.PROJECT_PAGE, { state: { project_id: project_id, title: title} });
     }
 
     return (
@@ -59,14 +63,16 @@ const ProjectListPage = () => {
 
                 <div className="p-4">
                     <h1 className="text-xl font-bold mb-4">Мои проекты</h1>
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4 gap-4 projects-div">
                         {projectsList.map((project, index) => (
                             <Card
+                                onClick={() => {handleClickCard(project.id, project.title)}}
                                 hoverable
                                 className='bottom-card'
                                 key={'my-movie-'+index}
                                 cover={<>
                                     <img src={project.src}
+                                         onClick={() => {handleClickCard(project.id, project.title)}}
                                          alt={`Poster movie ${index + 1}`}
                                           />
                                     <div className="text-right absolute top-0 right-0">

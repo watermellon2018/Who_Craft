@@ -11,6 +11,9 @@ import LoginPage from "./page/logIn/login";
 import ProfilePage from "./page/profile/user";
 import ProjectCreatePage from "./page/creation/projects/newProjectPage";
 import ProjectListPage from "./page/movie/library/own/list";
+import ProjectPage from "./page/movie/projectPage/projectPage";
+import CharacterData from "./page/movie/characters/setting/CharacterData";
+import PathConstants from "./routes/pathConstant";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -81,8 +84,13 @@ const theme = {
         "Form": {
             "labelColor": "rgb(27, 29, 34)",
         },
+        "Empty": {
+            "colorText": "#fab005",
+            "colorTextDisabled": "#fab005",
+        }
     }
 }
+
 function App() {
   return (
       <ConfigProvider
@@ -90,14 +98,16 @@ function App() {
       >
           <BrowserRouter>
               <Routes>
-                  <Route caseSensitive path="/start" element={<LandingPage />} />
-                  <Route path="/register" element={<RegistrationPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/" element={<MainPage />} />
-                  <Route path="/generating" element={<GenerationHeroPage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/create-project" element={<ProjectCreatePage />} />
-                  <Route path="/project-list" element={<ProjectListPage />} />
+                  <Route caseSensitive path={PathConstants.AUTH} element={<LandingPage />} />
+                  <Route path={PathConstants.REGISTER}  element={<RegistrationPage />} />
+                  <Route path={PathConstants.LOGIN} element={<LoginPage />} />
+                  <Route path={PathConstants.HOME} element={<MainPage />} />
+                  <Route path={PathConstants.GENERATING}  element={<GenerationHeroPage />} />
+                  <Route path={PathConstants.SETTING_HERO}  element={<CharacterData />} />
+                  <Route path={PathConstants.PROFILE}  element={<ProfilePage />} />
+                  <Route path={PathConstants.CREATE_PROJECT}  element={<ProjectCreatePage />} />
+                  <Route path={PathConstants.PROJECTS}  element={<ProjectListPage />} />
+                  <Route path={PathConstants.PROJECT_PAGE}  element={<ProjectPage />} />
               </Routes>
           </BrowserRouter>
       </ConfigProvider>

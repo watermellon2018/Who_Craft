@@ -1,7 +1,18 @@
 import React from 'react';
 import HeaderComponent from "./header";
 import withAuth from "../../utils/auth/check_auth";
+import {useNavigate} from "react-router-dom";
+import PathConstants from "../../routes/pathConstant";
 export const MainPage = () => {
+    const navigate = useNavigate();
+
+    const createProjectHandle = () => {
+        navigate(PathConstants.CREATE_PROJECT);
+    }
+
+    const myLibraryHandle = () => {
+        navigate(PathConstants.PROJECTS)
+    }
 
     return (
 
@@ -12,9 +23,14 @@ export const MainPage = () => {
             <main className="grid grid-cols-3 gap-5 p-6 w-2/3 max-w-2xl flex justify-center items-center"
                   style={{minHeight: "300px"}}
             >
-                <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
+                <div onClick={createProjectHandle}
+                     className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
                      style={{height: "-webkit-fill-available"}}>СОЗДАТЬ</div>
-                <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
+                <div onClick={myLibraryHandle}
+                     className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
+                     style={{height: "-webkit-fill-available"}}>
+                    МОИ ПРОЕКТЫ
+                </div>
                 <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
                 <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
                 <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>

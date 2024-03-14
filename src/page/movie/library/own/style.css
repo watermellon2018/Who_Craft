@@ -5,3 +5,9 @@
 .ant-card-body {
     padding: 6px 3px !important;
 }
+
+.projects-div .ant-card  {
+    width: inherit;
+    height: inherit;
+    min-width: inherit !important;
+}

@@ -3,12 +3,13 @@ import Cookies from 'js-cookie';
 import {useNavigate} from 'react-router-dom';
 import {CaretRightOutlined} from "@ant-design/icons";
 import './components.css'
+import PathConstants from "../../routes/pathConstant";
 
 
 const LogoButton: React.FC = () => {
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/')
+        navigate(PathConstants.HOME);
     };
     return (
         <div className="flex logo" onClick={handleClick}>

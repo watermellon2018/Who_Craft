@@ -17,9 +17,8 @@ interface UndefinedCharacterFormProps {
 const CharacterParams: React.FC<CharacterParamsProps> = ({ onFinish }) => {
 
     return (
-        <Form onFinish={onFinish} layout="vertical">
+        <Form style={{backgroundColor: 'rgb(250, 176, 5)'}} onFinish={onFinish} layout="vertical">
             <Form.Item label="Пол" name="gender" >
-                {/*<Select onChange={handleGenderChange}>*/}
                 <Select>
                     <Option value="female">Женский</Option>
                     <Option value="male">Мужской</Option>

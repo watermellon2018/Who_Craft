@@ -10,21 +10,35 @@ import {
     renameCharacterFromTree
 } from "../../../../api/generation/characters/tree_structure";
 import {NodeApi, TreeApi} from "react-arborist";
-import {TreeNode} from "primereact/treenode";
 
 interface NodeProps {
     node: NodeApi;
     style: React.CSSProperties;
     dragHandle?: ((el: (HTMLDivElement | null)) => void) | undefined;
     tree: TreeApi<any>; // тип дерева можно заменить на конкретный, если известен
+    setCurCharacter: (el: {id: string, name: string, is_folder: boolean }) => void;
 }
 
-const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
+const NodeTree: React.FC<NodeProps> = ({ node,
+                                           style,
+                                           dragHandle,
+                                           tree,
+                                           setCurCharacter
+}) => {
     const handleClick = () => {
         if (node.isInternal) {
             node.toggle()
         }
+
+        // скажем страницы, что сейчас мы на этом персонаже
+        if (node.data.name !== ''){
+            setCurCharacter({'id': node.data.id,
+                                'name': node.data.name,
+                                'is_folder': !node.isLeaf
+            });
+        }
     };
+
 
     const handleDelete = async () => {
         const idNodeToDel: string = node.data.id
@@ -51,9 +65,16 @@ const NodeTree: React.FC<NodeProps> = ({ node, style, dragHandle, tree }) => {
     }
 
     return (
-        <div className="node-container flex justify-between" style={style} ref={dragHandle}>
-            <div className="node-content"
+        <div
+             key={'div_block_tree_character_'+node.id}
+             className={`flex justify-between node-container ${node.state.isSelected ? "bg-blue-100 bg-opacity-10" : ""}`}
+             style={style}
+             ref={dragHandle}>
+            <div
+                key={'div_content_tree_character_'+node.id}
+                className="node-content"
                  onClick={handleClick}
+                 // onFocus={handleSelect}
             >
                 {node.isLeaf ? (
                     <>

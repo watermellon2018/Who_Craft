@@ -20,6 +20,7 @@ import {get_all_genres} from "../../../api/projects/properties/genres";
 import AudienceSelect from "./selectAudience";
 import {create_new_project} from "../../../api/projects/properties/project";
 import withAuth from "../../../utils/auth/check_auth";
+import PathConstants from "../../../routes/pathConstant";
 
 // TODO:: its for testing
 const BOTTOM_LEN_ANNOT = 0 // 300 # TODO: заглушка
@@ -122,7 +123,9 @@ export const ProjectCreatePage = () => {
                 openNotificationWithIcon('Проект успешно создался!',
                                         'Ура!',
                                         'success');
-                navigate('/project-list');
+                // localStorage.setItem('curProject', JSON.stringify(data));
+                // const project_id = response.data['project_id']
+                navigate(PathConstants.PROJECTS);
             }
         } catch (error) {
             console.error('Ошибка при получении списка жанров:', error);
