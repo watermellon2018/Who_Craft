@@ -35,7 +35,7 @@ interface IdentifyI {
 
 interface PsyhoI {
     character: string;
-    'insideConflict': string;
+    insideConflict: string;
 }
 
 interface SettingHero {

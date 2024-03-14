@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Col, Divider, Image, Row, Spin, Steps} from 'antd';
+import {Button, Card, Col, Divider, Image, notification, Row, Spin, Steps} from 'antd';
 import HeaderComponent from "../../../main/header";
 import './style.css'
 import PersonalCharacterData from "./personalInfo";
@@ -14,7 +14,7 @@ import {
     create_new_hero,
     select_info_hero_by_id,
 } from "../../../../api/characters/basic";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {
     CompetitionI,
     IdentifyI,
@@ -25,7 +25,6 @@ import {
     SettingHero
 } from "../../../../api/characters/interfaceHero";
 import PathConstants from "../../../../routes/pathConstant";
-import personalSettingForm from "../../../profile/personalSettingForm";
 import {
     update_addit_data_hero, update_bio_data_hero,
     update_competition_data_hero, update_development_data_hero, update_identity_data_hero, update_image_data_hero,
@@ -42,7 +41,7 @@ interface LocationState {
     character_id?: string;
 }
 const CharacterData = () => {
-
+    const navigate = useNavigate();
     const location = useLocation();
     const { is_edit, project_id, character_id } = location.state as LocationState || {};
 
@@ -82,7 +81,6 @@ const CharacterData = () => {
     const [isLoadData, setIsLoadData] = useState<boolean>(false);
 
 
-
     // При загрузке страницы выгружаем данные с сервера
     useEffect(() => {
 
@@ -99,14 +97,10 @@ const CharacterData = () => {
 
         getCharactersInfo().then((data) => {
 
-
-
-
             // TODO::
             const url = "https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
             setImgUrl(url);
             setImgUrlInit(url);
-
 
             const data1 = {
                 name: data['name'],
@@ -115,7 +109,6 @@ const CharacterData = () => {
                 dob: data['dob'],
                 town: data['town'],
             };
-            console.log('ff', data1);
             setFormPersonalInit(data1);
 
             const data2 = {
@@ -162,7 +155,7 @@ const CharacterData = () => {
             setDevelopmentHeroTextInit(dev);
             setAdditInfoTextInit(addit);
             setBiographyTextInit(bio);
-            setRelationshipText(rel);
+            setRelationshipTextInit(rel);
 
 
 
@@ -260,92 +253,36 @@ const CharacterData = () => {
             }
         }
 
-        if (imgUrl !== imgUrlInit){
-            // send data
-            update_image_data_hero(imgUrl, project_id, character_id).then(() => {
-                setImgUrlInit(imgUrl);
-                // notification
-                // navigate
-            })
-        }
-        if (!isEqual(formDataPersonal, formDataPersonalInit)) {
-            update_personal_data_hero(formDataPersonal, project_id, character_id).then(() => {
-                setFormPersonalInit(formDataPersonal);
-                // notification
-                // navigate
-            })
-        }
-        if (!isEqual(formDataMotivate, formDataMotivateInit)) {
-            update_motivate_data_hero(formDataMotivate, project_id, character_id).then(() => {
-                setFormMotivateInit(formDataMotivate);
-                // notification
-                // navigate
-            })
-        }
-        if (!isEqual(formDataInsideHero, formDataInsideHeroInit)) {
-            // saveFormData(formData1);
-            update_inside_data_hero(formDataInsideHero, project_id, character_id).then(() => {
-                setFormInsideHeroInit(formDataInsideHero);
-                // notification
-                // navigate
-            })
-        }
-        if (!isEqual(formDataCompetition, formDataCompetitionInit)) {
-            // saveFormData(formData1);
-            update_competition_data_hero(formDataCompetition, project_id, character_id).then(() => {
-                setFormCompetitionInit(formDataCompetition);
-                // notification
-                // navigate
-            })
-        }
-        if (!isEqual(formDataIdentify, formDataIdentifyInit)) {
-            // saveFormData(formData1);
-            update_identity_data_hero(formDataIdentify, project_id, character_id).then(() => {
-                setFormIdentifyInit(formDataIdentify);
-                // notification
-                // navigate
-            })
-        }
-        if (!isEqual(formDataPsychology, formDataPsychologyInit)) {
-            // saveFormData(formData1);
-            update_psyho_data_hero(formDataPsychology, project_id, character_id).then(() => {
-                setFormPsychologyInit(formDataPsychology);
-                // notification
-                // navigate
-            })
-        }
-        if (developmentHeroText !== developmentHeroTextInit) {
-            // saveFormData(formData1);
-            update_development_data_hero(developmentHeroText, project_id, character_id).then(() => {
-                setDevelopmentHeroTextInit(developmentHeroText);
-                // notification
-                // navigate
-            })
-        }
-        if (additInfoText !== additInfoTextInit) {
-            // saveFormData(formData1);
-            update_addit_data_hero(additInfoText, project_id, character_id).then(() => {
-                setAdditInfoTextInit(additInfoText);
-                // notification
-                // navigate
-            })
-        }
-        if (biographyText !== biographyTextInit) {
-            // saveFormData(formData1);
-            update_bio_data_hero(biographyText, project_id, character_id).then(() => {
-                setBiographyTextInit(biographyText);
-                // notification
-                // navigate
-            })
-        }
-        if (relationshipText !== relationshipTextInit) {
-            // saveFormData(formData1);
-            update_relationship_data_hero(relationshipText, project_id, character_id).then(() => {
-                setRelationshipTextInit(relationshipText);
-                // notification
-                // navigate
-            })
-        }
+        const updateData = async (data: any,
+                                  dataInit: any,
+                                  updateFunction: (data: any, projectId: number | undefined, characterId: string | undefined) => Promise<any>,
+                                  setInitFunction: React.Dispatch<React.SetStateAction<any>>) => {
+            const isDifferent = typeof data === 'string' ? data !== dataInit : !isEqual(data, dataInit);
+            if (isDifferent) {
+                await updateFunction(data, project_id, character_id).then(() => {
+                    setInitFunction(data);
+                    notification['success']({
+                        message: 'Информация о персонаже сохранена!',
+                        description: 'Ура!',
+                    });
+                    navigate(PathConstants.GENERATING);
+                });
+            }
+        };
+
+        updateData(imgUrl, imgUrlInit, update_image_data_hero, setImgUrlInit);
+        updateData(formDataPersonal, formDataPersonalInit, update_personal_data_hero, setFormPersonalInit);
+        updateData(formDataMotivate, formDataMotivateInit, update_motivate_data_hero, setFormMotivateInit);
+        updateData(formDataInsideHero, formDataInsideHeroInit, update_inside_data_hero, setFormInsideHeroInit);
+        updateData(formDataCompetition, formDataCompetitionInit, update_competition_data_hero, setFormCompetitionInit);
+        updateData(formDataIdentify, formDataIdentifyInit, update_identity_data_hero, setFormIdentifyInit);
+        updateData(formDataPsychology, formDataPsychologyInit, update_psyho_data_hero, setFormPsychologyInit);
+        updateData(developmentHeroText, developmentHeroTextInit, update_development_data_hero, setDevelopmentHeroTextInit);
+        updateData(additInfoText, additInfoTextInit, update_addit_data_hero, setAdditInfoTextInit);
+        updateData(biographyText, biographyTextInit, update_bio_data_hero, setBiographyTextInit);
+        updateData(relationshipText, relationshipTextInit, update_relationship_data_hero, setRelationshipTextInit);
+
+
     }
 
 
