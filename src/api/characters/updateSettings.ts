@@ -275,6 +275,31 @@ async function update_relationship_data_hero(data: string | undefined,
     }
 }
 
+async function update_image_data_hero(data: string | undefined,
+                                             project_id: number | undefined,
+                                             character_id: string | undefined): Promise<any> {
+    const is_correct = is_correct_data(project_id) &&
+        is_correct_data(character_id)
+
+    if(!is_correct)
+        throw TypeError('Не определен проект или персонаж')
+    if(data === undefined)
+        throw TypeError('Не определены данные персонажа')
+
+
+    try {
+        return await axios.post(`${backendUrl}/api/projects/hero/update_image_hero/`, {
+            data: {
+                projectId: project_id,
+                characterId: character_id,
+                image: data,
+            }
+        });
+    } catch (error) {
+        console.error('Error update personal info hero from project:', error);
+    }
+}
+
 export {
     update_personal_data_hero,
     update_motivate_data_hero,
@@ -286,4 +311,5 @@ export {
     update_addit_data_hero,
     update_bio_data_hero,
     update_relationship_data_hero,
+    update_image_data_hero,
 }

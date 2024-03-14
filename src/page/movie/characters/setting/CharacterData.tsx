@@ -28,7 +28,7 @@ import PathConstants from "../../../../routes/pathConstant";
 import personalSettingForm from "../../../profile/personalSettingForm";
 import {
     update_addit_data_hero, update_bio_data_hero,
-    update_competition_data_hero, update_development_data_hero, update_identity_data_hero,
+    update_competition_data_hero, update_development_data_hero, update_identity_data_hero, update_image_data_hero,
     update_inside_data_hero,
     update_motivate_data_hero,
     update_personal_data_hero, update_psyho_data_hero, update_relationship_data_hero
@@ -262,7 +262,11 @@ const CharacterData = () => {
 
         if (imgUrl !== imgUrlInit){
             // send data
-            setImgUrlInit(imgUrl);
+            update_image_data_hero(imgUrl, project_id, character_id).then(() => {
+                setImgUrlInit(imgUrl);
+                // notification
+                // navigate
+            })
         }
         if (!isEqual(formDataPersonal, formDataPersonalInit)) {
             update_personal_data_hero(formDataPersonal, project_id, character_id).then(() => {
