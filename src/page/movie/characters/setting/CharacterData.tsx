@@ -24,7 +24,6 @@ import {
     PsyhoI,
     SettingHero
 } from "../../../../api/characters/interfaceHero";
-import PathConstants from "../../../../routes/pathConstant";
 import {
     update_addit_data_hero, update_bio_data_hero,
     update_competition_data_hero, update_development_data_hero, update_identity_data_hero, update_image_data_hero,
@@ -85,6 +84,8 @@ const CharacterData = () => {
     useEffect(() => {
 
         const getCharactersInfo = async () => {
+            if (!is_edit)
+                return;
             try {
                 const response = await select_info_hero_by_id(project_id, character_id);
                 if (response.status == 200) {
@@ -103,55 +104,55 @@ const CharacterData = () => {
             setImgUrlInit(url);
 
             const data1 = {
-                name: data['name'],
-                lastName: data['lastName'],
-                middleName: data['middleName'],
-                dob: data['dob'],
-                town: data['town'],
+                name: data?.name || "",
+                lastName: data?.lastName || "",
+                middleName: data?.middleName || "",
+                dob: data?.dob || "",
+                town: data?.town || "",
             };
             setFormPersonalInit(data1);
 
             const data2 = {
-                forWhat: data['forWhat'],
-                goal: data['goal'],
-                philosophy: data['philosophy'],
+                forWhat: data?.forWhat || "",
+                goal: data?.goal || "",
+                philosophy: data?.philosophy || "",
             }
             setFormMotivateInit(data2)
 
             const data3 = {
-                personalTraits: data['personalTraits'],
-                character: data['character'],
-                strengthsWeaknesses: data['strengthsWeaknesses'],
+                personalTraits: data?.personalTraits || "",
+                character: data?.character || "",
+                strengthsWeaknesses: data?.strengthsWeaknesses || "",
             }
             setFormInsideHeroInit(data3);
 
             const data4 = {
-                profession: data['profession'],
-                hobby: data['hobby'],
-                talents: data['talents'],
-                mindInfo: data['mindInfo'],
-                sportInfo: data['sportInfo'],
+                profession: data?.profession || "",
+                hobby: data?.hobby || "",
+                talents: data?.talents || "",
+                mindInfo: data?.mindInfo || "",
+                sportInfo: data?.sportInfo || "",
             }
             setFormCompetitionInit(data4);
 
             const data5 = {
-                appearance: data['appearance'],
-                style: data['style'],
-                complexs: data['complexs'],
-                speech: data['speech']
+                appearance: data?.appearance || "",
+                style: data?.style || "",
+                complexs: data?.complexs || "",
+                speech: data?.speech || ""
             }
             setFormIdentifyInit(data5);
 
             const data6 = {
-                character: data['character'],
-                insideConflict: data['insideConflict']
+                character: data?.character || "",
+                insideConflict: data?.insideConflict || ""
             }
             setFormPsychologyInit(data6);
 
-            const dev = data['development']
-            const addit = data['additInfo']
-            const bio = data['biography']
-            const rel = data['relationship']
+            const dev = data?.development || ""
+            const addit = data?.additInfo || ""
+            const bio = data?.biography || ""
+            const rel = data?.relationship || ""
             setDevelopmentHeroTextInit(dev);
             setAdditInfoTextInit(addit);
             setBiographyTextInit(bio);
@@ -238,7 +239,7 @@ const CharacterData = () => {
             }
             const response = await create_new_hero(data, project_id);
             if(response.status == 200){
-                // navigate(PathConstants.PROJECTS);
+                navigate(-1);
             }
         } catch (error) {
             console.error('Ошибка при получении списка жанров:', error);
@@ -247,10 +248,25 @@ const CharacterData = () => {
 
 
     const handleSaveSettingHero = () => {
+        console.log('call!!!!!')
         if (!is_edit) {
             if(project_id !== undefined){
-                createCreateNewHero(project_id);
+                createCreateNewHero(project_id).then(() => {
+                        notification['success']({
+                            message: 'Информация о персонаже сохранена!',
+                            description: 'Ура!',
+                        });
+                        navigate(-1);
+                    }
+                );
+                return true;
             }
+            notification['error']({
+                message: 'Персонаж не создан!',
+                description: 'Проблемы с созданием героя, похоже не создался проект!',
+            });
+            navigate(-1);
+            return false;
         }
 
         const updateData = async (data: any,
@@ -265,7 +281,7 @@ const CharacterData = () => {
                         message: 'Информация о персонаже сохранена!',
                         description: 'Ура!',
                     });
-                    navigate(PathConstants.GENERATING);
+                    navigate(-1);
                 });
             }
         };
@@ -283,6 +299,10 @@ const CharacterData = () => {
         updateData(relationshipText, relationshipTextInit, update_relationship_data_hero, setRelationshipTextInit);
 
 
+    }
+
+    const handleBackStep = () => {
+        navigate(-1);
     }
 
 
@@ -448,6 +468,9 @@ const CharacterData = () => {
 
 
                             <div className="justify-end flex mt-3">
+                                <Button className="min-w-150 mr-5" type="primary" onClick={handleBackStep}>
+                                    Назад
+                                </Button>
                                 <Button className="min-w-150" type="primary" onClick={handleSaveSettingHero}>
                                     Сохранить настройки
                                 </Button>

@@ -37,6 +37,7 @@ const CharactersCard = () => {
                     src: hero.src ? 'data:image/jpeg;base64,' + hero.src : 'https://placehold.co/195x147',
                     name: hero.name,
                 }));
+                console.log(data.length)
                 setCharacterList(data);
             } catch (error) {
                 console.error('Ошибка при получении списка проектов:', error);
