@@ -58,11 +58,11 @@ export const GenerationHeroPage = () => {
     };
 
     const [imageGeneratedUrl, setImageGeneratedUrl] = useState<string>('');
-    const [isGenerated, setIsGenerated] = useState<boolean>(true);
+    const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
     const onFinish = async (values: any) => {
-        setIsGenerated(false);
-        console.log(values);
+        setIsGenerating(true);
+        // console.log(values);
 
         let response;
         // TODO:: переделать / костыль пока оставлю
@@ -77,7 +77,7 @@ export const GenerationHeroPage = () => {
         const byteArray = response.data;
         const imageUrl = `data:image/png;base64,${byteArray}`;
         setImageGeneratedUrl(imageUrl);
-        setIsGenerated(true);
+        setIsGenerating(false);
     };
 
     const settingHeroHandle = () => {
@@ -140,14 +140,15 @@ export const GenerationHeroPage = () => {
 
                             <div className="h-full w-full flex items-center justify-center">
 
-                                {imageGeneratedUrl == '' ?
-                                    <Empty description='Персонаж не сгенерирован'
-                                           className='text-yellow'
-                                           image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
-                                    isGenerated ?
-                                        <ImageCanvas imageUrl={imageGeneratedUrl} /> :
-                                        <Spin />
-
+                                {isGenerating ? <Spin /> :
+                                    <>
+                                        {curCharacter['name'] && imageGeneratedUrl == '' ?
+                                                <Empty description='Персонаж не сгенерирован'
+                                                       className='text-yellow'
+                                                       image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
+                                            <ImageCanvas imageUrl={imageGeneratedUrl} />
+                                        }
+                                    </>
                                 }
 
                             </div>
