@@ -27,10 +27,11 @@ import {
 import PathConstants from "../../../../routes/pathConstant";
 import personalSettingForm from "../../../profile/personalSettingForm";
 import {
-    update_competition_data_hero, update_identity_data_hero,
+    update_addit_data_hero, update_bio_data_hero,
+    update_competition_data_hero, update_development_data_hero, update_identity_data_hero,
     update_inside_data_hero,
     update_motivate_data_hero,
-    update_personal_data_hero
+    update_personal_data_hero, update_psyho_data_hero, update_relationship_data_hero
 } from "../../../../api/characters/updateSettings";
 
 
@@ -303,23 +304,43 @@ const CharacterData = () => {
         }
         if (!isEqual(formDataPsychology, formDataPsychologyInit)) {
             // saveFormData(formData1);
-            setFormPsychologyInit(formDataPsychology);
+            update_psyho_data_hero(formDataPsychology, project_id, character_id).then(() => {
+                setFormPsychologyInit(formDataPsychology);
+                // notification
+                // navigate
+            })
         }
         if (developmentHeroText !== developmentHeroTextInit) {
             // saveFormData(formData1);
-            setDevelopmentHeroTextInit(developmentHeroText);
+            update_development_data_hero(developmentHeroText, project_id, character_id).then(() => {
+                setDevelopmentHeroTextInit(developmentHeroText);
+                // notification
+                // navigate
+            })
         }
         if (additInfoText !== additInfoTextInit) {
             // saveFormData(formData1);
-            setAdditInfoTextInit(additInfoText);
+            update_addit_data_hero(additInfoText, project_id, character_id).then(() => {
+                setAdditInfoTextInit(additInfoText);
+                // notification
+                // navigate
+            })
         }
         if (biographyText !== biographyTextInit) {
             // saveFormData(formData1);
-            setBiographyTextInit(biographyText);
+            update_bio_data_hero(biographyText, project_id, character_id).then(() => {
+                setBiographyTextInit(biographyText);
+                // notification
+                // navigate
+            })
         }
         if (relationshipText !== relationshipTextInit) {
             // saveFormData(formData1);
-            setRelationshipTextInit(relationshipText);
+            update_relationship_data_hero(relationshipText, project_id, character_id).then(() => {
+                setRelationshipTextInit(relationshipText);
+                // notification
+                // navigate
+            })
         }
     }
 
