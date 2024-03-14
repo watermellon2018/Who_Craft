@@ -48,7 +48,6 @@ const CharactersCard = () => {
     }, []);
 
     const deleteProject = async (id: string) => {
-        console.log(id);
 
         try {
             await delete_hero_by_id(project_id, id);

@@ -10,7 +10,7 @@ import InsideCharacterData from "./personal";
 import CompetionsCharacterData from "./competations";
 import IdentifyCharacterData from "./identity";
 import PsychologyCharacterData from "./psychologyData";
-import {create_new_hero, select_info_hero_by_id} from "../../../../api/characters/basic";
+import {create_new_hero, select_info_hero_by_id, update_personal_data_hero} from "../../../../api/characters/basic";
 import {useLocation} from "react-router-dom";
 import {
     CompetitionI,
@@ -21,6 +21,8 @@ import {
     PsyhoI,
     SettingHero
 } from "../../../../api/characters/interfaceHero";
+import PathConstants from "../../../../routes/pathConstant";
+import personalSettingForm from "../../../profile/personalSettingForm";
 
 
 const { Step } = Steps;
@@ -233,10 +235,6 @@ const CharacterData = () => {
             }
             const response = await create_new_hero(data, project_id);
             if(response.status == 200){
-                // openNotificationWithIcon('Герой успешно создался!',
-                //     'Ура!',
-                //     'success');
-                // localStorage.setItem('curProject', JSON.stringify(data));
                 // navigate(PathConstants.PROJECTS);
             }
         } catch (error) {
@@ -244,20 +242,24 @@ const CharacterData = () => {
         }
     }
 
+
     const handleSaveSettingHero = () => {
         if (!is_edit) {
             if(project_id !== undefined){
                 createCreateNewHero(project_id);
             }
         }
-        console.log('Save');
+
         if (imgUrl !== imgUrlInit){
             // send data
             setImgUrlInit(imgUrl);
         }
         if (!isEqual(formDataPersonal, formDataPersonalInit)) {
-            // saveFormData(formData1);
-            setFormPersonalInit(formDataPersonal);
+            update_personal_data_hero(formDataPersonal, project_id, character_id).then(() => {
+                setFormPersonalInit(formDataPersonal);
+                // notification
+                // navigate
+            })
         }
         if (!isEqual(formDataMotivate, formDataMotivateInit)) {
             // saveFormData(formData1);

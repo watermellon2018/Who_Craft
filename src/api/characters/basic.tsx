@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {SettingHero} from "./interfaceHero";
+import {PersonalDataI, SettingHero} from "./interfaceHero";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -44,6 +44,36 @@ async function select_info_hero_by_id(project_id: number | undefined,
         });
     } catch (error) {
         console.error('Error get info hero from project:', error);
+    }
+}
+
+async function update_personal_data_hero(personal: PersonalDataI | undefined,
+                                         project_id: number | undefined,
+                                         character_id: string | undefined): Promise<any> {
+
+    if(personal === undefined || character_id === undefined){
+        throw TypeError('Личные данные персонажи не определены')
+    }
+
+    if(project_id === undefined){
+        throw TypeError('Не определен проект или персонаж')
+    }
+    console.log(personal);
+    try {
+        return await axios.post(`${backendUrl}/api/projects/hero/update_personal_info/`, {
+            data: {
+                projectId: project_id,
+                characterId: character_id,
+
+                name: personal.name,
+                lastName: personal.lastName,
+                middleName: personal.middleName,
+                dob: personal.dob,
+                town: personal.town,
+            }
+        });
+    } catch (error) {
+        console.error('Error update personal info hero from project:', error);
     }
 }
 
@@ -98,4 +128,5 @@ export {
     get_all_heros_project,
     select_info_hero_by_id,
     delete_hero_by_id,
+    update_personal_data_hero,
 }
