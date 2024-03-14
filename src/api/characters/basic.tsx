@@ -1,7 +1,12 @@
 import axios from 'axios';
-import {PersonalDataI, SettingHero} from "./interfaceHero";
+import {MotivateI, PersonalDataI, SettingHero} from "./interfaceHero";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+
+function is_correct_data(value: any) {
+    return value !== undefined;
+}
 
 async function get_all_heros_project(project_id: number): Promise<any> {
     try {
@@ -31,9 +36,10 @@ async function delete_hero_by_id(project_id: string, character_id: string): Prom
 
 async function select_info_hero_by_id(project_id: number | undefined,
                                       character_id: string | undefined): Promise<any> {
-    if(project_id === undefined || character_id === undefined){
+    const is_correct = is_correct_data(project_id) && is_correct_data(character_id)
+    if(!is_correct)
         throw TypeError('Не определен проект или персонаж')
-    }
+
 
     try {
         return await axios.get(`${backendUrl}/api/projects/hero/select_by_id/`, {
@@ -47,35 +53,6 @@ async function select_info_hero_by_id(project_id: number | undefined,
     }
 }
 
-async function update_personal_data_hero(personal: PersonalDataI | undefined,
-                                         project_id: number | undefined,
-                                         character_id: string | undefined): Promise<any> {
-
-    if(personal === undefined || character_id === undefined){
-        throw TypeError('Личные данные персонажи не определены')
-    }
-
-    if(project_id === undefined){
-        throw TypeError('Не определен проект или персонаж')
-    }
-    console.log(personal);
-    try {
-        return await axios.post(`${backendUrl}/api/projects/hero/update_personal_info/`, {
-            data: {
-                projectId: project_id,
-                characterId: character_id,
-
-                name: personal.name,
-                lastName: personal.lastName,
-                middleName: personal.middleName,
-                dob: personal.dob,
-                town: personal.town,
-            }
-        });
-    } catch (error) {
-        console.error('Error update personal info hero from project:', error);
-    }
-}
 
 async function create_new_hero(data: SettingHero, project_id: number): Promise<any> {
     try {
@@ -120,13 +97,13 @@ async function create_new_hero(data: SettingHero, project_id: number): Promise<a
     } catch (error) {
         console.error('Error create new hero for project:', error);
     }
-
 }
+
 
 export {
     create_new_hero,
     get_all_heros_project,
     select_info_hero_by_id,
     delete_hero_by_id,
-    update_personal_data_hero,
+    is_correct_data
 }

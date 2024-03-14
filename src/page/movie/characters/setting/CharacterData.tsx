@@ -10,7 +10,10 @@ import InsideCharacterData from "./personal";
 import CompetionsCharacterData from "./competations";
 import IdentifyCharacterData from "./identity";
 import PsychologyCharacterData from "./psychologyData";
-import {create_new_hero, select_info_hero_by_id, update_personal_data_hero} from "../../../../api/characters/basic";
+import {
+    create_new_hero,
+    select_info_hero_by_id,
+} from "../../../../api/characters/basic";
 import {useLocation} from "react-router-dom";
 import {
     CompetitionI,
@@ -23,6 +26,12 @@ import {
 } from "../../../../api/characters/interfaceHero";
 import PathConstants from "../../../../routes/pathConstant";
 import personalSettingForm from "../../../profile/personalSettingForm";
+import {
+    update_competition_data_hero, update_identity_data_hero,
+    update_inside_data_hero,
+    update_motivate_data_hero,
+    update_personal_data_hero
+} from "../../../../api/characters/updateSettings";
 
 
 const { Step } = Steps;
@@ -262,20 +271,35 @@ const CharacterData = () => {
             })
         }
         if (!isEqual(formDataMotivate, formDataMotivateInit)) {
-            // saveFormData(formData1);
-            setFormMotivateInit(formDataMotivate);
+            update_motivate_data_hero(formDataMotivate, project_id, character_id).then(() => {
+                setFormMotivateInit(formDataMotivate);
+                // notification
+                // navigate
+            })
         }
         if (!isEqual(formDataInsideHero, formDataInsideHeroInit)) {
             // saveFormData(formData1);
-            setFormInsideHeroInit(formDataInsideHero);
+            update_inside_data_hero(formDataInsideHero, project_id, character_id).then(() => {
+                setFormInsideHeroInit(formDataInsideHero);
+                // notification
+                // navigate
+            })
         }
         if (!isEqual(formDataCompetition, formDataCompetitionInit)) {
             // saveFormData(formData1);
-            setFormCompetitionInit(formDataCompetition);
+            update_competition_data_hero(formDataCompetition, project_id, character_id).then(() => {
+                setFormCompetitionInit(formDataCompetition);
+                // notification
+                // navigate
+            })
         }
         if (!isEqual(formDataIdentify, formDataIdentifyInit)) {
             // saveFormData(formData1);
-            setFormIdentifyInit(formDataIdentify);
+            update_identity_data_hero(formDataIdentify, project_id, character_id).then(() => {
+                setFormIdentifyInit(formDataIdentify);
+                // notification
+                // navigate
+            })
         }
         if (!isEqual(formDataPsychology, formDataPsychologyInit)) {
             // saveFormData(formData1);
