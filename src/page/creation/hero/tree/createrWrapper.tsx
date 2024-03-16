@@ -5,7 +5,12 @@ import {v4 as uuidv4} from 'uuid';
 
 // https://blog.logrocket.com/using-react-arborist-create-tree-components/
 
-const CreaterWrapper = (treeRef: any) => {
+interface WrraperTreeI {
+    projectId: any;
+    treeRef: any;
+}
+
+const CreaterWrapper: React.FC<WrraperTreeI> = ({projectId, treeRef}) => {
 
 
     /*Берем самый большой ID, прибавляем 1
@@ -20,7 +25,7 @@ const CreaterWrapper = (treeRef: any) => {
 
         return new Promise<void>((resolve) => {
             const checkChange = () => {
-                const newNode = treeRef.treeRef.current.focusedNode;
+                const newNode = treeRef.current.focusedNode;
                 if (newNode === null){
                     setTimeout(checkChange, 100);
                 }else {
@@ -43,13 +48,39 @@ const CreaterWrapper = (treeRef: any) => {
     // TODO:: добавить, чтобы пустые не создавались, если вдруг мы передумали, а то при удалении
     // будет ошибка status
     const createCharacter = async (newData: any, type: 'leaf' | 'node') => {
-        const parentNode = treeRef.treeRef.current.focusedNode.parent;
+        const parentNode = treeRef.current.focusedNode.parent;
 
         if(parentNode.level !== -1){
             const parentId = parentNode.data.id;
-            await createCharacterFromTreeAPI(newData.id, newData.name, type, parentId);
+            if(type == 'leaf') {
+                const leafInfo = [newData.id, newData.name, type, projectId, parentId];
+
+                const key = newData.id;
+                const value = JSON.stringify(leafInfo);
+
+                const treeLeafAr = localStorage.getItem("treeLeaf");
+                const parsedtreeLeafAr = treeLeafAr ? JSON.parse(treeLeafAr) : {};
+                parsedtreeLeafAr[key] = value;
+                const updatedValue = JSON.stringify(parsedtreeLeafAr);
+                localStorage.setItem("treeLeaf", updatedValue);
+            }else
+                await createCharacterFromTreeAPI(newData.id, newData.name, type, projectId, parentId);
         }else{
-            await createCharacterFromTreeAPI(newData.id, newData.name, type);
+            console.log(type);
+            if(type == 'leaf') {
+                // to local storage
+                const leafInfo = [newData.id, newData.name, type, projectId, null];
+                const key = newData.id;
+                const value = JSON.stringify(leafInfo);
+
+                const treeLeafAr = localStorage.getItem("treeLeaf");
+                const parsedtreeLeafAr = treeLeafAr ? JSON.parse(treeLeafAr) : {};
+                parsedtreeLeafAr[key] = value;
+                const updatedValue = JSON.stringify(parsedtreeLeafAr);
+                localStorage.setItem("treeLeaf", updatedValue);
+            }else {
+                await createCharacterFromTreeAPI(newData.id, newData.name, type, projectId);
+            }
         }
     };
 
@@ -61,7 +92,7 @@ const CreaterWrapper = (treeRef: any) => {
     const setNewID = async (newID: string) => {
         // Ждем изменения имени
         await waitForChange();
-        const tree = treeRef.treeRef.current
+        const tree = treeRef.current
         const nodeCur = tree.focusedNode;
         const newData = nodeCur.data;
         if (newData.name.length == 0) {
@@ -77,22 +108,23 @@ const CreaterWrapper = (treeRef: any) => {
     const createFolderClick  = async () => {
         const newID = getNewID();
 
-        await treeRef.treeRef.current.createInternal();
+        await treeRef.current.createInternal();
 
         const status = await setNewID(newID);
         if(status) {
-            const newData = treeRef.treeRef.current.focusedNode.data;
+            const newData = treeRef.current.focusedNode.data;
             await createCharacter(newData, 'node');
         }
     }
 
     const createFileClick = async () => {
         const newID = getNewID()
-        await treeRef.treeRef.current.createLeaf();
+        await treeRef.current.createLeaf();
+
 
         const status = await setNewID(newID);
         if(status) {
-            const newData = treeRef.treeRef.current.focusedNode.data;
+            const newData = treeRef.current.focusedNode.data;
             await createCharacter(newData, 'leaf');
         }
 

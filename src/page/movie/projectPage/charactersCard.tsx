@@ -30,7 +30,6 @@ const CharactersCard = () => {
         const getAllHeros = async () => {
             try {
                 const response: any = await get_all_heros_project(project_id);
-                console.log(response.data);
 
                 const data = response.data.map((hero:HeroCard) => ({
                     id: hero.id,

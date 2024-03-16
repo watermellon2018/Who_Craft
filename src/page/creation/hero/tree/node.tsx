@@ -41,13 +41,15 @@ const NodeTree: React.FC<NodeProps> = ({ node,
 
 
     const handleDelete = async () => {
-        const idNodeToDel: string = node.data.id
-
-        const response = await deleteCharacterFromTree(idNodeToDel);
-        if(response.status !== 200)
-            console.log('Ошибка при удалении. Статус '+response.status)
-        else
-            tree.delete(node.id)
+        const idNodeToDel: string = node.data.id;
+        const curStateTreeLeaf = localStorage.getItem("treeLeaf")!;
+        const storedValue = JSON.parse(curStateTreeLeaf);
+        if(idNodeToDel in storedValue){
+            delete storedValue[idNodeToDel];
+            localStorage.setItem("treeLeaf", JSON.stringify(storedValue));
+        }else
+            await deleteCharacterFromTree(idNodeToDel);
+        await tree.delete(node);
 
     };
 

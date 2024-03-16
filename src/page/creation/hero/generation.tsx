@@ -36,14 +36,49 @@ export const GenerationHeroPage = () => {
         return setCurCharacter;
     }, []);
 
+
     useEffect(() => {
         const getCharacters = async () => {
             const response = await get_all_character_for_project(project_id);
             const data = response.data;
-            setData(data);
+            console.log(data);
+            // setData(data);
+            return data;
         };
 
-        getCharacters();
+
+        getCharacters().then((data) => {
+            const curStateTreeLeaf = localStorage.getItem("treeLeaf");
+            // не сохраненные персонажи, для которых не сохранены настройки
+            if(curStateTreeLeaf && data) {
+                const newData = [...data];
+                const storedValue = JSON.parse(curStateTreeLeaf)
+                console.log(storedValue);
+                for (const [key, value] of Object.entries(storedValue)) {
+                    if (typeof value !== "string")
+                        continue
+                    const dict = JSON.parse(value)
+
+                    const item = {
+                        id: dict[0],
+                        key: dict[0],
+                        name: dict[1],
+                    }
+
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    newData.push(item);
+
+                }
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                setData(newData);
+                console.log(newData);
+            } else
+                localStorage.setItem("treeLeaf", JSON.stringify({}));
+        });
+
+
 
     }, []);
 
@@ -81,8 +116,25 @@ export const GenerationHeroPage = () => {
     };
 
     const settingHeroHandle = () => {
-        navigate(PathConstants.SETTING_HERO, { state: { is_edit: is_edit , project_id: project_id} });
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if(treeRef && treeRef.current && treeRef.current.hasOneSelection) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const name: string = treeRef.current.selectedNodes[0].data.name;
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const id: string = treeRef.current.selectedNodes[0].data.id;
+
+            navigate(PathConstants.SETTING_HERO, {state: {is_edit: is_edit,
+                    project_id: project_id,
+                    name: name,
+                    id_leaf: id,
+            }});
+        }else
+            console.log('Ошибка при передаче имени на другую страницу!')
     };
+
 
 
     return (
@@ -101,7 +153,7 @@ export const GenerationHeroPage = () => {
                             style={{height: '100%'}}
                     >
                         <div className="folderFileActions">
-                            <CreaterWrapper treeRef={treeRef}/>
+                            <CreaterWrapper projectId={project_id} treeRef={treeRef}/>
                         </div>
                         <Tree
                             key='tree_characters'
@@ -129,20 +181,27 @@ export const GenerationHeroPage = () => {
                                 <p style={{color: 'white', position: "relative"}}>
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
-                                {imageGeneratedUrl!='' ?
+                                {imageGeneratedUrl!='' &&
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore
+                                    treeRef.current && treeRef.current.hasOneSelection
+                                    ?
                                     <div>
-                                        <Button onClick={settingHeroHandle} className='mr-5'>Настройки персонажа</Button>
-                                        <Button onClick={saveCharacterHandle}>Сохранить</Button>
+                                        <Button onClick={settingHeroHandle} className='mr-5'>Сохранить</Button>
                                     </div> :
                                     <></>
                                 }
+                                <div>
+                                    <Button onClick={() => navigate(-1)}>В Мой проект</Button>
+                                </div>
                             </div>
 
                             <div className="h-full w-full flex items-center justify-center">
 
                                 {isGenerating ? <Spin /> :
                                     <>
-                                        {curCharacter['name'] && imageGeneratedUrl == '' ?
+                                        {curCharacter['name'] && imageGeneratedUrl == ''
+                                            ?
                                                 <Empty description='Персонаж не сгенерирован'
                                                        className='text-yellow'
                                                        image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
