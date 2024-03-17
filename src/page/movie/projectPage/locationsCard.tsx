@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import pathConstant from "../../../routes/pathConstant";
+import '../../global.css';
 
 interface ProjectCard {
     id: string;
@@ -53,7 +54,7 @@ const LocationsCard = () => {
                     {locationList.map((location, index) => (
                         <Card
                             hoverable
-                            className='bottom-card'
+                            className='effect-button-div bottom-card'
                             key={'my-movie-'+index}
                             cover={<>
                                 <img
@@ -75,7 +76,7 @@ const LocationsCard = () => {
                     ))}
                     <Card
                         hoverable
-                        className='bottom-card add-new-card'
+                        className='effect-button-div bottom-card add-new-card'
                         cover={<PlusOutlined />}
                     >
                     </Card>

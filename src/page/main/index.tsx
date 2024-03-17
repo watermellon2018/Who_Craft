@@ -3,6 +3,7 @@ import HeaderComponent from "./header";
 import withAuth from "../../utils/auth/check_auth";
 import {useNavigate} from "react-router-dom";
 import PathConstants from "../../routes/pathConstant";
+import '../global.css';
 export const MainPage = () => {
     const navigate = useNavigate();
 
@@ -24,17 +25,17 @@ export const MainPage = () => {
                   style={{minHeight: "300px"}}
             >
                 <div onClick={createProjectHandle}
-                     className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
+                     className="effect-button-div bg-[#FAB005] rounded-lg h-2/4 min-h-160 flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
                      style={{height: "-webkit-fill-available"}}>СОЗДАТЬ</div>
                 <div onClick={myLibraryHandle}
-                     className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
+                     className="effect-button-div bg-[#FAB005] rounded-lg h-2/4 min-h-160 flex items-center justify-center text-[#1B1D22] font-bold text-2xl"
                      style={{height: "-webkit-fill-available"}}>
                     МОИ ПРОЕКТЫ
                 </div>
-                <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
-                <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
-                <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
-                <div className="bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size flex items-center justify-center text-[#1B1D22] font-bold text-2xl" style={{height: "-webkit-fill-available"}}>КНОПКА</div>
+                <div className="effect-button-div bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
+                <div className="effect-button-div bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
+                <div className="effect-button-div bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size" style={{height: "-webkit-fill-available"}}></div>
+                <div className="effect-button-div bg-[#FAB005] rounded-lg h-2/4 min-h-160 button-size flex items-center justify-center text-[#1B1D22] font-bold text-2xl" style={{height: "-webkit-fill-available"}}>КНОПКА</div>
             </main>
             </div>
             <footer className="flex justify-between p-6 text-xs">

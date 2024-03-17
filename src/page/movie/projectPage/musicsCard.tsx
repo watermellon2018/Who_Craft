@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Space} from 'antd';
+import {Card} from 'antd';
 import {EditOutlined, DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {useNavigate} from "react-router-dom";
-import {delete_project_by_id, get_all_list_projects} from "../../../api/projects/properties/project";
-import HeaderComponent from "../../main/header";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
-import {Divider} from "antd/lib";
 import PathConstants from "../../../routes/pathConstant";
+import '../../global.css';
 
 interface ProjectCard {
     id: string;
@@ -35,15 +33,6 @@ const MusicsCard = () => {
 
     const deleteProject = async (id: string) => {
         console.log(id);
-
-        // try {
-        //     await delete_project_by_id(id);
-        //     const updatedList = projectsList.filter(project => project.id !== id);
-        //     setProjectList(updatedList);
-        // } catch (error) {
-        //     console.error('Ошибка при получении списка проектов:', error);
-        //     setProjectList([]);
-        // }
     }
     const navigate = useNavigate();
     const editProject = () => {
@@ -62,7 +51,7 @@ const MusicsCard = () => {
                     {musicList.map((sound, index) => (
                         <Card
                             hoverable
-                            className='bottom-card'
+                            className='effect-button-div bottom-card'
                             key={'my-movie-'+index}
                             cover={<>
                                 <img
@@ -84,7 +73,7 @@ const MusicsCard = () => {
                     ))}
                     <Card
                         hoverable
-                        className='bottom-card add-new-card'
+                        className='effect-button-div bottom-card add-new-card'
                         cover={<PlusOutlined />}
                     >
                     </Card>
