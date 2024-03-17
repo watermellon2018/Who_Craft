@@ -27,25 +27,26 @@ async function deleteCharacterFromTree(id: string): Promise<any> {
 
 }
 
-async function createCharacterFromTreeAPI(id: number | string,
-                                          name: string,
-                                          type: 'leaf' | 'node',
-                                          parentId: string|null = null,
+async function createCharacterFromTreeAPI(
+    id: number | string,
+    name: string,
+    type: 'leaf' | 'node',
+    projectId: number,
+    parentId: string|null = null,
+    heroID: string | null = null,
 )
     : Promise<any> {
     try {
         const token = localStorage.getItem('userId');
-        const curProjectStr = localStorage.getItem('curProject');
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const projectTitle: any = JSON.parse(curProjectStr!).title;
 
         return await axios.post(`${backendUrl}/api/character/create/`, {
+            'heroID': heroID,
             'id': id,
             'name': name,
             'type': type,
             'parent': parentId,
             'token_user': token,
-            'projectTitle': projectTitle,
+            'projectId': projectId,
         });
     } catch (error) {
         console.error('Error generating image to image:', error);

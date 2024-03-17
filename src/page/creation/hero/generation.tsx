@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useMemo} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Button, Empty, Layout, Spin} from 'antd';
 import NodeTree from './tree/node';
 import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
@@ -17,6 +17,16 @@ import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../routes/pathConstant";
 const { Content, Sider } = Layout;
 
+interface Character {
+    id: string;
+    key: string;
+    name: string;
+}
+
+interface TreeHandle {
+    hasOneSelection: boolean;
+    selectedNodes: { data: { name: string; id: string } }[];
+}
 
 export const GenerationHeroPage = () => {
     const navigate = useNavigate();
@@ -25,32 +35,66 @@ export const GenerationHeroPage = () => {
 
     const [collapsed, setCollapsed] = useState(false);
     const treeRef = useRef(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const [data, setData] = useState();
+    const [data, setData] = useState<Character[]>([]);
     const [curCharacter, setCurCharacter] = useState<{id: string,
         name: string,
         is_folder: boolean}>
     ({id: '', name: '', is_folder: true});
 
-    const memoizedSetCurCharacter = useMemo(() => {
-        return setCurCharacter;
-    }, []);
+    /**
+     * Выгрузка данных из базы - персонажи которые созданы
+     * Выгружаем еще не сохраненных персонажей, но созданных из localStorage.
+     * Объединяем их, чтобы отобразить на дереве
+     * **/
+
+    /** Объединяем созданных (в localStorage) и сохраненных персонажей из БД **/
+    const mergeCharactersWithStoredData = (characters: Character[], storedData: Record<string, string>) => {
+        const mergedData = [...characters];
+
+        for (const value of Object.values(storedData)) {
+            const [id, name] = JSON.parse(value) as [string, string];
+            mergedData.push({id, key: id, name});
+        }
+
+        return mergedData;
+    };
+
+    /** Получаем созданных персонажей из БД **/
+    const getCharacters = async () => {
+        try {
+            const response = await get_all_character_for_project(project_id);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching characters:', error);
+            return [];
+        }
+    };
+    const fetchAndMergeCharacters = async () => {
+        setIsLoading(true);
+        const characters = await getCharacters();
+        const storedTreeLeaf = localStorage.getItem('treeLeaf');
+
+        if (storedTreeLeaf && data) {
+            const storedData = JSON.parse(storedTreeLeaf);
+            const mergedData = mergeCharactersWithStoredData(characters, storedData);
+            setData(mergedData);
+
+        } else{
+            localStorage.setItem("treeLeaf", JSON.stringify({}));
+        }
+    }
 
     useEffect(() => {
-        const getCharacters = async () => {
-            const response = await get_all_character_for_project(project_id);
-            const data = response.data;
-            setData(data);
-        };
-
-        getCharacters();
-
+        fetchAndMergeCharacters().then(() => {
+            setIsLoading(false);
+        });
     }, []);
 
     const saveCharacterHandle = () => {
         const a = 5
     }
-
 
 
     const toggleCollapsed = () => {
@@ -81,9 +125,22 @@ export const GenerationHeroPage = () => {
     };
 
     const settingHeroHandle = () => {
-        navigate(PathConstants.SETTING_HERO, { state: { is_edit: is_edit , project_id: project_id} });
-    };
+        if (treeRef && treeRef.current && (treeRef.current as TreeHandle).hasOneSelection) {
+            const selectedNode = (treeRef.current as TreeHandle).selectedNodes[0];
+            const {name, id} = selectedNode.data;
 
+            navigate(PathConstants.SETTING_HERO, {
+                state: {
+                    is_edit: is_edit,
+                    project_id: project_id,
+                    name: name,
+                    id_leaf: id,
+                },
+            });
+        } else {
+            console.error('Ошибка при передаче имени на другую страницу!');
+        }
+    }
 
     return (
 
@@ -93,16 +150,17 @@ export const GenerationHeroPage = () => {
             <Layout style={{height: '100%'}}>
 
                 <div>
-
-                    {/* TODO:: в отдельный компонент вынести */}
                     <Sider  collapsible={false} onDoubleClick={toggleCollapsed} theme="dark"
                             className="h-screen flex flex-col select-none pt-4 pl-3 pr-1 pb-5"
                             collapsed={collapsed}
                             style={{height: '100%'}}
                     >
                         <div className="folderFileActions">
-                            <CreaterWrapper treeRef={treeRef}/>
+                            <CreaterWrapper projectId={project_id} treeRef={treeRef}/>
                         </div>
+                        {isLoading ? (
+                            <Tree height={600} className='tree sidebar-container' />
+                        ) : (
                         <Tree
                             key='tree_characters'
                             height={600}
@@ -114,10 +172,10 @@ export const GenerationHeroPage = () => {
                                           style={style}
                                           dragHandle={dragHandle}
                                           tree={tree}
-                                          setCurCharacter={memoizedSetCurCharacter}
+                                          setCurCharacter={setCurCharacter}
                                 />
                             )}
-                        </Tree>
+                        </Tree>)}
                     </Sider>
                 </div>
 
@@ -129,20 +187,27 @@ export const GenerationHeroPage = () => {
                                 <p style={{color: 'white', position: "relative"}}>
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
-                                {imageGeneratedUrl!='' ?
+                                {imageGeneratedUrl!='' &&
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore
+                                    treeRef.current && treeRef.current.hasOneSelection
+                                    ?
                                     <div>
-                                        <Button onClick={settingHeroHandle} className='mr-5'>Настройки персонажа</Button>
-                                        <Button onClick={saveCharacterHandle}>Сохранить</Button>
+                                        <Button onClick={settingHeroHandle} className='mr-5'>Сохранить</Button>
                                     </div> :
                                     <></>
                                 }
+                                <div>
+                                    <Button onClick={() => navigate(-1)}>В Мой проект</Button>
+                                </div>
                             </div>
 
                             <div className="h-full w-full flex items-center justify-center">
 
                                 {isGenerating ? <Spin /> :
                                     <>
-                                        {curCharacter['name'] && imageGeneratedUrl == '' ?
+                                        {curCharacter['name'] && imageGeneratedUrl == ''
+                                            ?
                                                 <Empty description='Персонаж не сгенерирован'
                                                        className='text-yellow'
                                                        image={Empty.PRESENTED_IMAGE_DEFAULT} /> :

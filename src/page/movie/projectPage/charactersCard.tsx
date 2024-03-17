@@ -30,14 +30,12 @@ const CharactersCard = () => {
         const getAllHeros = async () => {
             try {
                 const response: any = await get_all_heros_project(project_id);
-                console.log(response.data);
 
                 const data = response.data.map((hero:HeroCard) => ({
                     id: hero.id,
                     src: hero.src ? 'data:image/jpeg;base64,' + hero.src : 'https://placehold.co/195x147',
                     name: hero.name,
                 }));
-                console.log(data.length)
                 setCharacterList(data);
             } catch (error) {
                 console.error('Ошибка при получении списка проектов:', error);
@@ -89,10 +87,7 @@ const CharactersCard = () => {
                             cover={<>
                                 <img
                                     className='fixed-size'
-                                    // src={character.src}
                                     src='https://placehold.co/195x147'
-
-                                    alt={`Poster hero ${index + 1}`}
                                     onClick={() => cardClickHandle(character.id)}
                                 />
                                 <div

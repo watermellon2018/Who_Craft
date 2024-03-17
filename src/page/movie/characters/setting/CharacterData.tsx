@@ -31,6 +31,7 @@ import {
     update_motivate_data_hero,
     update_personal_data_hero, update_psyho_data_hero, update_relationship_data_hero
 } from "../../../../api/characters/updateSettings";
+import {createCharacterFromTreeAPI} from "../../../../api/generation/characters/tree_structure";
 
 
 const { Step } = Steps;
@@ -38,11 +39,13 @@ interface LocationState {
     is_edit?: boolean;
     project_id?: number;
     character_id?: string;
+    name?: string;
+    id_leaf?: string;
 }
 const CharacterData = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { is_edit, project_id, character_id } = location.state as LocationState || {};
+    const { is_edit, project_id, character_id, name, id_leaf } = location.state as LocationState || {};
 
 
     // Значения, которыми мы инициализируем формы при загрузке,
@@ -104,7 +107,8 @@ const CharacterData = () => {
             setImgUrlInit(url);
 
             const data1 = {
-                name: data?.name || "",
+                type: data?.type || 'seconder',
+                name: data?.name || name,
                 lastName: data?.lastName || "",
                 middleName: data?.middleName || "",
                 dob: data?.dob || "",
@@ -241,6 +245,7 @@ const CharacterData = () => {
             if(response.status == 200){
                 navigate(-1);
             }
+            return response.data;
         } catch (error) {
             console.error('Ошибка при получении списка жанров:', error);
         }
@@ -248,15 +253,27 @@ const CharacterData = () => {
 
 
     const handleSaveSettingHero = () => {
-        console.log('call!!!!!')
         if (!is_edit) {
             if(project_id !== undefined){
-                createCreateNewHero(project_id).then(() => {
+                createCreateNewHero(project_id).then((data) => {
+                    const heroID = data['heroId']
                         notification['success']({
                             message: 'Информация о персонаже сохранена!',
                             description: 'Ура!',
                         });
-                        navigate(-1);
+
+                        // сохраняем персонажа в дереве
+                    const curStateTreeLeaf = localStorage.getItem("treeLeaf");
+                        if(curStateTreeLeaf && id_leaf) {
+                            const storedValue = JSON.parse(curStateTreeLeaf);
+                            const leafData = JSON.parse(storedValue[id_leaf]);
+                            createCharacterFromTreeAPI(id_leaf, leafData[1], leafData[2], leafData[3], leafData[4], heroID).then(() => {
+                                    delete storedValue[id_leaf];
+                                    localStorage.setItem("treeLeaf", JSON.stringify(storedValue));
+                                });
+                            // }
+                        }
+                    navigate(-1);
                     }
                 );
                 return true;

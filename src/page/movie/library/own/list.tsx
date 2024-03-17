@@ -5,7 +5,7 @@ import HeaderComponent from "../../../main/header";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './style.css';
 import {delete_project_by_id, get_all_list_projects} from "../../../../api/projects/properties/project";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import PathConstants from "../../../../routes/pathConstant";
 
 
@@ -73,11 +73,18 @@ const ProjectListPage = () => {
                                 cover={<>
                                     <img src={project.src}
                                          onClick={() => {handleClickCard(project.id, project.title)}}
-                                         alt={`Poster movie ${index + 1}`}
                                           />
-                                    <div className="text-right absolute top-0 right-0">
-                                        <EditOutlined onClick={editProject} className="text-white text-xl p-2" />
-                                        <DeleteOutlined onClick={() => deleteProject(project.id)} className="text-white text-xl p-2" />
+                                    <div className="text-right absolute top-1 right-0">
+
+                                        <EditOutlined
+                                            onClick={editProject}
+                                            className="text-white text-xl p-2"
+                                        />
+                                        <DeleteOutlined
+                                            onClick={() => deleteProject(project.id)}
+                                            className="text-white text-xl p-2"
+                                        />
+
                                     </div>
                                 </>
                                 }

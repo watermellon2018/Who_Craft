@@ -20,7 +20,7 @@ const IdentifyCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
 
     return (
         <>
-            <Form onValuesChange={handleFormChange} initialValues={formData}>
+            <Form onValuesChange={handleFormChange}>
                 <Row>
                     <Col span={labelSpan}>
                         Внешние особенности

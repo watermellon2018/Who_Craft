@@ -24,7 +24,7 @@ const MotivationCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
 
     return (
         <>
-            <Form onValuesChange={handleFormChange} initialValues={formData}>
+            <Form onValuesChange={handleFormChange}>
                 <Row gutter={gutter}>
                     <Col span={labelSpan}>
                         Зачем этот персонаж?
