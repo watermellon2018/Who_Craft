@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Space} from 'antd';
+import {Card} from 'antd';
 import {EditOutlined, DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {useNavigate} from "react-router-dom";
-import {delete_project_by_id, get_all_list_projects} from "../../../api/projects/properties/project";
-import HeaderComponent from "../../main/header";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
-import {Divider} from "antd/lib";
 import pathConstant from "../../../routes/pathConstant";
 
 interface ProjectCard {
@@ -33,26 +30,6 @@ const LocationsCard = () => {
         ]
         setLocationList(loc);
 
-
-
-
-        // const getAllProjects = async () => {
-        //     try {
-        //         const response: any = await get_all_list_projects();
-        //
-        //         const ar = response.data.map((proj:ProjectCard) => ({
-        //             id: proj.id,
-        //             src: proj.src ? 'data:image/jpeg;base64,' + proj.src : 'https://placehold.co/195x147',
-        //             title: proj.title,
-        //         }));
-        //         setProjectList(ar);
-        //     } catch (error) {
-        //         console.error('Ошибка при получении списка проектов:', error);
-        //         setProjectList([]);
-        //     }
-        // };
-        //
-        // getAllProjects();
     }, []);
 
     const deleteProject = async (id: string) => {
