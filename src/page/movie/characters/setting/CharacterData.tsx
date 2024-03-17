@@ -257,12 +257,12 @@ const CharacterData = () => {
             if(project_id !== undefined){
                 createCreateNewHero(project_id).then((data) => {
                     const heroID = data['heroId']
-                        notification['success']({
-                            message: 'Информация о персонаже сохранена!',
-                            description: 'Ура!',
-                        });
+                    notification['success']({
+                        message: 'Персонаж создан!',
+                        description: 'Ура!',
+                    });
 
-                        // сохраняем персонажа в дереве
+                    // сохраняем персонажа в дереве
                     const curStateTreeLeaf = localStorage.getItem("treeLeaf");
                         if(curStateTreeLeaf && id_leaf) {
                             const storedValue = JSON.parse(curStateTreeLeaf);

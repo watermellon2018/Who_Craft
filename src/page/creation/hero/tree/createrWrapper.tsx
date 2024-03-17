@@ -66,7 +66,6 @@ const CreaterWrapper: React.FC<WrraperTreeI> = ({projectId, treeRef}) => {
             }else
                 await createCharacterFromTreeAPI(newData.id, newData.name, type, projectId, parentId);
         }else{
-            console.log(type);
             if(type == 'leaf') {
                 // to local storage
                 const leafInfo = [newData.id, newData.name, type, projectId, null];
