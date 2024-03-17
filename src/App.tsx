@@ -41,7 +41,11 @@ const theme = {
             "colorText": "rgb(250, 176, 5)",
             "defaultColor": "rgb(250, 176, 5)",
             "colorPrimaryHover": "rgb(252, 209, 95)",
-            "primaryShadow": "0 0px 0"
+            "primaryShadow": "0 0px 0",
+            "transition": "transform 0.3s ease",
+            "&:active": {
+                "transform": "scale(0.95)",
+            },
         },
         "Input": {
             "colorTextPlaceholder": "rgba(250, 176, 5, 0.55)",

@@ -54,3 +54,12 @@
     transform: rotate(360deg);
   }
 }
+
+button {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+button:active {
+  transform: scale(0.95);
+}

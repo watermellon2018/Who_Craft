@@ -6,6 +6,7 @@ import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
 import pathConstant from "../../../routes/pathConstant";
 import {delete_hero_by_id, get_all_heros_project} from "../../../api/characters/basic";
+import '../../global.css';
 
 interface ProjectCard {
     id: string;
@@ -82,7 +83,7 @@ const CharactersCard = () => {
                     {characterList.map((character, index) => (
                         <Card
                             hoverable
-                            className='bottom-card'
+                            className='effect-button-div bottom-card'
                             key={'my-movie-'+index}
                             cover={<>
                                 <img
@@ -111,7 +112,7 @@ const CharactersCard = () => {
                     <Card
                         onClick={clickProjectHandle}
                         hoverable
-                        className='bottom-card add-new-card'
+                        className='effect-button-div bottom-card add-new-card'
                         cover={<PlusOutlined />}
                     >
                     </Card>
