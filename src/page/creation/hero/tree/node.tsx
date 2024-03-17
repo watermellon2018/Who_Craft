@@ -76,7 +76,6 @@ const NodeTree: React.FC<NodeProps> = ({ node,
                 key={'div_content_tree_character_'+node.id}
                 className="node-content"
                  onClick={handleClick}
-                 // onFocus={handleSelect}
             >
                 {node.isLeaf ? (
                     <>

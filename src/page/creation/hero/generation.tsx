@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useMemo} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Button, Empty, Layout, Spin} from 'antd';
 import NodeTree from './tree/node';
 import {get_all_character_for_project} from '../../../api/generation/characters/tree_structure';
@@ -17,6 +17,16 @@ import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../routes/pathConstant";
 const { Content, Sider } = Layout;
 
+interface Character {
+    id: string;
+    key: string;
+    name: string;
+}
+
+interface TreeHandle {
+    hasOneSelection: boolean;
+    selectedNodes: { data: { name: string; id: string } }[];
+}
 
 export const GenerationHeroPage = () => {
     const navigate = useNavigate();
@@ -25,67 +35,66 @@ export const GenerationHeroPage = () => {
 
     const [collapsed, setCollapsed] = useState(false);
     const treeRef = useRef(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const [data, setData] = useState();
+    const [data, setData] = useState<Character[]>([]);
     const [curCharacter, setCurCharacter] = useState<{id: string,
         name: string,
         is_folder: boolean}>
     ({id: '', name: '', is_folder: true});
 
-    const memoizedSetCurCharacter = useMemo(() => {
-        return setCurCharacter;
-    }, []);
+    /**
+     * Выгрузка данных из базы - персонажи которые созданы
+     * Выгружаем еще не сохраненных персонажей, но созданных из localStorage.
+     * Объединяем их, чтобы отобразить на дереве
+     * **/
 
+    /** Объединяем созданных (в localStorage) и сохраненных персонажей из БД **/
+    const mergeCharactersWithStoredData = (characters: Character[], storedData: Record<string, string>) => {
+        const mergedData = [...characters];
+
+        for (const value of Object.values(storedData)) {
+            const [id, name] = JSON.parse(value) as [string, string];
+            mergedData.push({id, key: id, name});
+        }
+
+        return mergedData;
+    };
+
+    /** Получаем созданных персонажей из БД **/
+    const getCharacters = async () => {
+        try {
+            const response = await get_all_character_for_project(project_id);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching characters:', error);
+            return [];
+        }
+    };
+    const fetchAndMergeCharacters = async () => {
+        setIsLoading(true);
+        const characters = await getCharacters();
+        const storedTreeLeaf = localStorage.getItem('treeLeaf');
+
+        if (storedTreeLeaf && data) {
+            const storedData = JSON.parse(storedTreeLeaf);
+            const mergedData = mergeCharactersWithStoredData(characters, storedData);
+            setData(mergedData);
+
+        } else{
+            localStorage.setItem("treeLeaf", JSON.stringify({}));
+        }
+    }
 
     useEffect(() => {
-        const getCharacters = async () => {
-            const response = await get_all_character_for_project(project_id);
-            const data = response.data;
-            console.log(data);
-            // setData(data);
-            return data;
-        };
-
-
-        getCharacters().then((data) => {
-            const curStateTreeLeaf = localStorage.getItem("treeLeaf");
-            // не сохраненные персонажи, для которых не сохранены настройки
-            if(curStateTreeLeaf && data) {
-                const newData = [...data];
-                const storedValue = JSON.parse(curStateTreeLeaf)
-                console.log(storedValue);
-                for (const [key, value] of Object.entries(storedValue)) {
-                    if (typeof value !== "string")
-                        continue
-                    const dict = JSON.parse(value)
-
-                    const item = {
-                        id: dict[0],
-                        key: dict[0],
-                        name: dict[1],
-                    }
-
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    newData.push(item);
-
-                }
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                setData(newData);
-                console.log(newData);
-            } else
-                localStorage.setItem("treeLeaf", JSON.stringify({}));
+        fetchAndMergeCharacters().then(() => {
+            setIsLoading(false);
         });
-
-
-
     }, []);
 
     const saveCharacterHandle = () => {
         const a = 5
     }
-
 
 
     const toggleCollapsed = () => {
@@ -116,26 +125,22 @@ export const GenerationHeroPage = () => {
     };
 
     const settingHeroHandle = () => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        if(treeRef && treeRef.current && treeRef.current.hasOneSelection) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const name: string = treeRef.current.selectedNodes[0].data.name;
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const id: string = treeRef.current.selectedNodes[0].data.id;
+        if (treeRef && treeRef.current && (treeRef.current as TreeHandle).hasOneSelection) {
+            const selectedNode = (treeRef.current as TreeHandle).selectedNodes[0];
+            const {name, id} = selectedNode.data;
 
-            navigate(PathConstants.SETTING_HERO, {state: {is_edit: is_edit,
+            navigate(PathConstants.SETTING_HERO, {
+                state: {
+                    is_edit: is_edit,
                     project_id: project_id,
                     name: name,
                     id_leaf: id,
-            }});
-        }else
-            console.log('Ошибка при передаче имени на другую страницу!')
-    };
-
-
+                },
+            });
+        } else {
+            console.error('Ошибка при передаче имени на другую страницу!');
+        }
+    }
 
     return (
 
@@ -145,8 +150,6 @@ export const GenerationHeroPage = () => {
             <Layout style={{height: '100%'}}>
 
                 <div>
-
-                    {/* TODO:: в отдельный компонент вынести */}
                     <Sider  collapsible={false} onDoubleClick={toggleCollapsed} theme="dark"
                             className="h-screen flex flex-col select-none pt-4 pl-3 pr-1 pb-5"
                             collapsed={collapsed}
@@ -155,6 +158,9 @@ export const GenerationHeroPage = () => {
                         <div className="folderFileActions">
                             <CreaterWrapper projectId={project_id} treeRef={treeRef}/>
                         </div>
+                        {isLoading ? (
+                            <Tree height={600} className='tree sidebar-container' />
+                        ) : (
                         <Tree
                             key='tree_characters'
                             height={600}
@@ -166,10 +172,10 @@ export const GenerationHeroPage = () => {
                                           style={style}
                                           dragHandle={dragHandle}
                                           tree={tree}
-                                          setCurCharacter={memoizedSetCurCharacter}
+                                          setCurCharacter={setCurCharacter}
                                 />
                             )}
-                        </Tree>
+                        </Tree>)}
                     </Sider>
                 </div>
 
