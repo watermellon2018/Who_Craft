@@ -1,4 +1,5 @@
 interface PersonalDataI {
+    type: 'main' | 'seconder' | 'episode';
     name: string;
     lastName: string;
     middleName: string;

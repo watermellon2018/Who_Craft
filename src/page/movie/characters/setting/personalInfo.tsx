@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, Row, Col} from 'antd';
+import {Form, Input, Row, Col, Select} from 'antd';
 import './style.css'
 import {Gutter} from "antd/es/grid/row";
 import {PersonalDataI} from "../../../../api/characters/interfaceHero";
@@ -30,6 +30,22 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
     return (
         <>
             <Form onValuesChange={handleFormChange}>
+                <Row gutter={gutter}>
+                    <Col span={labelSpan}>
+                        Тип героя
+                    </Col>
+                    <Col span={fieldSpan}>
+                        <Form.Item initialValue={formData?.type || ''} name="type">
+                            <Select
+                                options={[
+                                    { value: 'main', label: 'Главный' },
+                                    { value: 'seconder', label: 'Второстепенный' },
+                                    { value: 'episode', label: 'Эпизодический' },
+                                ]}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Row gutter={gutter}>
                     <Col span={labelSpan}>
                         Имя

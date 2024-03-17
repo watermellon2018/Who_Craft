@@ -107,6 +107,7 @@ const CharacterData = () => {
             setImgUrlInit(url);
 
             const data1 = {
+                type: data?.type || 'seconder',
                 name: data?.name || name,
                 lastName: data?.lastName || "",
                 middleName: data?.middleName || "",

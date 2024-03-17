@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {MotivateI, PersonalDataI, SettingHero} from "./interfaceHero";
+import {SettingHero} from "./interfaceHero";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -60,6 +60,7 @@ async function create_new_hero(data: SettingHero, project_id: number): Promise<a
             data: {
                 projectId: project_id,
                 image: data.image,
+                type: data.personal.type,
                 name: data.personal.name,
                 lastName: data.personal.lastName,
                 middleName: data.personal.middleName,

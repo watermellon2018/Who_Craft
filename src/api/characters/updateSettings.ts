@@ -22,7 +22,6 @@ async function updateHeroData<T>(
 
     try {
         const requestData = typeof data === 'string' ? { data } : data;
-        console.log(requestData);
         return await axios.post(`${backendUrl}${url}`, {
             data: {
                 projectId,
