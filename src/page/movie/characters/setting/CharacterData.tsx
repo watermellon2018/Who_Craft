@@ -41,11 +41,12 @@ interface LocationState {
     character_id?: string;
     name?: string;
     id_leaf?: string;
+    imageUrl: string;
 }
 const CharacterData = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { is_edit, project_id, character_id, name, id_leaf } = location.state as LocationState || {};
+    const { is_edit, project_id, character_id, name, id_leaf, imageUrl } = location.state as LocationState || {};
 
 
     // Значения, которыми мы инициализируем формы при загрузке,
@@ -77,15 +78,11 @@ const CharacterData = () => {
     const [biographyText, setBiographyText] = useState<string>('');
     const [relationshipText, setRelationshipText] = useState<string>('');
 
-
-    const [imgUrl, setImgUrl] = useState<string>('');
-    const [imgUrlInit, setImgUrlInit] = useState<string>('');
     const [isLoadData, setIsLoadData] = useState<boolean>(false);
 
 
     // При загрузке страницы выгружаем данные с сервера
     useEffect(() => {
-
         const getCharactersInfo = async () => {
             if (!is_edit)
                 return;
@@ -100,11 +97,6 @@ const CharacterData = () => {
         };
 
         getCharactersInfo().then((data) => {
-
-            // TODO::
-            const url = "https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
-            setImgUrl(url);
-            setImgUrlInit(url);
 
             const data1 = {
                 type: data?.type || 'seconder',
@@ -223,7 +215,7 @@ const CharacterData = () => {
     const createCreateNewHero = async (project_id: number) => {
         try {
             const data: SettingHero = {
-                image: imgUrl,
+                image: imageUrl,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 personal: formDataPersonal!,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -263,17 +255,16 @@ const CharacterData = () => {
                     });
 
                     // сохраняем персонажа в дереве
-                    const curStateTreeLeaf = localStorage.getItem("treeLeaf");
-                        if(curStateTreeLeaf && id_leaf) {
+                        const curStateTreeLeaf = localStorage.getItem("treeLeaf");
+                        if(curStateTreeLeaf && id_leaf && curStateTreeLeaf.length > 2) {
                             const storedValue = JSON.parse(curStateTreeLeaf);
                             const leafData = JSON.parse(storedValue[id_leaf]);
                             createCharacterFromTreeAPI(id_leaf, leafData[1], leafData[2], leafData[3], leafData[4], heroID).then(() => {
-                                    delete storedValue[id_leaf];
-                                    localStorage.setItem("treeLeaf", JSON.stringify(storedValue));
-                                });
-                            // }
+                                delete storedValue[id_leaf];
+                                localStorage.setItem("treeLeaf", JSON.stringify(storedValue));
+                            });
                         }
-                    navigate(-1);
+                        navigate(-1);
                     }
                 );
                 return true;
@@ -294,28 +285,28 @@ const CharacterData = () => {
             if (isDifferent) {
                 await updateFunction(data, project_id, character_id).then(() => {
                     setInitFunction(data);
-                    notification['success']({
-                        message: 'Информация о персонаже сохранена!',
-                        description: 'Ура!',
-                    });
-                    navigate(-1);
+
                 });
             }
         };
 
-        updateData(imgUrl, imgUrlInit, update_image_data_hero, setImgUrlInit);
-        updateData(formDataPersonal, formDataPersonalInit, update_personal_data_hero, setFormPersonalInit);
-        updateData(formDataMotivate, formDataMotivateInit, update_motivate_data_hero, setFormMotivateInit);
-        updateData(formDataInsideHero, formDataInsideHeroInit, update_inside_data_hero, setFormInsideHeroInit);
-        updateData(formDataCompetition, formDataCompetitionInit, update_competition_data_hero, setFormCompetitionInit);
-        updateData(formDataIdentify, formDataIdentifyInit, update_identity_data_hero, setFormIdentifyInit);
-        updateData(formDataPsychology, formDataPsychologyInit, update_psyho_data_hero, setFormPsychologyInit);
-        updateData(developmentHeroText, developmentHeroTextInit, update_development_data_hero, setDevelopmentHeroTextInit);
-        updateData(additInfoText, additInfoTextInit, update_addit_data_hero, setAdditInfoTextInit);
-        updateData(biographyText, biographyTextInit, update_bio_data_hero, setBiographyTextInit);
-        updateData(relationshipText, relationshipTextInit, update_relationship_data_hero, setRelationshipTextInit);
-
-
+        update_image_data_hero(imageUrl, project_id, character_id).then(() => {
+            updateData(formDataPersonal, formDataPersonalInit, update_personal_data_hero, setFormPersonalInit);
+            updateData(formDataMotivate, formDataMotivateInit, update_motivate_data_hero, setFormMotivateInit);
+            updateData(formDataInsideHero, formDataInsideHeroInit, update_inside_data_hero, setFormInsideHeroInit);
+            updateData(formDataCompetition, formDataCompetitionInit, update_competition_data_hero, setFormCompetitionInit);
+            updateData(formDataIdentify, formDataIdentifyInit, update_identity_data_hero, setFormIdentifyInit);
+            updateData(formDataPsychology, formDataPsychologyInit, update_psyho_data_hero, setFormPsychologyInit);
+            updateData(developmentHeroText, developmentHeroTextInit, update_development_data_hero, setDevelopmentHeroTextInit);
+            updateData(additInfoText, additInfoTextInit, update_addit_data_hero, setAdditInfoTextInit);
+            updateData(biographyText, biographyTextInit, update_bio_data_hero, setBiographyTextInit);
+            updateData(relationshipText, relationshipTextInit, update_relationship_data_hero, setRelationshipTextInit);
+            notification['success']({
+                message: 'Информация о персонаже сохранена!',
+                description: 'Ура!',
+            });
+            navigate(-1);
+        });
     }
 
     const handleBackStep = () => {
@@ -336,7 +327,7 @@ const CharacterData = () => {
                     <Row gutter={[16, 16]}>
                         <Col style={{marginRight: '5px'}} span={7}>
                             <Image
-                                src={imgUrl}
+                                src={imageUrl}
                                 style={{width: '100%'}}
                             />
                         </Col>

@@ -106,7 +106,6 @@ export const GenerationHeroPage = () => {
 
     const onFinish = async (values: any) => {
         setIsGenerating(true);
-        console.log(values);
 
         let response;
         // TODO:: переделать / костыль пока оставлю
@@ -135,6 +134,7 @@ export const GenerationHeroPage = () => {
                     project_id: project_id,
                     name: name,
                     id_leaf: id,
+                    imageUrl: imageGeneratedUrl,
                 },
             });
         } else {

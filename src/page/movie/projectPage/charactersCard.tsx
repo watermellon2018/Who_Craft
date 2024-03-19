@@ -13,6 +13,7 @@ interface ProjectCard {
     key: string;
     // src: string;
     name: string
+    src: string;
 }
 interface HeroCard {
     id: string;
@@ -22,6 +23,7 @@ interface HeroCard {
     src?: string;
 }
 const CharactersCard = () => {
+    const navigate = useNavigate();
     const [characterList, setCharacterList] = useState<ProjectCard[]>([]);
     const location = useLocation();
     const { project_id, title } = location.state || {};
@@ -36,6 +38,7 @@ const CharactersCard = () => {
                     id: hero.id,
                     src: hero.src ? 'data:image/jpeg;base64,' + hero.src : 'https://placehold.co/195x147',
                     name: hero.name,
+                    key: hero.name + hero.id,
                 }));
                 setCharacterList(data);
             } catch (error) {
@@ -54,24 +57,21 @@ const CharactersCard = () => {
             const updatedList = characterList.filter(hero => hero.id !== id);
             setCharacterList(updatedList);
         } catch (error) {
-            console.error('Ошибка при получении списка проектов:', error);
+            console.error('Ошибка при получении списка персонажей:', error);
             setCharacterList([]);
         }
-    }
-    const navigate = useNavigate();
-    const editProject = () => {
-        navigate(pathConstant.HOME)
     }
 
     const clickProjectHandle = () => {
         navigate(pathConstant.GENERATING, { state: { is_edit: false , project_id: project_id} })
     };
 
-    const cardClickHandle = (id_character: string) => {
+    const cardClickHandle = (id_character: string, imgUrl: string) => {
         navigate(pathConstant.SETTING_HERO,
             { state: { is_edit: true ,
                     project_id: project_id,
                     character_id: id_character,
+                    imageUrl: imgUrl,
             } })
     };
 
@@ -88,14 +88,14 @@ const CharactersCard = () => {
                             cover={<>
                                 <img
                                     className='fixed-size'
-                                    src='https://placehold.co/195x147'
-                                    onClick={() => cardClickHandle(character.id)}
+                                    src={character.src}
+                                    onClick={() => cardClickHandle(character.id, character.src)}
                                 />
                                 <div
                                     style={{backgroundColor: 'rgba(0, 0, 0, 0.3)'}}
                                     className="text-right absolute top-1 right-0">
                                     <EditOutlined
-                                        onClick={editProject}
+                                        onClick={() => cardClickHandle(character.id, character.src)}
                                         className="text-white text-xl p-2" />
                                     <DeleteOutlined
                                         onClick={() => deleteProject(character.id)}
