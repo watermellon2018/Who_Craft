@@ -11,6 +11,7 @@ interface FormData {
     body?: string | undefined;
     appearance?: string | undefined;
     character?: string | undefined;
+    styleGen: 'anime' | 'real' | 'cartoon';
 }
 async function generateImageAPI(formData: FormData): Promise<any> {
     try {
@@ -24,6 +25,7 @@ async function generateImageAPI(formData: FormData): Promise<any> {
                 body: formData.body,
                 appearance: formData.appearance,
                 character: formData.character,
+                styleGen: formData.styleGen,
             }
         });
     } catch (error) {
@@ -35,6 +37,7 @@ async function generateImageAPI(formData: FormData): Promise<any> {
 interface FormDataUndefined {
     description: string | null;
     character: string | null;
+    styleGen: 'anime' | 'real' | 'cartoon';
 }
 
 async function generateImageUndefinedAPI(formData: FormDataUndefined): Promise<any> {
@@ -43,6 +46,7 @@ async function generateImageUndefinedAPI(formData: FormDataUndefined): Promise<a
             params: {
                 description: formData.description,
                 character: formData.character,
+                styleGen: formData.styleGen,
             }
         });
     } catch (error) {
@@ -56,6 +60,7 @@ interface FormImg2Img {
     url: string;
     prompt: string;
     character: string | null;
+    styleGen: 'anime' | 'real' | 'cartoon';
 }
 async function generateImage2ImgAPI(formData: FormImg2Img): Promise<any> {
     try {
@@ -64,6 +69,7 @@ async function generateImage2ImgAPI(formData: FormImg2Img): Promise<any> {
                 url: formData.url,
                 prompt: formData.prompt,
                 character: formData.character,
+                styleGen: formData.styleGen
             }
         });
     } catch (error) {

@@ -106,7 +106,7 @@ export const GenerationHeroPage = () => {
 
     const onFinish = async (values: any) => {
         setIsGenerating(true);
-        // console.log(values);
+        console.log(values);
 
         let response;
         // TODO:: переделать / костыль пока оставлю
