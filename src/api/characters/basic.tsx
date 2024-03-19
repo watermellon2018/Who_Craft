@@ -53,6 +53,26 @@ async function select_info_hero_by_id(project_id: number | undefined,
     }
 }
 
+async function get_image_by_id(project_id: number | undefined,
+                                      character_id: string | undefined): Promise<any> {
+    const is_correct = is_correct_data(project_id) && is_correct_data(character_id)
+    if(!is_correct)
+        throw TypeError('Не определен проект или персонаж')
+
+
+    try {
+        return await axios.get(`${backendUrl}/api/projects/hero/select_img_by_id/`, {
+            params: {
+                projectId: project_id,
+                characterId: character_id,
+            }
+        });
+
+    } catch (error) {
+        console.error('Error get info hero from project:', error);
+    }
+}
+
 
 async function create_new_hero(data: SettingHero, project_id: number): Promise<any> {
     try {
@@ -106,5 +126,6 @@ export {
     get_all_heros_project,
     select_info_hero_by_id,
     delete_hero_by_id,
-    is_correct_data
+    is_correct_data,
+    get_image_by_id
 }
