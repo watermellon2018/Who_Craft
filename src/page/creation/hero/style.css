@@ -38,3 +38,11 @@
 .sidebar-container::-webkit-scrollbar-track {
     background-color: transparent;
 }
+
+.form-gen-img .ant-input{
+    max-width: none;
+}
+
+.form-gen-img .ant-form-item {
+    margin-bottom: 1px;
+}

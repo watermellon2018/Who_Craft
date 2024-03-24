@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import {Form, Input, Select, Button, Switch, InputNumber} from 'antd';
+import {Form, Input, Select, Switch, InputNumber} from 'antd';
+import BottomGenMenu from "./bottomMenu";
 
 
 const { Option } = Select;
@@ -62,11 +63,7 @@ const CharacterParams: React.FC<CharacterParamsProps> = ({ onFinish }) => {
                 <Input.TextArea />
             </Form.Item>
 
-            <Form.Item>
-                <Button style={{borderColor: "black"}} type="primary" htmlType="submit">
-                    Генерировать
-                </Button>
-            </Form.Item>
+            <BottomGenMenu />
         </Form>
     );
 };
@@ -84,11 +81,9 @@ const UndefinedCreationForm: React.FC<UndefinedCharacterFormProps> = ({onFinish}
                 <Input.TextArea />
             </Form.Item>
 
-            <Form.Item>
-                <Button style={{borderColor: "black"}} type="primary" htmlType="submit">
-                    Генерировать
-                </Button>
-            </Form.Item>
+
+            <BottomGenMenu />
+
         </Form>
     );
 };
@@ -105,7 +100,7 @@ const CharacterSetting: React.FC<CharacterSetting> = ({onFinish}) => {
 
     const FormSwitcher: React.FC<{ onChange: (checked: boolean) => void }> = ({ onChange }) => {
         return (
-            <div style={{ marginBottom: 16, borderBottom: 'solid 1px', borderRadius: 10, borderColor: 'rgb(250, 176, 5)' }}>
+            <div className="mb-1 border-b border-solid border-yellow-400 rounded-lg">
                 <Switch onChange={onChange}
                         value={isCharacterForm}
                         checkedChildren='Человек'
@@ -116,7 +111,7 @@ const CharacterSetting: React.FC<CharacterSetting> = ({onFinish}) => {
     };
 
     return (
-        <div>
+        <div className='p-3 form-gen-img'>
             <FormSwitcher onChange={handleSwitchChange} />
             {isCharacterForm ?
                 <CharacterParams onFinish={onFinish} />

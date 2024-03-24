@@ -33,7 +33,7 @@ const MenuGeneration: React.FC<MenuGeneration> = ({onFinish}) => {
     return (
         <>
             <Card
-                style={{ width: '100%' }}
+                style={{ width: '100%', height: 'auto' }}
                 tabList={tabList}
                 activeTabKey={activeTab}
                 onTabChange={onTab2Change}

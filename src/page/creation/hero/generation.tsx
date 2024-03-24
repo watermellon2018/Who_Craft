@@ -15,6 +15,7 @@ import './style.css'
 import CreaterWrapper from "./tree/createrWrapper";
 import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../routes/pathConstant";
+import {get_image_by_id} from "../../../api/characters/basic";
 const { Content, Sider } = Layout;
 
 interface Character {
@@ -92,11 +93,6 @@ export const GenerationHeroPage = () => {
         });
     }, []);
 
-    const saveCharacterHandle = () => {
-        const a = 5
-    }
-
-
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
     };
@@ -106,7 +102,6 @@ export const GenerationHeroPage = () => {
 
     const onFinish = async (values: any) => {
         setIsGenerating(true);
-        // console.log(values);
 
         let response;
         // TODO:: переделать / костыль пока оставлю
@@ -135,12 +130,38 @@ export const GenerationHeroPage = () => {
                     project_id: project_id,
                     name: name,
                     id_leaf: id,
+                    imageUrl: imageGeneratedUrl,
                 },
             });
         } else {
             console.error('Ошибка при передаче имени на другую страницу!');
         }
     }
+    const [isHeroSaved, setIsHeroSaved] = useState(false);
+    useEffect(() => {
+        const idCurHero = curCharacter.id;
+        const fetchData = async () => {
+            try {
+                const response = await get_image_by_id(project_id, idCurHero);
+
+                if (response.data.status) {
+                    setIsHeroSaved(true);
+                    const byteArray = response.data.image;
+                    const imageUrl = `data:image/png;base64,${byteArray}`;
+                    setImageGeneratedUrl(imageUrl);
+                } else {
+                    setIsHeroSaved(false);
+                }
+            } catch (error) {
+                console.error('Ошибка при проверке сохранения героя:', error);
+                setIsGenerating(false);
+            }
+        };
+        if(idCurHero.length > 0){
+            fetchData();
+        }
+
+    }, [curCharacter.id])
 
     return (
 
@@ -187,6 +208,7 @@ export const GenerationHeroPage = () => {
                                 <p style={{color: 'white', position: "relative"}}>
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
+                                <div className='flex'>
                                 {imageGeneratedUrl!='' &&
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-ignore
@@ -200,13 +222,14 @@ export const GenerationHeroPage = () => {
                                 <div>
                                     <Button onClick={() => navigate(-1)}>В Мой проект</Button>
                                 </div>
+                                </div>
                             </div>
 
                             <div className="h-full w-full flex items-center justify-center">
 
                                 {isGenerating ? <Spin /> :
                                     <>
-                                        {curCharacter['name'] && imageGeneratedUrl == ''
+                                        {curCharacter['name'] && imageGeneratedUrl == '' && isHeroSaved
                                             ?
                                                 <Empty description='Персонаж не сгенерирован'
                                                        className='text-yellow'
