@@ -14,6 +14,7 @@ import ProjectListPage from "./page/movie/library/own/list";
 import ProjectPage from "./page/movie/projectPage/projectPage";
 import CharacterData from "./page/movie/characters/setting/CharacterData";
 import PathConstants from "./routes/pathConstant";
+import GenPosterPage from "./page/creation/poster/GenPosterPage";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -112,6 +113,7 @@ function App() {
                   <Route path={PathConstants.CREATE_PROJECT}  element={<ProjectCreatePage />} />
                   <Route path={PathConstants.PROJECTS}  element={<ProjectListPage />} />
                   <Route path={PathConstants.PROJECT_PAGE}  element={<ProjectPage />} />
+                  <Route path={PathConstants.GEN_POSTER}  element={<GenPosterPage />} />
               </Routes>
           </BrowserRouter>
       </ConfigProvider>

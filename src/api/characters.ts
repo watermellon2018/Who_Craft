@@ -78,6 +78,22 @@ async function generateImage2ImgAPI(formData: FormImg2Img): Promise<any> {
 
 }
 
+
+async function generatePosterApi(description: string): Promise<any> {
+    try {
+        return await axios.get(`${backendUrl}/api/generate/poster/`, {
+            params: {
+                description: description,
+            }
+        });
+    } catch (error) {
+        console.error('Error generating image to image:', error);
+    }
+
+}
+
 export {generateImageAPI,
     generateImageUndefinedAPI,
-    generateImage2ImgAPI};
+    generateImage2ImgAPI,
+    generatePosterApi
+};
