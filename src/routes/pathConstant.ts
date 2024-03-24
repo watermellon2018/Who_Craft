@@ -10,6 +10,7 @@ const PathConstants = {
     PROFILE: 'profile',
 
     CREATE_PROJECT: '/create-project',
+    GEN_POSTER: '/create-project/gen-poster',
     PROJECTS: '/project-list',
     PROJECT_PAGE: '/project-list/project'
 

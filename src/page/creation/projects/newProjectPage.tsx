@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HeaderComponent from "../../main/header";
-import { useNavigate } from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 
 import {Input, Button, Select, Upload, message, notification} from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -30,6 +30,8 @@ const UP_LEN_DESC = 2000
 
 export const ProjectCreatePage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
 
     const [genresList, setGenresList] = useState<Genre[]>([]);
 
@@ -57,6 +59,9 @@ export const ProjectCreatePage = () => {
         };
 
         fetchGenres();
+
+        if(location.state.posterUrl)
+            setImageUrl(location.state.posterUrl);
     }, []);
 
     const openNotificationWithIcon = (desc: React.ReactNode,
@@ -123,8 +128,6 @@ export const ProjectCreatePage = () => {
                 openNotificationWithIcon('Проект успешно создался!',
                                         'Ура!',
                                         'success');
-                // localStorage.setItem('curProject', JSON.stringify(data));
-                // const project_id = response.data['project_id']
                 navigate(PathConstants.PROJECTS);
             }
         } catch (error) {
@@ -211,6 +214,9 @@ export const ProjectCreatePage = () => {
                                     </>
                             }
                         </Dragger>
+                        <Link className='text-[#fab005] hover:text-white' to={PathConstants.GEN_POSTER}>
+                            Сгенерировать постер
+                        </Link>
 
                     </div>
                     <div className="col-span-2">
