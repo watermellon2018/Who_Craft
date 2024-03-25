@@ -16,6 +16,7 @@ import CreaterWrapper from "./tree/createrWrapper";
 import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../routes/pathConstant";
 import {get_image_by_id} from "../../../api/characters/basic";
+import {openNotificationWithIcon} from "../../../utils/global/notification";
 const { Content, Sider } = Layout;
 
 interface Character {
@@ -101,22 +102,30 @@ export const GenerationHeroPage = () => {
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
     const onFinish = async (values: any) => {
-        setIsGenerating(true);
+        try {
+            setIsGenerating(true);
 
-        let response;
-        // TODO:: переделать / костыль пока оставлю
-        if (values['url'] !== undefined){
-            response = await generateImage2ImgAPI(values);
-        }else {
-            response = (Object.keys(values).length > 2)
-                ? await generateImageAPI(values)
-                : await generateImageUndefinedAPI(values);
+            let response;
+            // TODO:: переделать / костыль пока оставлю
+            if (values['url'] !== undefined) {
+                response = await generateImage2ImgAPI(values);
+            } else {
+                response = (Object.keys(values).length > 2)
+                    ? await generateImageAPI(values)
+                    : await generateImageUndefinedAPI(values);
+            }
+
+            const byteArray = response.data;
+            const imageUrl = `data:image/png;base64,${byteArray}`;
+            setImageGeneratedUrl(imageUrl);
+            setIsGenerating(false);
+        } catch (error) {
+            setIsGenerating(false);
+            setImageGeneratedUrl('');
+            openNotificationWithIcon('Упс!',
+                'Ошибка при генерации изображения. Что-то пошло не так',
+                'error');
         }
-
-        const byteArray = response.data;
-        const imageUrl = `data:image/png;base64,${byteArray}`;
-        setImageGeneratedUrl(imageUrl);
-        setIsGenerating(false);
     };
 
     const settingHeroHandle = () => {

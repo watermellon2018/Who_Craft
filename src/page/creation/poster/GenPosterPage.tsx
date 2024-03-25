@@ -1,21 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import HeaderComponent from "../../main/header";
-import {Button, Empty, Input, Layout, Space, Spin} from "antd";
-import CreaterWrapper from "../hero/tree/createrWrapper";
-import {Tree} from "react-arborist";
-import NodeTree from "../hero/tree/node";
+import {Button, Empty, Input, Layout, Spin} from "antd";
 import ImageCanvas from "../hero/canvas";
-import MenuGeneration from "../hero/generationMenu";
 import {Content} from "antd/es/layout/layout";
-import {useLocation, useNavigate} from "react-router-dom";
-import BottomGenMenu from "../hero/bottomMenu";
+import {useNavigate} from "react-router-dom";
 import {
-    generateImage2ImgAPI,
-    generateImageAPI,
-    generateImageUndefinedAPI,
+    editGenerateImage,
     generatePosterApi
 } from "../../../api/characters";
 import PathConstants from "../../../routes/pathConstant";
+import EditGenComponent from "../edit_generation";
+import {openNotificationWithIcon} from "../../../utils/global/notification";
 
 
 const GenPosterPage = () => {
@@ -36,15 +31,39 @@ const GenPosterPage = () => {
         });
     }
 
-    const genHandle = async () => {
-        setIsGenerating(true);
+    const catchError = () => {
+        setIsGenerating(false);
+        setImageGeneratedUrl('');
+        openNotificationWithIcon('Упс!',
+            'Ошибка при генерации изображения. Что-то пошло не так',
+            'error');
+    }
 
-        const response = await generatePosterApi(describe);
-
+    const displayGenImage = (response: any) => {
         const byteArray = response.data;
         const imageUrl = `data:image/png;base64,${byteArray}`;
         setImageGeneratedUrl(imageUrl);
         setIsGenerating(false);
+    }
+
+    const genHandle = async () => {
+        try {
+            setIsGenerating(true);
+            const response = await generatePosterApi(describe);
+            displayGenImage(response);
+        } catch (error) {
+            catchError();
+        }
+    }
+
+    const editHandle = async (correctionText: string) => {
+        try {
+            setIsGenerating(true);
+            const response = await editGenerateImage(correctionText, imageGeneratedUrl);
+            displayGenImage(response);
+        } catch (error) {
+            catchError();
+        }
     }
 
     return (
@@ -89,16 +108,29 @@ const GenPosterPage = () => {
 
                                 </div>
 
-                                <div className="w-3/6">
-                                    <Input.TextArea
-                                        value={describe}
-                                        onChange={handleDescArea}
-                                        style={{height: '100%'}}
-                                        placeholder='Распишите, как должен выглядеть постер' />
-                                    <Button onClick={genHandle} className='mt-2 border border-black' type="primary" htmlType="submit">
-                                        Генерировать
-                                    </Button>
+                                <div className="w-3/6 flex flex-col justify-between">
+                                    <div className='h-1/2'>
+                                        <Input.TextArea
+                                            value={describe}
+                                            onChange={handleDescArea}
+                                            style={{height: '100%'}}
+                                            placeholder='Распишите, как должен выглядеть постер' />
+                                        <Button
+                                            style={{minWidth: '120px'}}
+                                            onClick={genHandle}
+                                            className='mt-2 border border-black'
+                                            type="primary"
+                                            htmlType="submit">
+                                            Генерировать
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        {imageGeneratedUrl != '' && !isGenerating ?
+                                            <EditGenComponent editHandle={editHandle} /> : <></>
+                                        }
+                                    </div>
                                 </div>
+
 
                             </div>
                         </div>

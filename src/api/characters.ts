@@ -92,8 +92,24 @@ async function generatePosterApi(description: string): Promise<any> {
 
 }
 
+
+async function editGenerateImage(correctionText: string, url: string): Promise<any> {
+    try {
+        return await axios.get(`${backendUrl}/api/generate/edit/`, {
+            params: {
+                image: url,
+                correction: correctionText,
+            }
+        });
+    } catch (error) {
+        console.error('Error edit image by promt:', error);
+    }
+
+}
+
 export {generateImageAPI,
     generateImageUndefinedAPI,
     generateImage2ImgAPI,
-    generatePosterApi
+    generatePosterApi,
+    editGenerateImage
 };
