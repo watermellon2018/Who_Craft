@@ -92,6 +92,16 @@ export const GenerationHeroPage = () => {
         fetchAndMergeCharacters().then(() => {
             setIsLoading(false);
         });
+
+        const url = location.state?.imageUrl || '';
+        setImageGeneratedUrl(url);
+
+        const curCharString = localStorage.getItem("curCharacter");
+        if(curCharString) {
+            const curChar = JSON.parse(curCharString);
+            setCurCharacter(curChar)
+            localStorage.removeItem('curCharacter')
+        }
     }, []);
 
     const toggleCollapsed = () => {
@@ -160,17 +170,31 @@ export const GenerationHeroPage = () => {
                     setImageGeneratedUrl(imageUrl);
                 } else {
                     setIsHeroSaved(false);
+                    setIsGenerating(false);
+                    setImageGeneratedUrl('');
                 }
             } catch (error) {
                 console.error('Ошибка при проверке сохранения героя:', error);
                 setIsGenerating(false);
+                setIsHeroSaved(false);
             }
         };
         if(idCurHero.length > 0){
             fetchData();
         }
 
-    }, [curCharacter.id])
+    }, [curCharacter, curCharacter.id])
+
+    const handleGenImage = () => {
+        localStorage.setItem("curCharacter", JSON.stringify(curCharacter))
+        // Перебросить на отдельную страничку для редактирования генерации
+        navigate(PathConstants.EDIT_GEN_IMG, {
+            state: {
+                imageUrl: imageGeneratedUrl,
+                project_id: project_id,
+            },
+        })
+    }
 
     return (
 
@@ -197,14 +221,19 @@ export const GenerationHeroPage = () => {
                             className='tree sidebar-container'
                             initialData={data}
                             ref={treeRef}>
-                            {({ node, style, dragHandle, tree }) => (
-                                <NodeTree node={node}
-                                          style={style}
-                                          dragHandle={dragHandle}
-                                          tree={tree}
-                                          setCurCharacter={setCurCharacter}
-                                />
-                            )}
+                            {({ node, style, dragHandle, tree }) => {
+                                if(node.id == curCharacter.id)
+                                    tree.props.selection = node.id;
+
+                                return (
+                                    <NodeTree node={node}
+                                              style={style}
+                                              dragHandle={dragHandle}
+                                              tree={tree}
+                                              setCurCharacter={setCurCharacter}
+                                    />
+                                )
+                            }}
                         </Tree>)}
                     </Sider>
                 </div>
@@ -224,12 +253,14 @@ export const GenerationHeroPage = () => {
                                     treeRef.current && treeRef.current.hasOneSelection
                                     ?
                                     <div>
+                                        <Button onClick={handleGenImage} className='mr-5'>Редактировать</Button>
                                         <Button onClick={settingHeroHandle} className='mr-5'>Сохранить</Button>
-                                    </div> :
+                                    </div>
+                                    :
                                     <></>
                                 }
                                 <div>
-                                    <Button onClick={() => navigate(-1)}>В Мой проект</Button>
+                                    <Button onClick={() => navigate(PathConstants.PROJECTS)}>В Мой проект</Button>
                                 </div>
                                 </div>
                             </div>

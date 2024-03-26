@@ -32,10 +32,11 @@ const NodeTree: React.FC<NodeProps> = ({ node,
 
         // скажем страницы, что сейчас мы на этом персонаже
         if (node.data.name !== ''){
-            setCurCharacter({'id': node.data.id,
-                                'name': node.data.name,
-                                'is_folder': !node.isLeaf
-            });
+            const curChar = {'id': node.data.id,
+                'name': node.data.name,
+                'is_folder': !node.isLeaf
+            }
+            setCurCharacter(curChar);
         }
     };
 
