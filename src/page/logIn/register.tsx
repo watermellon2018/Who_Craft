@@ -1,14 +1,10 @@
-import {Form, Input, Button, Layout} from 'antd';
+import {Form, Input, Button, Layout, Col, Row} from 'antd';
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/auth/register'
 import './registration.css';
 import Cookies from "js-cookie";
 import PathConstants from "../../routes/pathConstant";
-
-// const layout = {
-//     wrapperCol: { span: 16 },
-// };
 
 interface RegistrationValues {
     username: string;
@@ -33,7 +29,6 @@ const RegistrationPage: React.FC = () => {
             })
             .catch((error: any) => {
                 console.error(error);
-                // Consider updating your error handling here
             });
     };
 
@@ -49,65 +44,86 @@ const RegistrationPage: React.FC = () => {
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
-                className='flex flex-col w-full'
-                labelCol={{ offset: 3, span: 5 }}
-                wrapperCol={{ offset: 1, span: 10 }}
                 autoComplete="off"
+                style={{maxWidth: '700px'}}
             >
+                <Row className="justify-center items-start">
+                    <Row>
+                        <Col className="col text-right pr-4" style={{maxWidth: '200px'}}>
+                            <p>Username:</p>
+                        </Col>
 
-                <Form.Item
-                    label="Username"
-                    name="username"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
-                    className='mb-4 w-1/2'
-                >
-                    <Input />
-                </Form.Item>
+                        <Col>
 
-                <p>Пароль</p>
-                <Form.Item
-                    label="Пароль"
-                    name="password"
-                    hasFeedback
-                    rules={[{ required: true, message: 'Please input your password!' }]}
-                    className='mb-4 w-1/2'
-                >
-                    <Input.Password />
-                </Form.Item>
+                            <Form.Item
+                                name="username"
+                                rules={[{ required: true, message: 'Please input your username!' }]}
+                                className='mb-4'
+                            >
+                                <Input minW-50px />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="col text-right pr-4" style={{maxWidth: '200px'}}>
+                            <p>Пароль:</p>
+                        </Col>
+                        <Col>
+                            <Form.Item
+                                name="password"
+                                hasFeedback
+                                rules={[{ required: true, message: 'Please input your password!' }]}
+                                className='mb-4'
+                            >
+                                <Input.Password minW-50px />
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                <p>Повторите пароль</p>
-                <Form.Item
-                    name="confirm-password"
-                    label="Повторите пароль"
-                    className='mb-4 w-1/2'
-                    dependencies={['password']}
-                    hasFeedback
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please confirm your password!',
-                        },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (!value || getFieldValue('password') === value) {
-                                    return Promise.resolve();
-                                }
+                    <Row>
+                        <Col className="col text-right pr-4" style={{maxWidth: '200px'}}>
+                            <p>Повторите пароль</p>
+                        </Col>
+                        <Col>
+                            <Form.Item
+                                name="confirm-password"
+                                className='mb-4'
+                                dependencies={['password']}
+                                hasFeedback
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please confirm your password!',
+                                    },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value || getFieldValue('password') === value) {
+                                                return Promise.resolve();
+                                            }
 
-                                return Promise.reject(
-                                    new Error('The two passwords that you entered do not match!')
-                                );
-                            },
-                        }),
-                    ]}
-                >
-                    <Input.Password />
-                </Form.Item>
+                                            return Promise.reject(
+                                                new Error('The two passwords that you entered do not match!')
+                                            );
+                                        },
+                                    }),
+                                ]}
+                            >
+                                <Input.Password minW-50px />
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                <Form.Item wrapperCol={{ offset: 17 }} className='w-1/2'>
-                    <Button type="primary" htmlType="submit" loading={loading}>
-                        Submit
-                    </Button>
-                </Form.Item>
+                    <Row>
+                        <Col style={{maxWidth: '100px'}}></Col>
+                        <Col>
+                            <Form.Item style={{marginLeft: '120px'}}>
+                                <Button style={{width: '180px'}} type="primary" htmlType="submit" loading={loading}>
+                                    Зарегистрироваться
+                                </Button>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Row>
             </Form>
         </Layout>
     );

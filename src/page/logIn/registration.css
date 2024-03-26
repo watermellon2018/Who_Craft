@@ -1,13 +1,33 @@
 .registration-page {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*height: 100vh;*/
+
     display: flex;
     justify-content: center;
+    align-items: center;
     height: 100vh;
 }
 
 .registration-page form {
+    /*display: flex !important;*/
+    /*flex-direction: column !important;*/
+    /*align-items: center !important;*/
+    /*position: relative !important;*/
+    /*margin-bottom: 20px !important;*/
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     position: relative !important;
     margin-bottom: 20px !important;
+}
+
+.registration-page .ant-input {
+    min-width: 50px;
+    max-width: 250px;
+}
+
+.registration-page .ant-input-password {
+    min-width: 50px;
+    max-width: 250px;
 }
