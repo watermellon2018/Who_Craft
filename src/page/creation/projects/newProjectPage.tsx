@@ -21,6 +21,7 @@ import AudienceSelect from "./selectAudience";
 import {create_new_project} from "../../../api/projects/properties/project";
 import withAuth from "../../../utils/auth/check_auth";
 import PathConstants from "../../../routes/pathConstant";
+import {openNotificationWithIcon} from "../../../utils/global/notification";
 
 // TODO:: its for testing
 const BOTTOM_LEN_ANNOT = 0 // 300 # TODO: заглушка
@@ -59,19 +60,12 @@ export const ProjectCreatePage = () => {
         };
 
         fetchGenres();
+        const url = location.state?.posterUrl || '';
+        setImageUrl(url);
 
-        if(location.state.posterUrl)
-            setImageUrl(location.state.posterUrl);
     }, []);
 
-    const openNotificationWithIcon = (desc: React.ReactNode,
-                                      mes: React.ReactNode = "Ошибка в заполнении",
-                                      type: 'success' | 'info' | 'error' | 'warning' ='error') => {
-        notification[type]({
-            message: mes,
-            description: desc,
-        });
-    };
+
 
     const createHandle = async (event: any) => {
 

@@ -9,6 +9,7 @@ const PathConstants = {
 
     PROFILE: 'profile',
 
+    EDIT_GEN_IMG: '/generating/edit',
     CREATE_PROJECT: '/create-project',
     GEN_POSTER: '/create-project/gen-poster',
     PROJECTS: '/project-list',

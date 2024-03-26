@@ -1,35 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import HeaderComponent from "../../main/header";
-import {Button, Empty, Input, Layout, Spin} from "antd";
+import {Button, Empty, Layout, Spin} from "antd";
 import ImageCanvas from "../hero/canvas";
 import {Content} from "antd/es/layout/layout";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {
     editGenerateImage,
-    generatePosterApi
 } from "../../../api/characters";
 import PathConstants from "../../../routes/pathConstant";
 import EditGenComponent from "../edit_generation";
 import {openNotificationWithIcon} from "../../../utils/global/notification";
 
 
-const GenPosterPage = () => {
+const EditGenImgPage = () => {
+    const location = useLocation();
     const navigate = useNavigate();
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
     const [imageGeneratedUrl, setImageGeneratedUrl] = useState<string>('');
-    const [describe, setDescribe] = useState<string>('');
 
-    const handleDescArea = (newVal: any) => {
-        setDescribe(newVal.target.value);
-    }
-
-    const savePoster = () => {
-        navigate(PathConstants.CREATE_PROJECT, {
-            state: {
-                posterUrl: imageGeneratedUrl,
-            },
-        });
-    }
+    useEffect(() => {
+        const url = location.state?.imageUrl || ''
+        setImageGeneratedUrl(url);
+    }, [])
 
     const catchError = () => {
         setIsGenerating(false);
@@ -46,15 +38,6 @@ const GenPosterPage = () => {
         setIsGenerating(false);
     }
 
-    const genHandle = async () => {
-        try {
-            setIsGenerating(true);
-            const response = await generatePosterApi(describe);
-            displayGenImage(response);
-        } catch (error) {
-            catchError();
-        }
-    }
 
     const editHandle = async (correctionText: string) => {
         try {
@@ -69,6 +52,15 @@ const GenPosterPage = () => {
         } catch (error) {
             catchError();
         }
+    }
+
+    const readyEditHandle = () => {
+        navigate(PathConstants.GENERATING, {
+            state: {
+                imageUrl: imageGeneratedUrl,
+                project_id: location.state?.project_id,
+            },
+        });
     }
 
     return (
@@ -86,7 +78,7 @@ const GenPosterPage = () => {
                                 <div className='flex'>
                                     {imageGeneratedUrl!='' ?
                                         <div>
-                                            <Button onClick={savePoster} className='mr-5'>Сохранить</Button>
+                                            <Button onClick={readyEditHandle} className='mr-5'>Готово</Button>
                                         </div> :
                                         <></>
                                     }
@@ -114,21 +106,7 @@ const GenPosterPage = () => {
                                 </div>
 
                                 <div className="w-3/6 flex flex-col justify-between">
-                                    <div className='h-1/2'>
-                                        <Input.TextArea
-                                            value={describe}
-                                            onChange={handleDescArea}
-                                            style={{height: '100%'}}
-                                            placeholder='Распишите, как должен выглядеть постер' />
-                                        <Button
-                                            style={{minWidth: '120px'}}
-                                            onClick={genHandle}
-                                            className='mt-2 border border-black'
-                                            type="primary"
-                                            htmlType="submit">
-                                            Генерировать
-                                        </Button>
-                                    </div>
+
                                     <div>
                                         {imageGeneratedUrl != '' && !isGenerating ?
                                             <EditGenComponent editHandle={editHandle} /> : <></>
@@ -147,4 +125,4 @@ const GenPosterPage = () => {
     )
 }
 
-export default GenPosterPage;
+export default EditGenImgPage;

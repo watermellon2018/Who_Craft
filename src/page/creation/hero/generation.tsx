@@ -16,6 +16,7 @@ import CreaterWrapper from "./tree/createrWrapper";
 import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../routes/pathConstant";
 import {get_image_by_id} from "../../../api/characters/basic";
+import {openNotificationWithIcon} from "../../../utils/global/notification";
 const { Content, Sider } = Layout;
 
 interface Character {
@@ -91,6 +92,16 @@ export const GenerationHeroPage = () => {
         fetchAndMergeCharacters().then(() => {
             setIsLoading(false);
         });
+
+        const url = location.state?.imageUrl || '';
+        setImageGeneratedUrl(url);
+
+        const curCharString = localStorage.getItem("curCharacter");
+        if(curCharString) {
+            const curChar = JSON.parse(curCharString);
+            setCurCharacter(curChar)
+            localStorage.removeItem('curCharacter')
+        }
     }, []);
 
     const toggleCollapsed = () => {
@@ -101,22 +112,30 @@ export const GenerationHeroPage = () => {
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
     const onFinish = async (values: any) => {
-        setIsGenerating(true);
+        try {
+            setIsGenerating(true);
 
-        let response;
-        // TODO:: переделать / костыль пока оставлю
-        if (values['url'] !== undefined){
-            response = await generateImage2ImgAPI(values);
-        }else {
-            response = (Object.keys(values).length > 2)
-                ? await generateImageAPI(values)
-                : await generateImageUndefinedAPI(values);
+            let response;
+            // TODO:: переделать / костыль пока оставлю
+            if (values['url'] !== undefined) {
+                response = await generateImage2ImgAPI(values);
+            } else {
+                response = (Object.keys(values).length > 2)
+                    ? await generateImageAPI(values)
+                    : await generateImageUndefinedAPI(values);
+            }
+
+            const byteArray = response.data;
+            const imageUrl = `data:image/png;base64,${byteArray}`;
+            setImageGeneratedUrl(imageUrl);
+            setIsGenerating(false);
+        } catch (error) {
+            setIsGenerating(false);
+            setImageGeneratedUrl('');
+            openNotificationWithIcon('Упс!',
+                'Ошибка при генерации изображения. Что-то пошло не так',
+                'error');
         }
-
-        const byteArray = response.data;
-        const imageUrl = `data:image/png;base64,${byteArray}`;
-        setImageGeneratedUrl(imageUrl);
-        setIsGenerating(false);
     };
 
     const settingHeroHandle = () => {
@@ -151,17 +170,31 @@ export const GenerationHeroPage = () => {
                     setImageGeneratedUrl(imageUrl);
                 } else {
                     setIsHeroSaved(false);
+                    setIsGenerating(false);
+                    setImageGeneratedUrl('');
                 }
             } catch (error) {
                 console.error('Ошибка при проверке сохранения героя:', error);
                 setIsGenerating(false);
+                setIsHeroSaved(false);
             }
         };
         if(idCurHero.length > 0){
             fetchData();
         }
 
-    }, [curCharacter.id])
+    }, [curCharacter, curCharacter.id])
+
+    const handleGenImage = () => {
+        localStorage.setItem("curCharacter", JSON.stringify(curCharacter))
+        // Перебросить на отдельную страничку для редактирования генерации
+        navigate(PathConstants.EDIT_GEN_IMG, {
+            state: {
+                imageUrl: imageGeneratedUrl,
+                project_id: project_id,
+            },
+        })
+    }
 
     return (
 
@@ -188,14 +221,19 @@ export const GenerationHeroPage = () => {
                             className='tree sidebar-container'
                             initialData={data}
                             ref={treeRef}>
-                            {({ node, style, dragHandle, tree }) => (
-                                <NodeTree node={node}
-                                          style={style}
-                                          dragHandle={dragHandle}
-                                          tree={tree}
-                                          setCurCharacter={setCurCharacter}
-                                />
-                            )}
+                            {({ node, style, dragHandle, tree }) => {
+                                if(node.id == curCharacter.id)
+                                    tree.props.selection = node.id;
+
+                                return (
+                                    <NodeTree node={node}
+                                              style={style}
+                                              dragHandle={dragHandle}
+                                              tree={tree}
+                                              setCurCharacter={setCurCharacter}
+                                    />
+                                )
+                            }}
                         </Tree>)}
                     </Sider>
                 </div>
@@ -215,12 +253,14 @@ export const GenerationHeroPage = () => {
                                     treeRef.current && treeRef.current.hasOneSelection
                                     ?
                                     <div>
+                                        <Button onClick={handleGenImage} className='mr-5'>Редактировать</Button>
                                         <Button onClick={settingHeroHandle} className='mr-5'>Сохранить</Button>
-                                    </div> :
+                                    </div>
+                                    :
                                     <></>
                                 }
                                 <div>
-                                    <Button onClick={() => navigate(-1)}>В Мой проект</Button>
+                                    <Button onClick={() => navigate(PathConstants.PROJECTS)}>В Мой проект</Button>
                                 </div>
                                 </div>
                             </div>
