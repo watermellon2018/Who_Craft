@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, message, Layout } from 'antd';
+import {Form, Input, Button, message, Layout, Col, Row} from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -45,34 +45,53 @@ const LoginPage: React.FC = () => {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 className='flex flex-col w-full'
-                labelCol={{ offset: 4, span: 2 }}
-                wrapperCol={{ offset: 1, span: 10 }}
                 autoComplete="off"
-
+                style={{maxWidth: '600px'}}
             >
-                <Form.Item
-                    label="Ты кто"
-                    name="username"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
-                    className='mb-4 w-1/2'
-                >
-                    <Input />
-                </Form.Item>
+                <Row className="justify-center items-start">
+                    <Row>
+                        <Col className="col text-right pr-4" style={{maxWidth: '100px'}}>
+                            <p>Username:</p>
+                        </Col>
 
-                <Form.Item
-                    label="Пароль"
-                    name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
-                    className='mb-4 w-1/2'
-                >
-                    <Input.Password />
-                </Form.Item>
+                        <Col>
 
-                <Form.Item wrapperCol={{ span: 12, offset: 15 }} className='w-1/2'>
-                    <Button type="primary" htmlType="submit">
+                            <Form.Item
+                                name="username"
+                                rules={[{ required: true, message: 'Please input your username!' }]}
+                                className='mb-4'
+                            >
+                                <Input minW-50px />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col className="col text-right pr-4" style={{maxWidth: '100px'}}>
+                            <p>Пароль:</p>
+                        </Col>
+                        <Col>
+                            <Form.Item
+                                name="password"
+                                rules={[{ required: true, message: 'Please input your password!' }]}
+                                className='mb-4'
+                            >
+                                <Input.Password minW-50px />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col style={{maxWidth: '100px'}}></Col>
+                        <Col>
+
+                <Form.Item className='flex' style={{marginLeft: '150px'}}>
+                    <Button style={{width: '100px'}} type="primary" htmlType="submit">
                         Войти
                     </Button>
                 </Form.Item>
+                        </Col>
+                    </Row>
+                </Row>
             </Form>
         </Layout>
     );
