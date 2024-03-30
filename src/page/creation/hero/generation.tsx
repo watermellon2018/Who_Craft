@@ -264,7 +264,9 @@ export const GenerationHeroPage = () => {
                                         <></>
                                     }
                                     <div>
-                                        <Button onClick={() => navigate(PathConstants.PROJECTS)}>В Мой проект</Button>
+                                        <Button onClick={() => navigate(PathConstants.PROJECT_PAGE, {state: {project_id: project_id}})}>
+                                            В Мой проект
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
