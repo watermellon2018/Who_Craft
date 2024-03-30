@@ -33,7 +33,8 @@ interface TreeHandle {
 export const GenerationHeroPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { is_edit, project_id } = location.state || {};
+    const { project_id } = location.state || {};
+    const is_edit = localStorage.getItem('is_edit') == 'true' || false;
 
     const [collapsed, setCollapsed] = useState(false);
     const treeRef = useRef(null);
@@ -100,12 +101,15 @@ export const GenerationHeroPage = () => {
             const curChar = JSON.parse(curCharString);
             setCurCharacter(curChar)
             localStorage.removeItem('curCharacter')
+        } else if (location.state.curCharacter){
+            setCurCharacter(location.state?.curCharacter);
         }
     }, []);
 
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
     };
+
 
     const [imageGeneratedUrl, setImageGeneratedUrl] = useState<string>('');
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -149,6 +153,7 @@ export const GenerationHeroPage = () => {
                     name: name,
                     id_leaf: id,
                     imageUrl: imageGeneratedUrl,
+                    character_id: curCharacter.id,
                 },
             });
         } else {
@@ -158,7 +163,6 @@ export const GenerationHeroPage = () => {
     const [isHeroSaved, setIsHeroSaved] = useState(false);
     useEffect(() => {
         const is_regenerated = location.state?.regenerated || false;
-        console.log('cococ',is_regenerated);
         if (is_regenerated)
             return;
 
@@ -196,6 +200,7 @@ export const GenerationHeroPage = () => {
             state: {
                 imageUrl: imageGeneratedUrl,
                 project_id: project_id,
+                is_edit: is_edit,
             },
         })
     }
@@ -226,7 +231,7 @@ export const GenerationHeroPage = () => {
                                 initialData={data}
                                 ref={treeRef}>
                                 {({ node, style, dragHandle, tree }) => {
-                                    if(node.id == curCharacter.id)
+                                    if(node.data.key == curCharacter.id)
                                         tree.props.selection = node.id;
 
                                     return (
