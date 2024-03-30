@@ -52,8 +52,8 @@ const ProjectListPage = () => {
     const editProject = (project_id: string) => {
         navigate(PathConstants.CREATE_PROJECT, { state: { project_id: project_id, is_edit: true} });
     }
-    const handleClickCard = (project_id: string, title: string) => {
-        navigate(PathConstants.PROJECT_PAGE, { state: { project_id: project_id, title: title} });
+    const handleClickCard = (project_id: string) => {
+        navigate(PathConstants.PROJECT_PAGE, { state: { project_id: project_id} });
     }
 
     return (
@@ -72,7 +72,7 @@ const ProjectListPage = () => {
                                 key={'my-movie-'+index}
                                 cover={<>
                                     <img src={project.src}
-                                         onClick={() => {handleClickCard(project.id, project.title)}}
+                                         onClick={() => {handleClickCard(project.id)}}
                                           />
                                     <div className="text-right absolute top-1 right-0">
 
