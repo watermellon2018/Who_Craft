@@ -8,7 +8,7 @@ export const MainPage = () => {
     const navigate = useNavigate();
 
     const createProjectHandle = () => {
-        navigate(PathConstants.CREATE_PROJECT);
+        navigate(PathConstants.CREATE_PROJECT, {state: {is_edit: false}});
     }
 
     const myLibraryHandle = () => {

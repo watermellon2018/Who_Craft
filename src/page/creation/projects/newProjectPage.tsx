@@ -18,7 +18,7 @@ interface Genre {
 
 import {get_all_genres} from "../../../api/projects/properties/genres";
 import AudienceSelect from "./selectAudience";
-import {create_new_project} from "../../../api/projects/properties/project";
+import {create_new_project, get_info_project, update_info_project} from "../../../api/projects/properties/project";
 import withAuth from "../../../utils/auth/check_auth";
 import PathConstants from "../../../routes/pathConstant";
 import {openNotificationWithIcon} from "../../../utils/global/notification";
@@ -32,6 +32,7 @@ const UP_LEN_DESC = 2000
 export const ProjectCreatePage = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const is_edit = location.state?.is_edit || false;
 
 
     const [genresList, setGenresList] = useState<Genre[]>([]);
@@ -50,6 +51,24 @@ export const ProjectCreatePage = () => {
 
 
     useEffect(() => {
+        const getInfoProject = async () => {
+            try {
+                const response = await get_info_project(location.state.project_id);
+                if(response.status == 200){
+                    const data = response.data;
+                    const url = data.src ? 'data:image/jpeg;base64,' + data.src : 'https://placehold.co/195x147';
+                    setImageUrl(url);
+                    setTitle(data.title);
+                    setFormat(data.format);
+                    setAnnotation(data.annot);
+                    setDescription(data.desc);
+                    setSelectedAudience(data.audience);
+                    setGenre(data.genre);
+                }
+            } catch (error) {
+                console.error('Ошибка при получении списка жанров:', error);
+            }
+        };
         const fetchGenres = async () => {
             try {
                 const response = await get_all_genres();
@@ -63,47 +82,48 @@ export const ProjectCreatePage = () => {
         const url = location.state?.posterUrl || '';
         setImageUrl(url);
 
+        if(is_edit) {
+            getInfoProject();
+        }
+
+
     }, []);
 
-
-
-    const createHandle = async (event: any) => {
-
-        event.preventDefault();
+    const checkRecordFields = () => {
         if (!title) {
             setErrorTitle(true);
             openNotificationWithIcon('Поле "Название" обязательно для заполнения');
-            return;
+            return false;
         }
 
         if (!genre) {
             openNotificationWithIcon('Выберите жанры');
-            return;
+            return false;
         }
 
         if (!annotation || annotation.length < BOTTOM_LEN_ANNOT) {
             setErrorAnnot(true);
             openNotificationWithIcon('Поле "Аннотации" должно содержать не менее' + BOTTOM_LEN_ANNOT+' символов');
-            return;
+            return false;
         }
         if (!annotation || annotation.length > UP_LEN_ANNOT) {
             setErrorAnnot(true);
             openNotificationWithIcon('Поле "Аннотации" должно содержать не более'+ UP_LEN_ANNOT +' символов');
-            return;
+            return false;
         }
         if (!description || description.length < BOTTOM_LEN_DESC) {
             setErrorDesc(true);
             openNotificationWithIcon('Поле "Синопсис" должно содержать не менее' + BOTTOM_LEN_DESC +' символов');
-            return;
+            return false;
         }
         if (!description || description.length > UP_LEN_ANNOT) {
             setErrorDesc(true);
             openNotificationWithIcon('Поле "Синопсис" должно содержать не более' + UP_LEN_DESC + ' символов');
-            return;
+            return false;
         }
         if (selectedAudience.length == 0) {
             openNotificationWithIcon('Выберите целевую аудиторию');
-            return;
+            return false;
         }
 
         const data = {
@@ -113,8 +133,37 @@ export const ProjectCreatePage = () => {
             'desc': description,
             'annot': annotation,
             'audience': selectedAudience,
-            'image': imageUrl,
+            'image': (imageUrl == 'https://placehold.co/195x147') ? '' : imageUrl,
         };
+        return data;
+    }
+
+    const updateHandle = async () => {
+        const data = checkRecordFields();
+
+        // Пользователь не заполнил обязательно поле
+        if(!data)
+            return;
+
+        try {
+            const response = await update_info_project(data, location.state.project_id);
+            if(response.status == 200){
+                openNotificationWithIcon('Проект успешно обновился!',
+                    'Ура!',
+                    'success');
+                navigate(PathConstants.PROJECTS);
+            }
+        } catch (error) {
+            console.error('Ошибка при получении списка жанров:', error);
+        }
+    }
+
+    const createHandle = async () => {
+        const data = checkRecordFields();
+
+        // Пользователь не заполнил обязательно поле
+        if(!data)
+            return;
 
         try {
             const response = await create_new_project(data);
@@ -209,7 +258,7 @@ export const ProjectCreatePage = () => {
                             }
                         </Dragger>
                         <Link className='text-[#fab005] hover:text-white' to={PathConstants.GEN_POSTER}>
-                            Сгенерировать постер
+                           Сгенерировать постер
                         </Link>
 
                     </div>
@@ -291,6 +340,14 @@ export const ProjectCreatePage = () => {
                                     />
                                 </div>
                                 <div></div>
+                                {location.state?.is_edit ?
+                                    <Button
+                                        type="primary"
+                                        onClick={updateHandle}
+                                        className="mt-10"
+                                    >
+                                        Сохранить
+                                    </Button> :
                                 <Button
                                     type="primary"
                                     onClick={createHandle}
@@ -298,6 +355,7 @@ export const ProjectCreatePage = () => {
                                 >
                                     Создать
                                 </Button>
+                                }
                             </div>
                         </div>
 
