@@ -92,12 +92,11 @@ export const GenerationHeroPage = () => {
         fetchAndMergeCharacters().then(() => {
             setIsLoading(false);
         });
-
         const url = location.state?.imageUrl || '';
         setImageGeneratedUrl(url);
 
         const curCharString = localStorage.getItem("curCharacter");
-        if(curCharString) {
+        if (curCharString) {
             const curChar = JSON.parse(curCharString);
             setCurCharacter(curChar)
             localStorage.removeItem('curCharacter')
@@ -158,6 +157,11 @@ export const GenerationHeroPage = () => {
     }
     const [isHeroSaved, setIsHeroSaved] = useState(false);
     useEffect(() => {
+        const is_regenerated = location.state?.regenerated || false;
+        console.log('cococ',is_regenerated);
+        if (is_regenerated)
+            return;
+
         const idCurHero = curCharacter.id;
         const fetchData = async () => {
             try {
@@ -215,26 +219,26 @@ export const GenerationHeroPage = () => {
                         {isLoading ? (
                             <Tree height={600} className='tree sidebar-container' />
                         ) : (
-                        <Tree
-                            key='tree_characters'
-                            height={600}
-                            className='tree sidebar-container'
-                            initialData={data}
-                            ref={treeRef}>
-                            {({ node, style, dragHandle, tree }) => {
-                                if(node.id == curCharacter.id)
-                                    tree.props.selection = node.id;
+                            <Tree
+                                key='tree_characters'
+                                height={600}
+                                className='tree sidebar-container'
+                                initialData={data}
+                                ref={treeRef}>
+                                {({ node, style, dragHandle, tree }) => {
+                                    if(node.id == curCharacter.id)
+                                        tree.props.selection = node.id;
 
-                                return (
-                                    <NodeTree node={node}
-                                              style={style}
-                                              dragHandle={dragHandle}
-                                              tree={tree}
-                                              setCurCharacter={setCurCharacter}
-                                    />
-                                )
-                            }}
-                        </Tree>)}
+                                    return (
+                                        <NodeTree node={node}
+                                                  style={style}
+                                                  dragHandle={dragHandle}
+                                                  tree={tree}
+                                                  setCurCharacter={setCurCharacter}
+                                        />
+                                    )
+                                }}
+                            </Tree>)}
                     </Sider>
                 </div>
 
@@ -247,21 +251,21 @@ export const GenerationHeroPage = () => {
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
                                 <div className='flex'>
-                                {imageGeneratedUrl!='' &&
+                                    {imageGeneratedUrl!='' &&
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-ignore
                                     treeRef.current && treeRef.current.hasOneSelection
-                                    ?
+                                        ?
+                                        <div>
+                                            <Button onClick={handleGenImage} className='mr-5'>Редактировать</Button>
+                                            <Button onClick={settingHeroHandle} className='mr-5'>Сохранить</Button>
+                                        </div>
+                                        :
+                                        <></>
+                                    }
                                     <div>
-                                        <Button onClick={handleGenImage} className='mr-5'>Редактировать</Button>
-                                        <Button onClick={settingHeroHandle} className='mr-5'>Сохранить</Button>
+                                        <Button onClick={() => navigate(PathConstants.PROJECTS)}>В Мой проект</Button>
                                     </div>
-                                    :
-                                    <></>
-                                }
-                                <div>
-                                    <Button onClick={() => navigate(PathConstants.PROJECTS)}>В Мой проект</Button>
-                                </div>
                                 </div>
                             </div>
 
@@ -271,9 +275,9 @@ export const GenerationHeroPage = () => {
                                     <>
                                         {curCharacter['name'] && imageGeneratedUrl == '' && isHeroSaved
                                             ?
-                                                <Empty description='Персонаж не сгенерирован'
-                                                       className='text-yellow'
-                                                       image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
+                                            <Empty description='Персонаж не сгенерирован'
+                                                   className='text-yellow'
+                                                   image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
                                             <ImageCanvas imageUrl={imageGeneratedUrl} />
                                         }
                                     </>

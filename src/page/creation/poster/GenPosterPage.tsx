@@ -26,12 +26,12 @@ const GenPosterPage = () => {
 
 
     const savePoster = () => {
-        console.log(location.state?.is_edit);
         navigate(PathConstants.CREATE_PROJECT, {
             state: {
-                posterUrl: imageGeneratedUrl,
+                imgUrl: imageGeneratedUrl,
                 is_edit: location.state?.is_edit,
                 project_id: location.state?.project_id,
+                regenerated: true,
             },
         });
     }

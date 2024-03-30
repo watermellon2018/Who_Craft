@@ -81,13 +81,13 @@ export const ProjectCreatePage = () => {
         fetchGenres();
         if(is_edit)
             getInfoProject().then(() => {
-                if(location.state?.posterUrl) {
-                    const url = location.state?.posterUrl;
+                if(location.state?.imgUrl) {
+                    const url = location.state?.imgUrl;
                     setImageUrl(url);
                 }
             });
 
-        const url = location.state?.posterUrl || '';
+        const url = location.state?.imgUrl || '';
         setImageUrl(url);
 
 
