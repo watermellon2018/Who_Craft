@@ -60,7 +60,43 @@ async function delete_project_by_id(id: string): Promise<any> {
 
 }
 
+async function get_info_project(id: string): Promise<any> {
+    try {
+        const token = localStorage.getItem('userId');
+        return await axios.get(`${backendUrl}/api/projects/select-project-by-id/`, {
+            params: {
+                "id": id,
+                'token_user': token,
+            }
+        });
+    } catch (error) {
+        console.error('Error creating project:', error);
+    }
+}
+
+async function update_info_project(data: ProjectI, id: string): Promise<any> {
+    try {
+        const token = localStorage.getItem('userId');
+        return await axios.post(`${backendUrl}/api/projects/update-project-by-id/`, {
+            data: {
+                ...data,
+                'token_user': token,
+                "id": id,
+            },
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
+            }
+        });
+    } catch (error) {
+        console.error('Error creating project:', error);
+    }
+
+}
+
 export { create_new_project,
     get_all_list_projects,
-    delete_project_by_id
+    delete_project_by_id,
+    get_info_project,
+    update_info_project,
 }

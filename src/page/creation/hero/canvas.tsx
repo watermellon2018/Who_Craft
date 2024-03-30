@@ -50,14 +50,14 @@ const ImageCanvas: React.FC<ImageCanvas> = ({imageUrl}) => {
     }, [zoom, offset, isUrlWorked, image, imageDimensions.width, imageDimensions.height]);
 
     const handlePan = (dx: number, dy: number) => {
-        setOffset((prevOffset) => ({
-            x: prevOffset.x + dx,
-            y: prevOffset.y + dy,
-        }));
+        // setOffset((prevOffset) => ({
+        //     x: prevOffset.x + dx,
+        //     y: prevOffset.y + dy,
+        // }));
     };
 
     const handleZoom = (delta: number) => {
-        setZoom((zoom) => Math.max(0.1, zoom - delta / 200)); // Adjust the factor as needed
+        // setZoom((zoom) => Math.max(0.1, zoom - delta / 200)); // Adjust the factor as needed
     };
 
 
@@ -67,7 +67,8 @@ const ImageCanvas: React.FC<ImageCanvas> = ({imageUrl}) => {
                 ref={canvasRef}
                 width={imageDimensions.width * zoom}
                 height={imageDimensions.height * zoom}
-                style={{ border: '1px solid #ccc', cursor: 'grab'}}
+                // style={{ border: '1px solid #ccc', cursor: 'grab'}}
+                style={{ border: '1px solid #ccc'}}
                 onWheel={(e) => {
                     handleZoom(e.deltaY);
                 }}

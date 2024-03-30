@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import HeaderComponent from "../../main/header";
 import {Button, Empty, Input, Layout, Spin} from "antd";
 import ImageCanvas from "../hero/canvas";
 import {Content} from "antd/es/layout/layout";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {
     editGenerateImage,
     generatePosterApi
@@ -14,6 +14,7 @@ import {openNotificationWithIcon} from "../../../utils/global/notification";
 
 
 const GenPosterPage = () => {
+    const location = useLocation();
     const navigate = useNavigate();
     const [isGenerating, setIsGenerating] = useState<boolean>(false);
     const [imageGeneratedUrl, setImageGeneratedUrl] = useState<string>('');
@@ -23,10 +24,14 @@ const GenPosterPage = () => {
         setDescribe(newVal.target.value);
     }
 
+
     const savePoster = () => {
         navigate(PathConstants.CREATE_PROJECT, {
             state: {
-                posterUrl: imageGeneratedUrl,
+                imgUrl: imageGeneratedUrl,
+                is_edit: location.state?.is_edit,
+                project_id: location.state?.project_id,
+                regenerated: true,
             },
         });
     }

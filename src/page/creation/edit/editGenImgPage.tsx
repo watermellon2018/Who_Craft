@@ -59,6 +59,7 @@ const EditGenImgPage = () => {
             state: {
                 imageUrl: imageGeneratedUrl,
                 project_id: location.state?.project_id,
+                regenerated: true,
             },
         });
     }

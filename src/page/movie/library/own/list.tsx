@@ -49,8 +49,8 @@ const ProjectListPage = () => {
         }
     }
     const navigate = useNavigate();
-    const editProject = () => {
-        navigate(PathConstants.HOME);
+    const editProject = (project_id: string) => {
+        navigate(PathConstants.CREATE_PROJECT, { state: { project_id: project_id, is_edit: true} });
     }
     const handleClickCard = (project_id: string, title: string) => {
         navigate(PathConstants.PROJECT_PAGE, { state: { project_id: project_id, title: title} });
@@ -66,7 +66,7 @@ const ProjectListPage = () => {
                     <div className="grid grid-cols-4 gap-4 projects-div">
                         {projectsList.map((project, index) => (
                             <Card
-                                onClick={() => {handleClickCard(project.id, project.title)}}
+                                // onClick={() => {handleClickCard(project.id, project.title)}}
                                 hoverable
                                 className='bottom-card'
                                 key={'my-movie-'+index}
@@ -77,7 +77,7 @@ const ProjectListPage = () => {
                                     <div className="text-right absolute top-1 right-0">
 
                                         <EditOutlined
-                                            onClick={editProject}
+                                            onClick={() => editProject(project.id)}
                                             className="text-white text-xl p-2"
                                         />
                                         <DeleteOutlined
