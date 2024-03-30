@@ -32,6 +32,8 @@ import {
     update_personal_data_hero, update_psyho_data_hero, update_relationship_data_hero
 } from "../../../../api/characters/updateSettings";
 import {createCharacterFromTreeAPI} from "../../../../api/generation/characters/tree_structure";
+import PathConstants from "../../../../routes/pathConstant";
+import personalSettingForm from "../../../profile/personalSettingForm";
 
 
 const { Step } = Steps;
@@ -289,7 +291,6 @@ const CharacterData = () => {
                 });
             }
         };
-
         update_image_data_hero(imageUrl, project_id, character_id).then(() => {
             updateData(formDataPersonal, formDataPersonalInit, update_personal_data_hero, setFormPersonalInit);
             updateData(formDataMotivate, formDataMotivateInit, update_motivate_data_hero, setFormMotivateInit);
@@ -305,12 +306,30 @@ const CharacterData = () => {
                 message: 'Информация о персонаже сохранена!',
                 description: 'Ура!',
             });
-            navigate(-1);
+            navigate(PathConstants.PROJECT_PAGE, {state: {project_id: project_id}});
         });
     }
 
     const handleBackStep = () => {
         navigate(-1);
+    }
+
+    const regenerateHero = () => {
+        const curCharacter = {
+            id: location.state.character_id,
+            name: formDataPersonal?.name || '',
+            is_folder: false,
+        }
+
+        localStorage.setItem('is_edit', 'true');
+        navigate(PathConstants.GENERATING,
+            {state: {
+                    // is_edit: true,
+                    project_id: project_id,
+                    regenerated: true,
+                    imageUrl: imageUrl,
+                    curCharacter: curCharacter,
+            }})
     }
 
 
@@ -330,6 +349,11 @@ const CharacterData = () => {
                                 src={imageUrl}
                                 style={{width: '100%'}}
                             />
+                            <p className='text-[#fab005] hover:text-white'
+                               onClick={regenerateHero}
+                            >
+                                Перегенерировать персожа
+                            </p>
                         </Col>
 
                         <Col span={8}>

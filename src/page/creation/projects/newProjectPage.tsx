@@ -267,11 +267,6 @@ export const ProjectCreatePage = () => {
                         </Dragger>
                         <p className='text-[#fab005] hover:text-white'
                               onClick={toGenPage}
-                              // to={{
-                              //     pathname: PathConstants.GEN_POSTER,
-                              //     state: {is_edit: true}
-                              //
-                              // }}
                         >
                            Сгенерировать постер
                         </p>
