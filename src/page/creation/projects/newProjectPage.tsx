@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HeaderComponent from "../../main/header";
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {Link, LinkProps, useLocation, useNavigate} from 'react-router-dom';
 
 import {Input, Button, Select, Upload, message, notification} from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -79,12 +79,16 @@ export const ProjectCreatePage = () => {
         };
 
         fetchGenres();
+        if(is_edit)
+            getInfoProject().then(() => {
+                if(location.state?.posterUrl) {
+                    const url = location.state?.posterUrl;
+                    setImageUrl(url);
+                }
+            });
+
         const url = location.state?.posterUrl || '';
         setImageUrl(url);
-
-        if(is_edit) {
-            getInfoProject();
-        }
 
 
     }, []);
@@ -151,7 +155,7 @@ export const ProjectCreatePage = () => {
                 openNotificationWithIcon('Проект успешно обновился!',
                     'Ура!',
                     'success');
-                navigate(PathConstants.PROJECTS);
+                navigate(PathConstants.PROJECTS, {state: {is_edit: true}});
             }
         } catch (error) {
             console.error('Ошибка при получении списка жанров:', error);
@@ -225,6 +229,10 @@ export const ProjectCreatePage = () => {
         });
     }
 
+    const toGenPage = () => {
+        navigate(PathConstants.GEN_POSTER, {state: {is_edit: true, project_id: location.state.project_id}});
+    }
+
     return (
         <>
             <HeaderComponent />
@@ -257,9 +265,16 @@ export const ProjectCreatePage = () => {
                                     </>
                             }
                         </Dragger>
-                        <Link className='text-[#fab005] hover:text-white' to={PathConstants.GEN_POSTER}>
+                        <p className='text-[#fab005] hover:text-white'
+                              onClick={toGenPage}
+                              // to={{
+                              //     pathname: PathConstants.GEN_POSTER,
+                              //     state: {is_edit: true}
+                              //
+                              // }}
+                        >
                            Сгенерировать постер
-                        </Link>
+                        </p>
 
                     </div>
                     <div className="col-span-2">
