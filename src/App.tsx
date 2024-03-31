@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import GenerationHeroPage from "./page/creation/hero/generation";
 
-import { ConfigProvider } from 'antd';
+import {ConfigProvider, Switch} from 'antd';
 import MainPage from "./page/main";
 import LandingPage from "./page/logIn/start";
 import RegistrationPage from "./page/logIn/register";
@@ -98,28 +98,57 @@ const theme = {
 }
 
 function App() {
-  return (
-      <ConfigProvider
-          theme={theme}
-      >
-          <BrowserRouter>
-              <Routes>
-                  <Route caseSensitive path={PathConstants.AUTH} element={<LandingPage />} />
-                  <Route path={PathConstants.REGISTER}  element={<RegistrationPage />} />
-                  <Route path={PathConstants.LOGIN} element={<LoginPage />} />
-                  <Route path={PathConstants.HOME} element={<MainPage />} />
-                  <Route path={PathConstants.GENERATING}  element={<GenerationHeroPage />} />
-                  <Route path={PathConstants.SETTING_HERO}  element={<CharacterData />} />
-                  <Route path={PathConstants.PROFILE}  element={<ProfilePage />} />
-                  <Route path={PathConstants.CREATE_PROJECT}  element={<ProjectCreatePage />} />
-                  <Route path={PathConstants.PROJECTS}  element={<ProjectListPage />} />
-                  <Route path={PathConstants.PROJECT_PAGE}  element={<ProjectPage />} />
-                  <Route path={PathConstants.GEN_POSTER}  element={<GenPosterPage />} />
-                  <Route path={PathConstants.EDIT_GEN_IMG} element={<EditGenImgPage />} />
-              </Routes>
-          </BrowserRouter>
-      </ConfigProvider>
-  );
+
+    const routes = useMemo(() => [
+        { key: 'auth', path: PathConstants.AUTH, component: <LandingPage /> },
+        { key: 'register', path: PathConstants.REGISTER, component: <RegistrationPage /> },
+        { key: 'login', path: PathConstants.LOGIN, component: <LoginPage /> },
+        { key: 'home', path: PathConstants.HOME, component: <MainPage /> },
+        { key: 'generating', path: PathConstants.GENERATING, component: <GenerationHeroPage /> },
+        { key: 'settingHero', path: PathConstants.SETTING_HERO, component: <CharacterData /> },
+        { key: 'profile', path: PathConstants.PROFILE, component: <ProfilePage /> },
+        { key: 'createProject', path: PathConstants.CREATE_PROJECT, component: <ProjectCreatePage /> },
+        { key: 'projects', path: PathConstants.PROJECTS, component: <ProjectListPage /> },
+        { key: 'projectPage', path: PathConstants.PROJECT_PAGE, component: <ProjectPage /> },
+        { key: 'genPoster', path: PathConstants.GEN_POSTER, component: <GenPosterPage /> },
+        { key: 'editGenImg', path: PathConstants.EDIT_GEN_IMG, component: <EditGenImgPage /> },
+    ], []);
+
+
+
+    return (
+        <ConfigProvider theme={theme}>
+            <BrowserRouter>
+                <Routes>
+                    {routes.map(({ path, component }) => (
+                        <Route key={path} path={path} element={component} />
+                    ))}
+                </Routes>
+            </BrowserRouter>
+        </ConfigProvider>
+    );
+  // return (
+  //     <ConfigProvider
+  //         theme={theme}
+  //     >
+  //         <BrowserRouter>
+  //             <Routes>
+  //                 <Route caseSensitive path={PathConstants.AUTH} element={<LandingPage />} />
+  //                 <Route path={PathConstants.REGISTER}  element={<RegistrationPage />} />
+  //                 <Route path={PathConstants.LOGIN} element={<LoginPage />} />
+  //                 <Route path={PathConstants.HOME} element={<MainPage />} />
+  //                 <Route path={PathConstants.GENERATING}  element={<GenerationHeroPage />} />
+  //                 <Route path={PathConstants.SETTING_HERO}  element={<CharacterData />} />
+  //                 <Route path={PathConstants.PROFILE}  element={<ProfilePage />} />
+  //                 <Route path={PathConstants.CREATE_PROJECT}  element={<ProjectCreatePage />} />
+  //                 <Route path={PathConstants.PROJECTS}  element={<ProjectListPage />} />
+  //                 <Route path={PathConstants.PROJECT_PAGE}  element={<ProjectPage />} />
+  //                 <Route path={PathConstants.GEN_POSTER}  element={<GenPosterPage />} />
+  //                 <Route path={PathConstants.EDIT_GEN_IMG} element={<EditGenImgPage />} />
+  //             </Routes>
+  //         </BrowserRouter>
+  //     </ConfigProvider>
+  // );
 }
 
 export default App;

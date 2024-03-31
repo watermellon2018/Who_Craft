@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Card} from 'antd';
+import {Card, Spin} from 'antd';
 import {EditOutlined, DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {useLocation, useNavigate} from "react-router-dom";
 import withAuth from "../../../utils/auth/check_auth";
@@ -22,11 +22,14 @@ interface HeroCard {
     name: string;
     src?: string;
 }
-const CharactersCard = () => {
+
+
+const CharactersCard = React.memo(() => {
     const navigate = useNavigate();
     const [characterList, setCharacterList] = useState<ProjectCard[]>([]);
     const location = useLocation();
-    const { project_id, title } = location.state || {};
+    const { project_id } = location.state || {};
+    const [isLoadData, setIsLoadData] = useState<boolean>(false);
 
     useEffect(() => {
 
@@ -41,13 +44,14 @@ const CharactersCard = () => {
                     key: hero.name + hero.id,
                 }));
                 setCharacterList(data);
+
             } catch (error) {
                 console.error('Ошибка при получении списка проектов:', error);
                 setCharacterList([]);
             }
         };
 
-        getAllHeros();
+        getAllHeros().then(() => setIsLoadData(true));
     }, []);
 
     const deleteProject = async (id: string) => {
@@ -72,13 +76,16 @@ const CharactersCard = () => {
                     project_id: project_id,
                     character_id: id_character,
                     imageUrl: imgUrl,
-            } })
+                } })
     };
+
+    if (!isLoadData)
+        return (<Spin />);
 
     return (
         <>
             <div className="p-4 container-card">
-                <h1 className="text-xl font-bold mb-4">Персонажи</h1>
+                <h1 className="text-xl min-h-200 font-bold mb-4">Персонажи</h1>
                 <div className="div-card-seq grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {characterList.map((character, index) => (
                         <Card
@@ -120,6 +127,7 @@ const CharactersCard = () => {
             </div>
         </>
     );
-}
+})
+CharactersCard.displayName = 'CharactersCard';
 
 export default withAuth(CharactersCard);

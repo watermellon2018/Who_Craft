@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import HeaderComponent from "../../main/header";
 import withAuth from "../../../utils/auth/check_auth";
 import './style.css'
@@ -15,34 +15,49 @@ const ProjectPage = () => {
     const [project, setProject] = useState<ProjectI>();
 
     useEffect(() => {
-        if(project_id == null){
+        if (!project_id) {
             throw new Error('Страница проекта! Нет информации о текущем проекте');
         }
-        get_info_project(project_id).then((curProject) => {
-            if(curProject.status)
+
+        const getProjectInfo = async () => {
+            const projectInfoCache = localStorage.getItem('projectInfoCache');
+            if (projectInfoCache) {
+                const projectObj = JSON.parse(projectInfoCache);
+                if (projectObj.id === project_id) {
+                    setProject(projectObj);
+                    return;
+                }
+            }
+
+            const curProject = await get_info_project(project_id);
+            if (curProject.status) {
                 setProject(curProject.data);
-        });
-    }, []);
+                localStorage.setItem('projectInfoCache', JSON.stringify(curProject.data));
+            }
+        };
+
+        getProjectInfo();
+    }, [project_id]);
 
 
+    const memoizedProject = useMemo(() => project, [project]);
 
 
 
     return (
+
+
+
         <>
             <HeaderComponent />
             <div className="p-4 bg-gray-800 min-h-screen text-white">
                 <div className="mb-4 ml-5">
-                    <h1 className="text-3xl font-bold mb-4">Проект {project?.title || ''}</h1>
+                    <h1 className="text-3xl font-bold mb-4">Проект {memoizedProject?.title || ''}</h1>
                     Добавьте персонажей, локации и музыку
                 </div>
 
                 <CharactersCard />
-
-
                 <LocationsCard />
-
-
                 <MusicsCard />
             </div>
         </>
