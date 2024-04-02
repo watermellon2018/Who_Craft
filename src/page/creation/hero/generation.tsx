@@ -39,15 +39,21 @@ export const GenerationHeroPage = () => {
 
     const [collapsed, setCollapsed] = useState(false);
     const treeRef = useRef(null);
+    const [data, setData] = useState<Character[]>([]);
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [imageGeneratedUrl, setImageGeneratedUrl] = useState<string>('');
+    const [isGenerating, setIsGenerating] = useState<boolean>(false);
+    const [isHeroSaved, setIsHeroSaved] = useState(false);
+    const [isEmptySelected, setIsEmptySelected] = useState(false);
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const [data, setData] = useState<Character[]>([]);
     const [curCharacter, setCurCharacter] = useState<{id: string,
         name: string,
         is_folder: boolean}>
     ({id: '', name: '', is_folder: true});
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     /**
      * Выгрузка данных из базы - персонажи которые созданы
@@ -122,9 +128,6 @@ export const GenerationHeroPage = () => {
     };
 
 
-    const [imageGeneratedUrl, setImageGeneratedUrl] = useState<string>('');
-    const [isGenerating, setIsGenerating] = useState<boolean>(false);
-
     const onFinish = async (values: any) => {
         try {
             setIsGenerating(true);
@@ -171,7 +174,6 @@ export const GenerationHeroPage = () => {
             console.error('Ошибка при передаче имени на другую страницу!');
         }
     }
-    const [isHeroSaved, setIsHeroSaved] = useState(false);
     useEffect(() => {
         const is_regenerated = location.state?.regenerated || false;
         if (is_regenerated)
@@ -228,8 +230,15 @@ export const GenerationHeroPage = () => {
         </>
     );
 
-    return (
+    // Так как запомнием персонажа, с которым работает пользователя, нужно очистить состояние
+    // после того, как пользователь переключится на что-то другое и снимент все выделения
+    useEffect(() => {
+        if (isEmptySelected){
+            setCurCharacter({id: '', name: '', is_folder: true});
+        }
+    }, [isEmptySelected]);
 
+    return (
         <>
 
             <HeaderComponent />
@@ -256,6 +265,7 @@ export const GenerationHeroPage = () => {
                                 {({ node, style, dragHandle, tree }) => {
                                     if(node.data.key == curCharacter.id)
                                         tree.props.selection = node.id;
+                                    setIsEmptySelected(tree.hasNoSelection);
 
                                     return (
                                         <NodeTree node={node}
@@ -279,19 +289,13 @@ export const GenerationHeroPage = () => {
                                     Текущий персонаж: {curCharacter['name']}
                                 </p>
                                 <div className='flex'>
-                                    {imageGeneratedUrl!='' &&
-                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                    // @ts-ignore
-                                    treeRef.current && treeRef.current.hasOneSelection
-                                        ?
-                                        <div>
-                                            {topMenu}
-                                        </div>
-                                        :
-                                        <></>
+                                    {imageGeneratedUrl!='' && !isEmptySelected ?
+                                        <div> {topMenu} </div>
+                                        : <></>
                                     }
                                     <div>
-                                        <Button onClick={() => navigate(PathConstants.PROJECT_PAGE, {state: {project_id: project_id}})}>
+                                        <Button onClick={() => navigate(PathConstants.PROJECT_PAGE,
+                                            {state: {project_id: project_id}})}>
                                             В Мой проект
                                         </Button>
                                     </div>
@@ -302,21 +306,29 @@ export const GenerationHeroPage = () => {
 
                                 {isGenerating ? <Spin /> :
                                     <>
-                                        {curCharacter['name'] && imageGeneratedUrl == '' && isHeroSaved
-                                            ?
-                                            <Empty description='Персонаж не сгенерирован'
-                                                   className='text-yellow'
-                                                   image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
-                                            <ImageCanvas imageUrl={imageGeneratedUrl} />
+                                        {
+                                            isEmptySelected ?
+                                                <Empty description='Выберите персонажа'
+                                                       className='text-yellow' /> :
+                                                <>
+                                                    {curCharacter['name']
+                                                    && imageGeneratedUrl == ''
+                                                    && isHeroSaved
+                                                        ?
+                                                        <Empty description='Персонаж не сгенерирован'
+                                                               className='text-yellow'
+                                                               image={Empty.PRESENTED_IMAGE_DEFAULT} /> :
+                                                        <ImageCanvas imageUrl={imageGeneratedUrl} />
+                                                    }
+                                                </>
                                         }
                                     </>
                                 }
-
                             </div>
 
                         </div>
                         {!curCharacter.is_folder ?
-                                <MenuGeneration onFinish={onFinish} />
+                            <MenuGeneration onFinish={onFinish} />
                             : <></>
                         }
 
