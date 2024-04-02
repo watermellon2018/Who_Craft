@@ -324,7 +324,6 @@ const CharacterData = () => {
         localStorage.setItem('is_edit', 'true');
         navigate(PathConstants.GENERATING,
             {state: {
-                    // is_edit: true,
                     project_id: project_id,
                     regenerated: true,
                     imageUrl: imageUrl,
@@ -352,7 +351,7 @@ const CharacterData = () => {
                             <p className='text-[#fab005] hover:text-white'
                                onClick={regenerateHero}
                             >
-                                Перегенерировать персожа
+                                Перегенерировать персонажа
                             </p>
                         </Col>
 

@@ -35,7 +35,8 @@ export const GenerationHeroPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { project_id } = location.state || {};
-    const is_edit = localStorage.getItem('is_edit') == 'true' || false;
+    // const is_edit = localStorage.getItem('is_edit') == 'true' || false;
+    const [isEdit, setIsEdit] = useState<boolean>( localStorage.getItem('is_edit') == 'true' || false);
 
     const [collapsed, setCollapsed] = useState(false);
     const treeRef = useRef(null);
@@ -54,7 +55,6 @@ export const GenerationHeroPage = () => {
         is_folder: boolean}>
     ({id: '', name: '', is_folder: true});
 
-
     /**
      * Выгрузка данных из базы - персонажи которые созданы
      * Выгружаем еще не сохраненных персонажей, но созданных из localStorage.
@@ -64,44 +64,49 @@ export const GenerationHeroPage = () => {
     /** Объединяем созданных (в localStorage) и сохраненных персонажей из БД **/
     const mergeCharactersWithStoredData = (characters: Character[], storedData: Record<string, string>) => {
         const mergedData = [...characters];
-
         for (const value of Object.values(storedData)) {
             const [id, name] = JSON.parse(value) as [string, string];
-            mergedData.push({id, key: id, name});
+            mergedData.push({ id, key: id, name });
         }
-
         return mergedData;
     };
 
-    /** Получаем созданных персонажей из БД **/
-    const getCharacters = async () => {
-        try {
-            const response = await get_all_character_for_project(project_id);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching characters:', error);
-            return [];
-        }
-    };
-    const fetchAndMergeCharacters = async () => {
-        setIsLoading(true);
-        const characters = await getCharacters();
-        const storedTreeLeaf = localStorage.getItem('treeLeaf');
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const response = await get_all_character_for_project(project_id);
+                const characters = response.data;
+                const storedTreeLeaf = localStorage.getItem('treeLeaf');
+                if (storedTreeLeaf && data) {
+                    const storedData = JSON.parse(storedTreeLeaf);
+                    const mergedData = mergeCharactersWithStoredData(characters, storedData);
+                    setData(mergedData);
+                } else {
+                    localStorage.setItem("treeLeaf", JSON.stringify({}));
+                }
+            } catch (error) {
+                console.error('Error fetching characters:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-        if (storedTreeLeaf && data) {
-            const storedData = JSON.parse(storedTreeLeaf);
-            const mergedData = mergeCharactersWithStoredData(characters, storedData);
-            setData(mergedData);
+        fetchData();
 
-        } else{
-            localStorage.setItem("treeLeaf", JSON.stringify({}));
-        }
-    }
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            console.log(localStorage.getItem('is_edit'));
+            window.removeEventListener('resize', handleResize);
+            localStorage.removeItem('is_edit');
+        };
+    }, []);
+
 
     useEffect(() => {
-        fetchAndMergeCharacters().then(() => {
-            setIsLoading(false);
-        });
         const url = location.state?.imageUrl || '';
         setImageGeneratedUrl(url);
 
@@ -110,17 +115,10 @@ export const GenerationHeroPage = () => {
             const curChar = JSON.parse(curCharString);
             setCurCharacter(curChar)
             localStorage.removeItem('curCharacter')
-        } else if (location.state.curCharacter){
+        } else if (location.state.curCharacter) {
             setCurCharacter(location.state?.curCharacter);
         }
 
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
     }, []);
 
     const toggleCollapsed = () => {
@@ -131,17 +129,9 @@ export const GenerationHeroPage = () => {
     const onFinish = async (values: any) => {
         try {
             setIsGenerating(true);
-
-            let response;
-            // TODO:: переделать / костыль пока оставлю
-            if (values['url'] !== undefined) {
-                response = await generateImage2ImgAPI(values);
-            } else {
-                response = (Object.keys(values).length > 2)
-                    ? await generateImageAPI(values)
-                    : await generateImageUndefinedAPI(values);
-            }
-
+            const response = (Object.keys(values).length > 2)
+                ? await generateImageAPI(values)
+                : await generateImageUndefinedAPI(values);
             const byteArray = response.data;
             const imageUrl = `data:image/png;base64,${byteArray}`;
             setImageGeneratedUrl(imageUrl);
@@ -159,10 +149,11 @@ export const GenerationHeroPage = () => {
         if (treeRef && treeRef.current && (treeRef.current as TreeHandle).hasOneSelection) {
             const selectedNode = (treeRef.current as TreeHandle).selectedNodes[0];
             const {name, id} = selectedNode.data;
+            console.log(isEdit);
 
             navigate(PathConstants.SETTING_HERO, {
                 state: {
-                    is_edit: is_edit,
+                    is_edit: isEdit,
                     project_id: project_id,
                     name: name,
                     id_leaf: id,
@@ -174,16 +165,15 @@ export const GenerationHeroPage = () => {
             console.error('Ошибка при передаче имени на другую страницу!');
         }
     }
-    useEffect(() => {
-        const is_regenerated = location.state?.regenerated || false;
-        if (is_regenerated)
-            return;
 
-        const idCurHero = curCharacter.id;
+    useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await get_image_by_id(project_id, idCurHero);
+                const is_regenerated = location.state?.regenerated || false;
+                if (is_regenerated) return;
 
+                const idCurHero = curCharacter.id;
+                const response = await get_image_by_id(project_id, idCurHero);
                 if (response.data.status) {
                     setIsHeroSaved(true);
                     const byteArray = response.data.image;
@@ -195,16 +185,16 @@ export const GenerationHeroPage = () => {
                     setImageGeneratedUrl('');
                 }
             } catch (error) {
-                console.error('Ошибка при проверке сохранения героя:', error);
+                console.error('Error checking hero save:', error);
                 setIsGenerating(false);
                 setIsHeroSaved(false);
             }
         };
-        if(idCurHero.length > 0){
+
+        if (curCharacter.id.length > 0) {
             fetchData();
         }
-
-    }, [curCharacter, curCharacter.id])
+    }, [curCharacter, curCharacter.id]);
 
     const handleGenImage = () => {
         localStorage.setItem("curCharacter", JSON.stringify(curCharacter))
@@ -213,7 +203,7 @@ export const GenerationHeroPage = () => {
             state: {
                 imageUrl: imageGeneratedUrl,
                 project_id: project_id,
-                is_edit: is_edit,
+                is_edit: isEdit,
             },
         })
     }
