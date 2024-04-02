@@ -319,12 +319,12 @@ const CharacterData = () => {
             <HeaderComponent />
 
 
-            <div className="setting-hero-page p-4 bg-gray-800 min-h-screen text-white">
+            <div className="min-w-full setting-hero-page p-4 bg-gray-800 min-h-screen text-white">
                 <h1 className="text-3xl font-bold mb-4">Настройки информации о персонаже</h1>
                 <Divider style={{ borderColor: 'rgba(250, 176, 5, 0.6)'}} />
                 {!isLoadData ? <Spin /> : <>
 
-                    <Row gutter={[16, 16]}>
+                    <Row gutter={[16, 16]} className='mb-5'>
                         <Col style={{marginRight: '5px'}} span={7}>
                             <Image
                                 src={imageUrl}
@@ -381,10 +381,9 @@ const CharacterData = () => {
                                     />
                                 </Card>
                             </div>
-
                         </Col>
 
-                        <Col>
+                        <Col span={8}>
                             <h1 className="text-2xl font-bold mb-4">Биография персонажа</h1>
                             <Card className="card-form biography-card" style={{height: '500px'}}>
                                 <TextArea
@@ -392,15 +391,15 @@ const CharacterData = () => {
                                     onChange={(e) => setBiographyText(e.target.value)}
                                     name='biography-hero'
                                     placeholder='Напишите информацию о жизни персонажа'
-                                    style={{height: '100%'}} />
+                                    style={{height: '100%', width: '100%'}} />
                             </Card>
                         </Col>
 
                     </Row>
 
 
-                    <Row>
-                        <Col span={10}>
+                    <Row gutter={[16, 16]}>
+                        <Col>
                             <h1 className="text-2xl font-bold mb-4">Особенности</h1>
                             <Card className="card-form competitions">
                                 <div className="flex">
@@ -461,7 +460,7 @@ const CharacterData = () => {
                             </Card>
                         </Col>
 
-                        <Col>
+                        <Col span={7}>
                             <div className='additional-info-card'>
                                 <h1 className="text-2xl font-bold mb-4">Дополнительная информация</h1>
 

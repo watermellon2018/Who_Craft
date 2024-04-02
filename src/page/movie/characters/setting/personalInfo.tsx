@@ -29,7 +29,7 @@ const PersonalCharacterData: React.FC<ChildProps> = ({ formData, setFormData }) 
 
     return (
         <>
-            <Form onValuesChange={handleFormChange}>
+            <Form className='personal-info-form' onValuesChange={handleFormChange}>
                 <Row gutter={gutter}>
                     <Col span={labelSpan}>
                         Тип героя

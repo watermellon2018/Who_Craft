@@ -14,7 +14,7 @@ const CompetionsCharacterData: React.FC<ChildProps> = ({ formData, setFormData }
         setFormData({ ...formData, ...allValues });
     };
 
-    const labelSpan = 7
+    const labelSpan = 8
     const fieldSpan = 24 - labelSpan;
 
     return (
