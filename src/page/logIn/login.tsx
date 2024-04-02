@@ -41,8 +41,7 @@ const LoginPage: React.FC = () => {
     return (
         <Layout className='login-page'>
             <Form
-
-                name="login-form"
+                name="login-form "
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
@@ -50,9 +49,9 @@ const LoginPage: React.FC = () => {
                 autoComplete="off"
                 style={{maxWidth: '600px'}}
             >
-                <Row className="justify-center items-start">
+                <Row className="justify-center items-start row-field-login">
                     <Row>
-                        <Col className="col text-right pr-4" style={{maxWidth: '100px'}}>
+                        <Col className="col text-right pr-4" style={{width: '100px'}}>
                             <p>Username:</p>
                         </Col>
 
@@ -63,13 +62,13 @@ const LoginPage: React.FC = () => {
                                 rules={[{ required: true, message: 'Please input your username!' }]}
                                 className='mb-4'
                             >
-                                <Input minW-50px />
+                                <Input style={{width: '200px'}} />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col className="col text-right pr-4" style={{maxWidth: '100px'}}>
+                        <Col className="col text-right pr-4" style={{width: '100px'}}>
                             <p>Пароль:</p>
                         </Col>
                         <Col>
@@ -78,15 +77,15 @@ const LoginPage: React.FC = () => {
                                 rules={[{ required: true, message: 'Please input your password!' }]}
                                 className='mb-4'
                             >
-                                <Input.Password minW-50px />
+                                <Input.Password style={{width: '200px'}} />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row>
-                        <Col style={{maxWidth: '100px'}}></Col>
+                        <Col style={{width: '100px'}}></Col>
                         <Col>
 
-                <Form.Item className='flex' style={{marginLeft: '150px'}}>
+                <Form.Item className='flex' style={{justifyContent: 'end', width: '200px'}}>
                     <Button style={{width: '100px'}} type="primary" htmlType="submit">
                         Войти
                     </Button>

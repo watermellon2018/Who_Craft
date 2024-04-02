@@ -25,6 +25,7 @@ const RegistrationPage: React.FC = () => {
             .then((data) => {
                 setLoading(false);
                 Cookies.set('id', data.refresh, { expires: 7 });
+                localStorage.setItem('userId', data.refresh);
                 navigate(PathConstants.HOME);
             })
             .catch((error: any) => {
@@ -49,7 +50,7 @@ const RegistrationPage: React.FC = () => {
             >
                 <Row className="justify-center items-start">
                     <Row>
-                        <Col className="col text-right pr-4" style={{maxWidth: '200px'}}>
+                        <Col className="col text-right pr-4" style={{width: '200px'}}>
                             <p>Username:</p>
                         </Col>
 
@@ -60,12 +61,12 @@ const RegistrationPage: React.FC = () => {
                                 rules={[{ required: true, message: 'Please input your username!' }]}
                                 className='mb-4'
                             >
-                                <Input minW-50px />
+                                <Input style={{width: '200px'}} />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="col text-right pr-4" style={{maxWidth: '200px'}}>
+                        <Col className="col text-right pr-4" style={{width: '200px'}}>
                             <p>Пароль:</p>
                         </Col>
                         <Col>
@@ -75,14 +76,14 @@ const RegistrationPage: React.FC = () => {
                                 rules={[{ required: true, message: 'Please input your password!' }]}
                                 className='mb-4'
                             >
-                                <Input.Password minW-50px />
+                                <Input.Password style={{width: '200px'}} />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col className="col text-right pr-4" style={{maxWidth: '200px'}}>
-                            <p>Повторите пароль</p>
+                        <Col className="col text-right pr-4" style={{width: '200px'}}>
+                            <p>Повторите пароль:</p>
                         </Col>
                         <Col>
                             <Form.Item
@@ -108,13 +109,13 @@ const RegistrationPage: React.FC = () => {
                                     }),
                                 ]}
                             >
-                                <Input.Password minW-50px />
+                                <Input.Password style={{width: '200px'}} />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col style={{maxWidth: '100px'}}></Col>
+                        <Col style={{width: '100px'}}></Col>
                         <Col>
                             <Form.Item style={{marginLeft: '120px'}}>
                                 <Button style={{width: '180px'}} type="primary" htmlType="submit" loading={loading}>
