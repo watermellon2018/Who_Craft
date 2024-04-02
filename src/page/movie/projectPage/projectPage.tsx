@@ -43,14 +43,11 @@ const ProjectPage = () => {
     const memoizedProject = useMemo(() => project, [project]);
 
 
-
     return (
-
-
 
         <>
             <HeaderComponent />
-            <div className="p-4 bg-gray-800 min-h-screen text-white">
+            <div className="project-page p-4 bg-gray-800 min-h-screen text-white">
                 <div className="mb-4 ml-5">
                     <h1 className="text-3xl font-bold mb-4">Проект {memoizedProject?.title || ''}</h1>
                     Добавьте персонажей, локации и музыку

@@ -59,7 +59,7 @@ const ProjectListPage = () => {
     return (
         <>
             <HeaderComponent />
-            <div className="p-4 bg-gray-800 min-h-screen text-white">
+            <div className="library-projects-page p-4 bg-gray-800 min-h-screen text-white">
 
                 <div className="p-4">
                     <h1 className="text-xl font-bold mb-4">Мои проекты</h1>

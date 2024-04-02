@@ -17,6 +17,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import PathConstants from "../../../routes/pathConstant";
 import {get_image_by_id} from "../../../api/characters/basic";
 import {openNotificationWithIcon} from "../../../utils/global/notification";
+import {EditOutlined, SaveOutlined} from "@ant-design/icons";
 const { Content, Sider } = Layout;
 
 interface Character {
@@ -44,6 +45,8 @@ export const GenerationHeroPage = () => {
         name: string,
         is_folder: boolean}>
     ({id: '', name: '', is_folder: true});
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     /**
      * Выгрузка данных из базы - персонажи которые созданы
@@ -101,6 +104,14 @@ export const GenerationHeroPage = () => {
             setCurCharacter(curChar)
             localStorage.removeItem('curCharacter')
         }
+
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
     const toggleCollapsed = () => {
@@ -200,6 +211,18 @@ export const GenerationHeroPage = () => {
         })
     }
 
+    const topMenu = windowWidth > 1200 ? (
+        <>
+            <Button onClick={handleGenImage} className='mr-3'>Редактировать</Button>
+            <Button onClick={settingHeroHandle} className='mr-3'>Сохранить</Button>
+        </>
+    ) : (
+        <>
+            <Button onClick={handleGenImage} className='mr-3' icon={<EditOutlined />} />
+            <Button onClick={settingHeroHandle} className='mr-3' icon={<SaveOutlined />} />
+        </>
+    );
+
     return (
 
         <>
@@ -257,8 +280,7 @@ export const GenerationHeroPage = () => {
                                     treeRef.current && treeRef.current.hasOneSelection
                                         ?
                                         <div>
-                                            <Button onClick={handleGenImage} className='mr-5'>Редактировать</Button>
-                                            <Button onClick={settingHeroHandle} className='mr-5'>Сохранить</Button>
+                                            {topMenu}
                                         </div>
                                         :
                                         <></>
@@ -271,7 +293,7 @@ export const GenerationHeroPage = () => {
                                 </div>
                             </div>
 
-                            <div className="h-full w-full flex items-center justify-center">
+                            <div className="mt-5 flex items-center justify-center">
 
                                 {isGenerating ? <Spin /> :
                                     <>
@@ -286,12 +308,11 @@ export const GenerationHeroPage = () => {
                                 }
 
                             </div>
-                        </div>
 
+                        </div>
                         {!curCharacter.is_folder ?
-                            <div className="w-1/3 p-5">
                                 <MenuGeneration onFinish={onFinish} />
-                            </div> : <></>
+                            : <></>
                         }
 
                     </Content>

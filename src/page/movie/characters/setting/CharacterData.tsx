@@ -319,7 +319,7 @@ const CharacterData = () => {
             <HeaderComponent />
 
 
-            <div className="p-4 bg-gray-800 min-h-screen text-white">
+            <div className="setting-hero-page p-4 bg-gray-800 min-h-screen text-white">
                 <h1 className="text-3xl font-bold mb-4">Настройки информации о персонаже</h1>
                 <Divider style={{ borderColor: 'rgba(250, 176, 5, 0.6)'}} />
                 {!isLoadData ? <Spin /> : <>

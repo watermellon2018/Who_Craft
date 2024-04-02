@@ -17,7 +17,7 @@
     height: min-content;
 }
 
-.ant-card {
+.setting-hero-page .ant-card {
     max-width: 600px !important;
     min-width: 420px !important;
     width: 460px;
@@ -31,21 +31,21 @@
     padding-right: 25px;
 }
 
-.ant-card-body {
+.setting-hero-page .ant-card-body {
     padding: 0 !important;
 }
 
-.ant-input {
+.setting-hero-page .ant-input {
     max-width: 270px;
     min-width: 200px;
 }
 
-.form-data-character {
+.setting-hero-page .form-data-character {
     max-width: 600px;
 }
 
 
-.ant-col {
+.setting-hero-page .ant-col {
     width: 300px;
 }
 

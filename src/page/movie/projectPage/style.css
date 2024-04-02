@@ -1,16 +1,16 @@
-.bottom-card {
+.project-page .bottom-card {
     background-color: transparent;
     border: none;
 }
-.ant-card-body {
+.project-page .ant-card-body {
     padding: 6px 3px !important;
 }
 
 
-.ant-card {
+.project-page .ant-card {
     height: 240px;
 }
-.fixed-size {
+.project-page .fixed-size {
     height: 210px;
 }
 
@@ -21,14 +21,14 @@
     background-color: rgba(250, 176, 5, 0.8);
 }
 
-.container-card {
+.project-page .container-card {
     height: fit-content !important;
     background: transparent;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
     filter: brightness(130%);
 }
 
-.container-card:not(:last-child) {
+.project-page .container-card:not(:last-child) {
     margin-bottom: 8vh;
 }
 
