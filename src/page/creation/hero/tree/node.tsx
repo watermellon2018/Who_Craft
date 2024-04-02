@@ -47,7 +47,9 @@ const NodeTree: React.FC<NodeProps> = ({ node,
         const storedValue = JSON.parse(curStateTreeLeaf);
         if(idNodeToDel in storedValue){
             delete storedValue[idNodeToDel];
-            localStorage.setItem("treeLeaf", JSON.stringify(storedValue));
+            const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
+            const cacheLeaf = {projectId: project_id, data: storedValue}
+            localStorage.setItem("treeLeaf", JSON.stringify(cacheLeaf));
         }else
             await deleteCharacterFromTree(idNodeToDel);
         await tree.delete(node);

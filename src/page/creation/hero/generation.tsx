@@ -83,7 +83,9 @@ export const GenerationHeroPage = () => {
                     const mergedData = mergeCharactersWithStoredData(characters, storedData);
                     setData(mergedData);
                 } else {
-                    localStorage.setItem("treeLeaf", JSON.stringify({}));
+                    const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
+                    const cacheLeaf = {projectId: project_id, data: {}}
+                    localStorage.setItem("treeLeaf", JSON.stringify(cacheLeaf));
                 }
             } catch (error) {
                 console.error('Error fetching characters:', error);

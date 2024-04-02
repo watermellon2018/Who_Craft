@@ -259,11 +259,13 @@ const CharacterData = () => {
                     // сохраняем персонажа в дереве
                         const curStateTreeLeaf = localStorage.getItem("treeLeaf");
                         if(curStateTreeLeaf && id_leaf && curStateTreeLeaf.length > 2) {
+                            const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
                             const storedValue = JSON.parse(curStateTreeLeaf);
                             const leafData = JSON.parse(storedValue[id_leaf]);
+                            const cacheLeaf = {projectId: project_id, data: storedValue}
                             createCharacterFromTreeAPI(id_leaf, leafData[1], leafData[2], leafData[3], leafData[4], heroID).then(() => {
                                 delete storedValue[id_leaf];
-                                localStorage.setItem("treeLeaf", JSON.stringify(storedValue));
+                                localStorage.setItem("treeLeaf", JSON.stringify(cacheLeaf));
                             });
                         }
                         navigate(-1);

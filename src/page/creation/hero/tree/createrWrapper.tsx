@@ -58,9 +58,11 @@ const CreaterWrapper: React.FC<WrraperTreeI> = ({projectId, treeRef}) => {
                 const key = newData.id;
                 const value = JSON.stringify(leafInfo);
 
+                const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
                 const treeLeafAr = localStorage.getItem("treeLeaf");
                 const parsedtreeLeafAr = treeLeafAr ? JSON.parse(treeLeafAr) : {};
-                parsedtreeLeafAr[key] = value;
+                // const leafFromProject = parsedtreeLeafAr[project_id];
+                parsedtreeLeafAr[project_id][key] = value;
                 const updatedValue = JSON.stringify(parsedtreeLeafAr);
                 localStorage.setItem("treeLeaf", updatedValue);
             }else
@@ -72,9 +74,11 @@ const CreaterWrapper: React.FC<WrraperTreeI> = ({projectId, treeRef}) => {
                 const key = newData.id;
                 const value = JSON.stringify(leafInfo);
 
+                const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
                 const treeLeafAr = localStorage.getItem("treeLeaf");
                 const parsedtreeLeafAr = treeLeafAr ? JSON.parse(treeLeafAr) : {};
-                parsedtreeLeafAr[key] = value;
+                // parsedtreeLeafAr[key] = value;
+                parsedtreeLeafAr[project_id][key] = value;
                 const updatedValue = JSON.stringify(parsedtreeLeafAr);
                 localStorage.setItem("treeLeaf", updatedValue);
             }else {

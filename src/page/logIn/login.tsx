@@ -18,9 +18,11 @@ const LoginPage: React.FC = () => {
     const onFinish = (values: LoginFormValues) => {
         login(values)
             .then((data: any) => {
-                if (data.status === 'success') {
+                console.log(data);
+                if (data.status === 200) {
+                    // TODO:: зачем кукисы, если мы используем локальное хранилище. Подумать
                     Cookies.set('id', data.refresh, { expires: 7 });
-                    // Cookies.set('id', data.refresh, { expires: 7 });
+                    localStorage.setItem('userId', data.refresh);
                     navigate(PathConstants.HOME);
                 } else {
                     message.error('Пользователь не найден в базе');
