@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card } from 'antd';
 import CharacterSetting from "./paramsPerson";
 import Img2ImgForm from './img2img';
+import './style.css'
 
 const tabList = [
     {
@@ -31,9 +32,9 @@ const MenuGeneration: React.FC<MenuGeneration> = ({onFinish}) => {
 
 
     return (
-        <>
+        <div className='menu-generation mt-5 mb-5 mr-5'>
             <Card
-                style={{ width: '100%', height: 'auto' }}
+                style={{ width: '100%', height: 'auto'}}
                 tabList={tabList}
                 activeTabKey={activeTab}
                 onTabChange={onTab2Change}
@@ -43,7 +44,7 @@ const MenuGeneration: React.FC<MenuGeneration> = ({onFinish}) => {
             >
                 {contentList[activeTab]}
             </Card>
-        </>
+        </div>
     );
 };
 

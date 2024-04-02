@@ -1,8 +1,8 @@
-.bottom-card {
+.library-projects-page .bottom-card {
     background-color: transparent;
     border: none;
 }
-.ant-card-body {
+.library-projects-page .ant-card-body {
     padding: 6px 3px !important;
 }
 

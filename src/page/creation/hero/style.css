@@ -46,3 +46,26 @@
 .form-gen-img .ant-form-item {
     margin-bottom: 1px;
 }
+
+.menu-generation .ant-card-body {
+    padding: 5px;
+}
+
+.button-menu-bottom .select-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.button-menu-bottom .select-dropdown {
+    position: relative;
+}
+
+.button-menu-bottom .select-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+}
