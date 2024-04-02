@@ -117,6 +117,7 @@ const CharactersCard = React.memo(() => {
                         </Card>
                     ))}
                     <Card
+                        style={{backgroundColor: '#fab005'}}
                         onClick={clickProjectHandle}
                         hoverable
                         className='effect-button-div bottom-card add-new-card'

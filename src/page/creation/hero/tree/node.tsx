@@ -66,9 +66,13 @@ const NodeTree: React.FC<NodeProps> = ({ node,
             }
         }
     }
+    const handleBlur = () => {
+        console.log(node)
+    }
 
     return (
         <div
+            onBlur={handleBlur}
              key={'div_block_tree_character_'+node.id}
              className={`flex justify-between node-container ${node.state.isSelected ? "bg-blue-100 bg-opacity-10" : ""}`}
              style={style}
