@@ -99,7 +99,6 @@ export const GenerationHeroPage = () => {
         };
         window.addEventListener('resize', handleResize);
         return () => {
-            console.log(localStorage.getItem('is_edit'));
             window.removeEventListener('resize', handleResize);
             localStorage.removeItem('is_edit');
         };
@@ -169,9 +168,6 @@ export const GenerationHeroPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const is_regenerated = location.state?.regenerated || false;
-                if (is_regenerated) return;
-
                 const idCurHero = curCharacter.id;
                 const response = await get_image_by_id(project_id, idCurHero);
                 if (response.data.status) {
@@ -303,7 +299,6 @@ export const GenerationHeroPage = () => {
                                                 <>
                                                     {curCharacter['name']
                                                     && imageGeneratedUrl == ''
-                                                    && isHeroSaved
                                                         ?
                                                         <Empty description='Персонаж не сгенерирован'
                                                                className='text-yellow'
