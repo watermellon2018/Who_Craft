@@ -40,18 +40,35 @@ const NodeTree: React.FC<NodeProps> = ({ node,
         }
     };
 
+    const isNotSave = (storedValue: any, idTarget: string) => {
+        for (let i = 0; i < storedValue.length; i++) {
+            const id = storedValue[i][0];
+            if (idTarget == id)
+                return true;
+            return false;
+        }
+    }
+
 
     const handleDelete = async () => {
         const idNodeToDel: string = node.data.id;
-        const curStateTreeLeaf = localStorage.getItem("treeLeaf")!;
+        const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
+        const curStateTreeLeaf = localStorage.getItem("treeLeaf_"+project_id)!;
         const storedValue = JSON.parse(curStateTreeLeaf);
-        if(idNodeToDel in storedValue){
-            delete storedValue[idNodeToDel];
-            const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
-            const cacheLeaf = {projectId: project_id, data: storedValue}
-            localStorage.setItem("treeLeaf", JSON.stringify(cacheLeaf));
-        }else
+        const isInsideCache = isNotSave(storedValue, idNodeToDel);
+        if(isInsideCache){
+            for (let i = 0; i < storedValue.length; i++) {
+                const id = storedValue[i][0];
+                if (idNodeToDel == id) {
+                    storedValue.splice(i, 1);
+                    const updatedValue = JSON.stringify(storedValue);
+                    localStorage.setItem("treeLeaf_" + project_id, updatedValue);
+                    break
+                }
+            }
+        } else
             await deleteCharacterFromTree(idNodeToDel);
+
         await tree.delete(node);
 
     };
@@ -68,13 +85,9 @@ const NodeTree: React.FC<NodeProps> = ({ node,
             }
         }
     }
-    const handleBlur = () => {
-        console.log(node)
-    }
 
     return (
         <div
-            onBlur={handleBlur}
              key={'div_block_tree_character_'+node.id}
              className={`flex justify-between node-container ${node.state.isSelected ? "bg-blue-100 bg-opacity-10" : ""}`}
              style={style}

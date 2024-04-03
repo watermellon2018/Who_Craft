@@ -250,24 +250,34 @@ const CharacterData = () => {
         if (!is_edit) {
             if(project_id !== undefined){
                 createCreateNewHero(project_id).then((data) => {
-                    const heroID = data['heroId']
-                    notification['success']({
-                        message: 'Персонаж создан!',
-                        description: 'Ура!',
-                    });
+                        const heroID = data['heroId']
+                        notification['success']({
+                            message: 'Персонаж создан!',
+                            description: 'Ура!',
+                        });
 
-                    // сохраняем персонажа в дереве
-                        const curStateTreeLeaf = localStorage.getItem("treeLeaf");
-                        if(curStateTreeLeaf && id_leaf && curStateTreeLeaf.length > 2) {
-                            const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
+                        // сохраняем персонажа в дереве
+                        // удаляем из кэша, теперь герой будет подгружаться из БД
+                        const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
+                        const curStateTreeLeaf = localStorage.getItem("treeLeaf_"+project_id)!;
+                        if(curStateTreeLeaf && id_leaf && curStateTreeLeaf.length > 0) {
                             const storedValue = JSON.parse(curStateTreeLeaf);
-                            const leafData = JSON.parse(storedValue[id_leaf]);
-                            const cacheLeaf = {projectId: project_id, data: storedValue}
-                            createCharacterFromTreeAPI(id_leaf, leafData[1], leafData[2], leafData[3], leafData[4], heroID).then(() => {
-                                delete storedValue[id_leaf];
-                                localStorage.setItem("treeLeaf", JSON.stringify(cacheLeaf));
-                            });
+
+                            for (let i = 0; i < storedValue.length; i++) {
+                                const id = storedValue[i][0];
+                                if (id_leaf == id) {
+                                    const leafData = storedValue[i]
+
+                                    createCharacterFromTreeAPI(id_leaf, leafData[1], leafData[2], leafData[3], leafData[4], heroID).then(() => {
+                                        storedValue.splice(i, 1);
+                                        const updatedValue = JSON.stringify(storedValue);
+                                        localStorage.setItem("treeLeaf_" + project_id, updatedValue);
+                                    });
+                                    break
+                                }
+                            }
                         }
+                
                         navigate(-1);
                     }
                 );
@@ -330,7 +340,7 @@ const CharacterData = () => {
                     regenerated: true,
                     imageUrl: imageUrl,
                     curCharacter: curCharacter,
-            }})
+                }})
     }
 
 
