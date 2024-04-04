@@ -5,14 +5,21 @@ import './style.css'
 import CharactersCard from "./charactersCard";
 import LocationsCard from "./locationsCard";
 import MusicsCard from "./musicsCard";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {get_info_project} from "../../../api/projects/properties/project";
 import {ProjectI} from "../../../api/projects/interface";
+import {Button} from "antd";
+import PathConstants from "../../../routes/pathConstant";
 
 const ProjectPage = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const { project_id } = location.state || {};
     const [project, setProject] = useState<ProjectI>();
+
+    const toLibraryClick = () => {
+        navigate(PathConstants.PROJECTS);
+    }
 
     useEffect(() => {
         if (!project_id) {
@@ -48,9 +55,12 @@ const ProjectPage = () => {
         <>
             <HeaderComponent />
             <div className="project-page p-4 bg-gray-800 min-h-screen text-white">
+                <div className='flex justify-between'>
                 <div className="mb-4 ml-5">
                     <h1 className="text-3xl font-bold mb-4">Проект {memoizedProject?.title || ''}</h1>
                     Добавьте персонажей, локации и музыку
+                </div>
+                    <Button onClick={toLibraryClick}>В библиотеку</Button>
                 </div>
 
                 <CharactersCard />

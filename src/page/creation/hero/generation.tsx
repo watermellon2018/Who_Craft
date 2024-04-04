@@ -64,8 +64,11 @@ export const GenerationHeroPage = () => {
     /** Объединяем созданных (в localStorage) и сохраненных персонажей из БД **/
     const mergeCharactersWithStoredData = (characters: Character[], storedData: Record<string, string>) => {
         const mergedData = [...characters];
+
+
         for (const value of Object.values(storedData)) {
-            const [id, name] = JSON.parse(value) as [string, string];
+            const id = value[0]
+            const name = value[1]
             mergedData.push({ id, key: id, name });
         }
         return mergedData;
@@ -77,13 +80,14 @@ export const GenerationHeroPage = () => {
                 setIsLoading(true);
                 const response = await get_all_character_for_project(project_id);
                 const characters = response.data;
-                const storedTreeLeaf = localStorage.getItem('treeLeaf');
+                const storedTreeLeaf = localStorage.getItem("treeLeaf_"+project_id);
                 if (storedTreeLeaf && data) {
                     const storedData = JSON.parse(storedTreeLeaf);
                     const mergedData = mergeCharactersWithStoredData(characters, storedData);
                     setData(mergedData);
                 } else {
-                    localStorage.setItem("treeLeaf", JSON.stringify({}));
+                    // const cacheLeaf = {data: []}
+                    localStorage.setItem("treeLeaf_"+project_id, JSON.stringify([]));
                 }
             } catch (error) {
                 console.error('Error fetching characters:', error);

@@ -45,6 +45,15 @@ const CreaterWrapper: React.FC<WrraperTreeI> = ({projectId, treeRef}) => {
         });
     };
 
+    const pushToLocalStore = (leafInfo: any) => {
+        const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
+        const treeLeafStr: any = localStorage.getItem("treeLeaf_"+project_id); // array {project_id; data}
+        const treeLeafAr = JSON.parse(treeLeafStr);
+        treeLeafAr.push(leafInfo);
+        const updatedValue = JSON.stringify(treeLeafAr);
+        localStorage.setItem("treeLeaf_"+project_id, updatedValue);
+    }
+
     // TODO:: добавить, чтобы пустые не создавались, если вдруг мы передумали, а то при удалении
     // будет ошибка status
     const createCharacter = async (newData: any, type: 'leaf' | 'node') => {
@@ -54,29 +63,14 @@ const CreaterWrapper: React.FC<WrraperTreeI> = ({projectId, treeRef}) => {
             const parentId = parentNode.data.id;
             if(type == 'leaf') {
                 const leafInfo = [newData.id, newData.name, type, projectId, parentId];
-
-                const key = newData.id;
-                const value = JSON.stringify(leafInfo);
-
-                const treeLeafAr = localStorage.getItem("treeLeaf");
-                const parsedtreeLeafAr = treeLeafAr ? JSON.parse(treeLeafAr) : {};
-                parsedtreeLeafAr[key] = value;
-                const updatedValue = JSON.stringify(parsedtreeLeafAr);
-                localStorage.setItem("treeLeaf", updatedValue);
+                pushToLocalStore(leafInfo);
             }else
                 await createCharacterFromTreeAPI(newData.id, newData.name, type, projectId, parentId);
         }else{
             if(type == 'leaf') {
-                // to local storage
                 const leafInfo = [newData.id, newData.name, type, projectId, null];
-                const key = newData.id;
-                const value = JSON.stringify(leafInfo);
+                pushToLocalStore(leafInfo);
 
-                const treeLeafAr = localStorage.getItem("treeLeaf");
-                const parsedtreeLeafAr = treeLeafAr ? JSON.parse(treeLeafAr) : {};
-                parsedtreeLeafAr[key] = value;
-                const updatedValue = JSON.stringify(parsedtreeLeafAr);
-                localStorage.setItem("treeLeaf", updatedValue);
             }else {
                 await createCharacterFromTreeAPI(newData.id, newData.name, type, projectId);
             }
