@@ -151,7 +151,6 @@ export const GenerationHeroPage = () => {
         if (treeRef && treeRef.current && (treeRef.current as TreeHandle).hasOneSelection) {
             const selectedNode = (treeRef.current as TreeHandle).selectedNodes[0];
             const {name, id} = selectedNode.data;
-            console.log(isEdit);
 
             navigate(PathConstants.SETTING_HERO, {
                 state: {
@@ -222,7 +221,6 @@ export const GenerationHeroPage = () => {
     // Так как запомнием персонажа, с которым работает пользователя, нужно очистить состояние
     // после того, как пользователь переключится на что-то другое и снимент все выделения
     useEffect(() => {
-        console.log(isEmptySelected);
         if (isEmptySelected){
             setCurCharacter({id: '', name: '', is_folder: true});
         }

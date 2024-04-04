@@ -41,9 +41,9 @@ const NodeTree: React.FC<NodeProps> = ({ node,
     };
 
     const isNotSave = (storedValue: any, idTarget: string) => {
-        for (let i = 0; i < storedValue.length; i++) {
+        for(let i = 0; i < storedValue.length; i+=1) {
             const id = storedValue[i][0];
-            if (idTarget == id)
+            if(idTarget == id)
                 return true;
             return false;
         }
@@ -51,6 +51,9 @@ const NodeTree: React.FC<NodeProps> = ({ node,
 
 
     const handleDelete = async () => {
+
+        await tree.delete(node);
+
         const idNodeToDel: string = node.data.id;
         const project_id = JSON.parse(localStorage.getItem('projectInfoCache')!)['id']
         const curStateTreeLeaf = localStorage.getItem("treeLeaf_"+project_id)!;
@@ -69,8 +72,6 @@ const NodeTree: React.FC<NodeProps> = ({ node,
             }
         } else
             await deleteCharacterFromTree(idNodeToDel);
-
-        await tree.delete(node);
 
     };
 
@@ -138,7 +139,7 @@ const NodeTree: React.FC<NodeProps> = ({ node,
                     <button onClick={handleEdit} title="Rename...">
                         <EditOutlined />
                     </button>
-                    <button onClick={handleDelete} title="Delete">
+                    <button onClick={handleDelete} title="Delete" style={{display: node.state.isSelected ? 'none' : 'inline-block'}}>
                         <CloseOutlined />
                     </button>
                 </div>
