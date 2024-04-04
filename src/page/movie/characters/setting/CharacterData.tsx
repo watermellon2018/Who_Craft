@@ -277,7 +277,7 @@ const CharacterData = () => {
                                 }
                             }
                         }
-                
+
                         navigate(-1);
                     }
                 );
