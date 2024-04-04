@@ -60,11 +60,6 @@ const NodeTree: React.FC<NodeProps> = ({ node,
             for (let i = 0; i < storedValue.length; i++) {
                 const id = storedValue[i][0];
                 if (idNodeToDel == id) {
-                    // чистим локальное хранилище, этого персонажа больше нет
-                    if (storedValue.length == 1){
-                        localStorage.removeItem("treeLeaf_" + project_id);
-                        break
-                    }
 
                     storedValue.splice(i, 1);
                     const updatedValue = JSON.stringify(storedValue);

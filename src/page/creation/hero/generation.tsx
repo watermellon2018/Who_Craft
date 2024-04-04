@@ -86,7 +86,6 @@ export const GenerationHeroPage = () => {
                     const mergedData = mergeCharactersWithStoredData(characters, storedData);
                     setData(mergedData);
                 } else {
-                    // const cacheLeaf = {data: []}
                     localStorage.setItem("treeLeaf_"+project_id, JSON.stringify([]));
                 }
             } catch (error) {
