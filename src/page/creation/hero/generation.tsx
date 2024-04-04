@@ -86,7 +86,6 @@ export const GenerationHeroPage = () => {
                     const mergedData = mergeCharactersWithStoredData(characters, storedData);
                     setData(mergedData);
                 } else {
-                    // const cacheLeaf = {data: []}
                     localStorage.setItem("treeLeaf_"+project_id, JSON.stringify([]));
                 }
             } catch (error) {
@@ -152,7 +151,6 @@ export const GenerationHeroPage = () => {
         if (treeRef && treeRef.current && (treeRef.current as TreeHandle).hasOneSelection) {
             const selectedNode = (treeRef.current as TreeHandle).selectedNodes[0];
             const {name, id} = selectedNode.data;
-            console.log(isEdit);
 
             navigate(PathConstants.SETTING_HERO, {
                 state: {

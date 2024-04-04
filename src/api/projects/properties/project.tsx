@@ -47,6 +47,9 @@ async function get_all_list_projects(): Promise<any> {
 
 async function delete_project_by_id(id: string): Promise<any> {
     try {
+        // чистим локальное хранилище, этого проекта больше нет
+        localStorage.removeItem("treeLeaf_" + id);
+
         const token = localStorage.getItem('userId');
         return await axios.get(`${backendUrl}/api/projects/delete-project-by-id/`, {
             params: {
