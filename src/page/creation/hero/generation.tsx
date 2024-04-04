@@ -223,6 +223,7 @@ export const GenerationHeroPage = () => {
     // Так как запомнием персонажа, с которым работает пользователя, нужно очистить состояние
     // после того, как пользователь переключится на что-то другое и снимент все выделения
     useEffect(() => {
+        console.log(isEmptySelected);
         if (isEmptySelected){
             setCurCharacter({id: '', name: '', is_folder: true});
         }
