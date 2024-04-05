@@ -24,7 +24,7 @@ const AllHeroesPage = () => {
     const { project_id } = location.state || {};
     const [isLoadData, setIsLoadData] = useState<boolean>(false);
 
-    const [filterType, setFilterType] = useState<'main' | 'seconder' | 'episode'>('main');
+    const [filterType, setFilterType] = useState<'main' | 'seconder' | 'episode' | 'none'>('none');
     const [sortType, setSortType] = useState<'role' | 'name'>('role');
     const [isHoveredCard, setIsHoveredCard] = useState<number>(0);
 
@@ -83,9 +83,22 @@ const AllHeroesPage = () => {
                 } })
     };
 
-    const handleSortByChange = (value: 'role' | 'name') => {
-        setSortType(value);
-    }
+    const sortByField = (array: HeroCard[], field: keyof HeroCard) => {
+        return array.slice().sort((a, b) => {
+            if (a[field] < b[field]) {
+                return -1;
+            }
+            if (a[field] > b[field]) {
+                return 1;
+            }
+            return 0;
+        });
+    };
+
+    useEffect(() => {
+        const sortedCharacterList = sortByField(characterList, sortType);
+        setCharacterList(sortedCharacterList);
+    }, [sortType]);
 
     const handleFilter = (e: any) => {
         setFilterType(e.target.value);
@@ -106,7 +119,7 @@ const AllHeroesPage = () => {
 
                         <p style={{lineHeight: '2.0', marginRight: '10px'}}>Сортировать по:</p>
                         <Select defaultValue={sortType}
-                                onChange={handleSortByChange}
+                                onChange={setSortType}
                                 style={{ width: 120, marginRight: '10px' }}>
                             <Select.Option value="role">роли</Select.Option>
                             <Select.Option value="name">имени</Select.Option>
@@ -118,10 +131,11 @@ const AllHeroesPage = () => {
                             dropdownRender={menu => (
                                 <div>
                                     {menu}
-                                    <Radio.Group style={{ padding: '8px 12px', width: '100%' }} onChange={handleFilter}>
+                                    <Radio.Group defaultValue={filterType} style={{ padding: '8px 12px', width: '100%' }} onChange={handleFilter}>
                                         <Radio value="main">Главная</Radio>
                                         <Radio value="seconder">Второстепенная</Radio>
                                         <Radio value="episode">Эпизодическая</Radio>
+                                        <Radio value="none">Отключить</Radio>
                                     </Radio.Group>
                                 </div>
                             )}
@@ -133,7 +147,8 @@ const AllHeroesPage = () => {
                 </div>
 
                 <div className="p-2 div-card-seq grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {characterList.map((character, index) => (
+                    {characterList.filter(item => filterType === 'none' ? true : item.role === filterType)
+                        .map((character, index) => (
                         <Card
                             hoverable
                             className='effect-button-div bottom-card'
