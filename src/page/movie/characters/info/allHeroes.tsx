@@ -7,6 +7,7 @@ import withAuth from "../../../../utils/auth/check_auth";
 import pathConstant from "../../../../routes/pathConstant";
 import HeaderComponent from "../../../main/header";
 import '../../../global.css';
+import GraphEditor from "./graph";
 
 interface HeroCard {
     id: string;
@@ -200,7 +201,7 @@ const AllHeroesPage = () => {
                 <div>
                     <h1 className="text-xl min-h-200 font-bold mb-4">Граф персонажей</h1>
                     <div>
-                        Тут будет граф
+                        <GraphEditor nodes={characterList} />
                     </div>
                 </div>
             </div>
