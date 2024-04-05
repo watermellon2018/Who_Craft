@@ -16,6 +16,7 @@ import CharacterData from "./page/movie/characters/setting/CharacterData";
 import PathConstants from "./routes/pathConstant";
 import GenPosterPage from "./page/creation/poster/GenPosterPage";
 import EditGenImgPage from "./page/creation/edit/editGenImgPage";
+import AllHeroesPage from "./page/movie/characters/info/allHeroes";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -76,6 +77,12 @@ const theme = {
             "optionSelectedColor": "#fab005",
             "colorBgElevated": "#fab005",
         },
+        "Checkbox": {
+            "colorText": "rgb(27, 29, 34)",
+        },
+        "Radio": {
+            "colorText": "rgb(27, 29, 34)",
+        },
         "Card": {
             "colorBgContainer": "#fab005",
             "colorText": "rgb(27, 29, 34)",
@@ -112,6 +119,7 @@ function App() {
         { key: 'projectPage', path: PathConstants.PROJECT_PAGE, component: <ProjectPage /> },
         { key: 'genPoster', path: PathConstants.GEN_POSTER, component: <GenPosterPage /> },
         { key: 'editGenImg', path: PathConstants.EDIT_GEN_IMG, component: <EditGenImgPage /> },
+        { key: 'allHeroesPage', path: PathConstants.ALL_HEROES_PAGE, component: <AllHeroesPage /> },
     ], []);
 
 
@@ -127,28 +135,6 @@ function App() {
             </BrowserRouter>
         </ConfigProvider>
     );
-  // return (
-  //     <ConfigProvider
-  //         theme={theme}
-  //     >
-  //         <BrowserRouter>
-  //             <Routes>
-  //                 <Route caseSensitive path={PathConstants.AUTH} element={<LandingPage />} />
-  //                 <Route path={PathConstants.REGISTER}  element={<RegistrationPage />} />
-  //                 <Route path={PathConstants.LOGIN} element={<LoginPage />} />
-  //                 <Route path={PathConstants.HOME} element={<MainPage />} />
-  //                 <Route path={PathConstants.GENERATING}  element={<GenerationHeroPage />} />
-  //                 <Route path={PathConstants.SETTING_HERO}  element={<CharacterData />} />
-  //                 <Route path={PathConstants.PROFILE}  element={<ProfilePage />} />
-  //                 <Route path={PathConstants.CREATE_PROJECT}  element={<ProjectCreatePage />} />
-  //                 <Route path={PathConstants.PROJECTS}  element={<ProjectListPage />} />
-  //                 <Route path={PathConstants.PROJECT_PAGE}  element={<ProjectPage />} />
-  //                 <Route path={PathConstants.GEN_POSTER}  element={<GenPosterPage />} />
-  //                 <Route path={PathConstants.EDIT_GEN_IMG} element={<EditGenImgPage />} />
-  //             </Routes>
-  //         </BrowserRouter>
-  //     </ConfigProvider>
-  // );
 }
 
 export default App;
