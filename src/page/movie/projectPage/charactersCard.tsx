@@ -25,6 +25,7 @@ interface HeroCard {
 
 
 const CharactersCard = React.memo(() => {
+    const N_TOP_HEROS = 9;
     const navigate = useNavigate();
     const [characterList, setCharacterList] = useState<ProjectCard[]>([]);
     const location = useLocation();
@@ -87,7 +88,7 @@ const CharactersCard = React.memo(() => {
             <div className="p-4 container-card">
                 <h1 className="text-xl min-h-200 font-bold mb-4">Персонажи</h1>
                 <div className="div-card-seq grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {characterList.map((character, index) => (
+                    {characterList.slice(0, N_TOP_HEROS).map((character, index) => (
                         <Card
                             hoverable
                             className='effect-button-div bottom-card'
