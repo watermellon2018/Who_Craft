@@ -51,6 +51,8 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
         }));
         setNodeData(nodeData);
 
+
+        // выгрузить из БД ребра
         setEdges([]);
     }, [nodes]);
 
@@ -124,7 +126,6 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
     return (
 
         <div className='graph-character'>
-            {/*Тип взаимоотношений? Враги и тд*/}
             <TypeRelationshipModal
                 setModelVisible={setIsVisible}
                 isModalVisible={isVisible}
@@ -154,14 +155,6 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
                             setIsVisible(true);
                             setCurrentEdge([fromNode, toNode])
 
-                            // handleConnectNodes({
-                            //     label: 'test',
-                            //     id: uuidv4(),
-                            //     from: fromNode,
-                            //     to: toNode
-                            // });
-
-
                             network.unselectAll();
                         }
                     });
@@ -170,17 +163,7 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
                 style={{ height: '400px' }}
             />
 
-            {/*<TypeRelationshipModal*/}
-            {/*    setModelVisible={setIsVisible}*/}
-            {/*    isModalVisible={isVisible}*/}
-            {/*    handleConnectNodes={handleConnectNodes}*/}
-            {/*    handleCancel={() => {*/}
-            {/*        setIsVisible(false);*/}
-            {/*    }}*/}
-            {/*    fromNode={currentEdge[0]}*/}
-            {/*    toNode={currentEdge[1]}*/}
 
-            {/*/>*/}
             <Button>test</Button>
         </div>
     );
