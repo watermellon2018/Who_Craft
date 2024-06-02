@@ -4,7 +4,7 @@ import {Button, Modal, Select} from "antd";
 import {v4 as uuidv4} from "uuid";
 
 import styled from 'styled-components';
-import {add_edge_graph, get_all_type_relationship} from "../../../../api/characters/graph";
+import {add_edge_graph, delete_edge_graph_api, get_all_type_relationship} from "../../../../api/characters/graph";
 import {get_all_heros_project} from "../../../../api/characters/basic";
 import {all} from "axios";
 import {useLocation} from "react-router-dom";
@@ -17,6 +17,7 @@ interface TypeRelationshipModalI {
     fromNode: any;
     toNode: any;
     setModelVisible: (visib: boolean) => void;
+    handleDeleteEdge: () => void;
 }
 
 interface TypeRelation {
@@ -30,7 +31,8 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
                                                                      handleConnectNodes,
                                                                      handleCancel,
                                                                      fromNode,
-                                                                     toNode
+                                                                     toNode,
+                                                                     handleDeleteEdge
 }) => {
 
     const [allTypes, setAllTypes] = useState<TypeRelation[]>([])
@@ -80,13 +82,19 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
             from: fromNode,
             to: toNode
         };
-        console.log(location.state)
         // сохранить в базу данных
         add_edge_graph(edgeToSaveObj, project_id);
 
     }
 
-    return (
+    // const handleDeleteEdge = (edgeId: string) => {
+    //     console.log(typeShipCur);
+    //     // Удаляем ребро на фронте
+    //     setEdges(prevEdges => prevEdges.filter((edge: { from: string; to: string; }) =>
+    //         edge.from !== fromNode && edge.to !== toNode ));
+    // }
+
+        return (
 
         <Modal
             className='type-relationship-modal'
@@ -95,6 +103,23 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
             // onOk={handleOk}
             // onCancel={handleCancel}
             footer={[
+                // TODO:: кнопка должна быть , если связь уже создана
+                <Button key='remove' danger className='remove-but-in-modal' onClick={() => {
+                    // Удаляем ребро на бэке
+                    const e = {
+                        from: fromNode,
+                        to: toNode,
+                        label: typeShipCur,
+                    }
+                    delete_edge_graph_api(e, project_id);
+
+                    // Удаляем ребро на фронте
+                    handleDeleteEdge();
+
+                    handleCancel(); // Close the modal
+                }}>
+                    Удалить
+                </Button>,
                 <Button className='back-modal' key="back" onClick={handleCancel}>
                     Назад
                 </Button>,

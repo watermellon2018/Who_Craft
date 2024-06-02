@@ -103,6 +103,12 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
 
     };
 
+    const handleDeleteEdge = () => {
+        // Удаляем ребро на фронте
+        setEdges(prevEdges => prevEdges.filter((edge: { from: string; to: string; }) =>
+            edge.from !== currentEdge[0] && edge.to !== currentEdge[1] ));
+    }
+
 
     const handleConnectNodes = (newEdge: Edge) => {
         const newEdgeWithId = {
@@ -145,6 +151,7 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
                 }}
                 fromNode={currentEdge[0]}
                 toNode={currentEdge[1]}
+                handleDeleteEdge={handleDeleteEdge}
 
             />
 

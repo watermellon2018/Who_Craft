@@ -52,8 +52,25 @@ async function select_edge_graph(projectId: number): Promise<any> {
     }
 }
 
+async function delete_edge_graph_api(edge: EdgeI, projectId: number): Promise<any> {
+    const token = localStorage.getItem('userId');
+    try {
+        return await axios.get(`${backendUrl}/api/projects/hero/graph/delete/`, {
+            params: {
+                token_user: token,
+                projectId: projectId,
+                from: edge.from,
+                to: edge.to,
+            }
+        });
+    }catch (error){
+        console.error('Error select all type of the relationship for project:', error);
+    }
+}
+
 export {
     get_all_type_relationship,
     add_edge_graph,
-    select_edge_graph
+    select_edge_graph,
+    delete_edge_graph_api
 }
