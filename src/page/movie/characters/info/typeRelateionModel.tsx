@@ -4,9 +4,10 @@ import {Button, Modal, Select} from "antd";
 import {v4 as uuidv4} from "uuid";
 
 import styled from 'styled-components';
-import {get_all_type_relationship} from "../../../../api/characters/graph";
+import {add_edge_graph, get_all_type_relationship} from "../../../../api/characters/graph";
 import {get_all_heros_project} from "../../../../api/characters/basic";
 import {all} from "axios";
+import {useLocation} from "react-router-dom";
 
 
 interface TypeRelationshipModalI {
@@ -60,18 +61,28 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
     const [typeShipCur, setTypeShipCur] = useState('Partnerstvo')
 
     const {Option} = Select;
+    const location = useLocation();
+    const { project_id } = location.state || {};
 
     const handleOk = () => {
         const nameCur = translitValueSelect(typeShipCur);
-        handleConnectNodes({
+        const edge = {
             label: nameCur,
             id: uuidv4(),
             from: fromNode,
             to: toNode
-        });
+        };
+        handleConnectNodes(edge);
         setModelVisible(false);
 
+        const edgeToSaveObj = {
+            label: typeShipCur,
+            from: fromNode,
+            to: toNode
+        };
+        console.log(location.state)
         // сохранить в базу данных
+        add_edge_graph(edgeToSaveObj, project_id);
 
     }
 

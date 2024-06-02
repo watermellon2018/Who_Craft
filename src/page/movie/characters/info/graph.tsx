@@ -10,6 +10,12 @@ import './style.css'
 import {Simulate} from "react-dom/test-utils";
 import copy = Simulate.copy;
 import TypeRelationshipModal from "./typeRelateionModel";
+import {select_edge_graph} from "../../../../api/characters/graph";
+import {useLocation} from "react-router-dom";
+
+/*** Больше примеров тут: https://visjs.github.io/vis-network/examples/
+ * Для будущих модификаций
+ * ***/
 
 interface Node {
     id: string;
@@ -40,6 +46,8 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
     const [edges, setEdges] = useState<Edge[]>([]);
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [currentEdge, setCurrentEdge] = useState<any>([]);
+    const location = useLocation();
+    const { project_id } = location.state;
 
     useEffect(() => {
 
@@ -53,7 +61,12 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
 
 
         // выгрузить из БД ребра
-        setEdges([]);
+        select_edge_graph(project_id).then(response => {
+            if(response.status == 200){
+                setEdges(response.data);
+            }
+        })
+        // setEdges([]);
     }, [nodes]);
 
 
@@ -91,34 +104,31 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
     };
 
 
-    const   handleConnectNodes = (newEdge: Edge) => {
-        console.log('handleConnectNodes:', newEdge);
-        // setEdges([...edges, newEdge]);
+    const handleConnectNodes = (newEdge: Edge) => {
         const newEdgeWithId = {
             ...newEdge,
-            // id: uuidv4()
         };
 
         setEdges(prevEdges => [...prevEdges, newEdgeWithId]);
     };
 
-    const events = {
-        selectEdge: (event: any) => {
-            const { edges: selectedEdges } = event;
-            if (selectedEdges.length > 0) {
-                const selectedEdge = edges.find(edge => edge.from === selectedEdges[0].from && edge.to === selectedEdges[0].to);
-                if (selectedEdge) {
-                    console.log("Selected Edge:", selectedEdge);
-                }
-            }
-        },
-        doubleClick: (event: any) => {
-            const { pointer: { canvas } } = event;
-            const newNodeId = (nodes.length + 1).toString();
-            // setNodeData([...nodes, { id: newNodeId, label: `Node ${newNodeId}` }]);
-            setEdges([...edges, { from: newNodeId, id: uuidv4(), to: canvas.toString(), label: 'test' }]);
-        }
-    };
+    // const events = {
+    //     selectEdge: (event: any) => {
+    //         const { edges: selectedEdges } = event;
+    //         if (selectedEdges.length > 0) {
+    //             const selectedEdge = edges.find(edge => edge.from === selectedEdges[0].from && edge.to === selectedEdges[0].to);
+    //             if (selectedEdge) {
+    //                 console.log("Selected Edge:", selectedEdge);
+    //             }
+    //         }
+    //     },
+    //     doubleClick: (event: any) => {
+    //         const { pointer: { canvas } } = event;
+    //         const newNodeId = (nodes.length + 1).toString();
+    //         // setNodeData([...nodes, { id: newNodeId, label: `Node ${newNodeId}` }]);
+    //         setEdges([...edges, { from: newNodeId, id: uuidv4(), to: canvas.toString(), label: 'test' }]);
+    //     }
+    // };
 
     useEffect(() => {
         console.log("Edges:", edges);
@@ -139,12 +149,9 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
             />
 
             <Graph
-                // key={JSON.stringify(nodeData)}
                 key={`${nodeData.map(node => node.id).join(',')}__${edges.map(edge => edge.id).join(',')}`}
                 graph={{ 'nodes': nodeData, 'edges': edges }}
-                // manipulation={manipulation}
                 options={options}
-                // events={events}
                 getNetwork={(network: any) => {
                     // Нажать ctrl, чтобы соединить
                     network.on("selectNode", (params: any) => {
