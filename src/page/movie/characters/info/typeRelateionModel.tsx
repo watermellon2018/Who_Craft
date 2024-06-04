@@ -45,13 +45,16 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
 
     const [allTypes, setAllTypes] = useState<TypeRelation[]>([])
 
+    /**
+     * Преобразует значение типа связи (typeShipCur) в текстовое описание.
+     *
+     * @param typeShipCur Значение типа связи.
+     * @returns Текстовое описание типа связи или "Не найдено отношение", если значение не найдено в массиве allTypes.
+     */
     const translitValueSelect = (typeShipCur: string) => {
-        for(let i = 0; i < allTypes.length; i+=1){
-            if(allTypes[i].value == typeShipCur)
-                return allTypes[i].name;
-        }
-        return 'Не найдено отношение'
-    }
+        const foundType = allTypes.find(type => type.value === typeShipCur);
+        return foundType ? foundType.name : 'Не найдено отношение';
+    };
 
     useEffect(() => {
         const getAllRelationships = async () => {
@@ -74,6 +77,12 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
     const location = useLocation();
     const { project_id } = location.state || {};
 
+    /**
+     * Обрабатывает подтверждение создания или обновления связи между узлами.
+     * Получает текстовое описание типа связи, создает объект ребра,
+     * добавляет его в график, закрывает модальное окно и сохраняет
+     * ребро в базу данных.
+     */
     const handleOk = () => {
         const nameCur = translitValueSelect(typeShipCur);
         const edge = {
@@ -90,12 +99,16 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
             from: fromNode,
             to: toNode
         };
-        // сохранить в базу данных
 
+        // сохранить в базу данных
         add_edge_graph(edgeToSaveObj, project_id);
 
     }
-
+    
+    /**
+     * Обрабатывает обновление связи между узлами.
+     * Обновляет данные ребра на сервере и в графике.
+     */
     const handleUpdate = () => {
         const updatedObj = {
             label: typeShipCur,
@@ -116,8 +129,6 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
             className='type-relationship-modal'
             open={isModalVisible}
             title="Выберите тип отношений между персонажами"
-            // onOk={handleOk}
-            // onCancel={handleCancel}
             footer={[
                 !isExist ? null :
                     <Button key='remove' danger className='remove-but-in-modal' onClick={() => {
@@ -155,28 +166,6 @@ const TypeRelationshipModal: React.FC<TypeRelationshipModalI> = ({  isModalVisib
                 ))}
 
             </Select>
-            {/*<Select*/}
-            {/*    defaultValue={typeShipCur}*/}
-            {/*    style={{minWidth: '150px', width: '250px'}}*/}
-            {/*>*/}
-            {/*    <Option value="DruzheskieOtnosheniya">Дружеские отношения</Option>*/}
-            {/*    <Option value="Partnerstvo">Партнерство</Option>*/}
-            {/*    <Option value="SoyuzPoNeobhodimosti">Союз по необходимости</Option>*/}
-            {/*    <Option value="Soperniky">Соперники</Option>*/}
-            {/*    <Option value="Nepriateli">Неприятели</Option>*/}
-            {/*    <Option value="SmertelnyeVragi">Смертельные враги</Option>*/}
-            {/*    <Option value="NeytralnyeOtnosheniya">Нейтральные отношения</Option>*/}
-            {/*    <Option value="SlozhnyeOtnosheniya">Сложные отношения</Option>*/}
-            {/*    <Option value="Dvulichie">Двуличие</Option>*/}
-            {/*    <Option value="LozhnyeDruzhYa">Ложные друзья</Option>*/}
-            {/*    <Option value="RomanticheskieOtnosheniya">Романтические отношения</Option>*/}
-            {/*    <Option value="SemeynyeOtnosheniya">Семейные отношения</Option>*/}
-            {/*    <Option value="UchitelUchenik">Учитель-ученик</Option>*/}
-            {/*    <Option value="RabochyeOtnosheniya">Рабочие отношения</Option>*/}
-            {/*    <Option value="KonfliktPokoleniy">Конфликт поколений</Option>*/}
-            {/*    <Option value="Sozavisimost">Созависимость</Option>*/}
-            {/*    <Option value="Sochuvstvie">Сочувствие</Option>*/}
-            {/*</Select>*/}
         </Modal>
     )
 };

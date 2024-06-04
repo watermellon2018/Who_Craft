@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Button} from 'antd';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import Graph, {Edge, Network, Node} from 'react-graph-vis';
+import Graph from 'react-graph-vis';
 import './style.css'
-import {Simulate} from "react-dom/test-utils";
 import TypeRelationshipModal from "./typeRelateionModel";
 import {select_edge_graph} from "../../../../api/characters/graph";
 import {useLocation} from "react-router-dom";
@@ -57,21 +55,17 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
         }));
         setNodeData(nodeData);
 
-
         // выгрузить из БД ребра
         select_edge_graph(project_id).then(response => {
             if(response.status == 200){
                 setEdges(response.data);
             }
         })
-        // setEdges([]);
     }, [nodes]);
 
 
     const options = {
         nodes: {
-            // shape: 'circle',
-            // borderWidth: 1,
             size: 30,
             font: {
                 size: 15,
@@ -96,34 +90,45 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
                 speed: {x: 10, y: 10, zoom: 0.01},
             },
         },
-        // locale: 'ru',
-
-
     };
 
+    /** Удаляем ребро на фронте **/
     const handleDeleteEdge = () => {
-        // Удаляем ребро на фронте
         setEdges(prevEdges => prevEdges.filter((edge: { from: string; to: string; }) =>
             edge.from !== currentEdge[0] && edge.to !== currentEdge[1] ));
     }
 
+    /** Обновляет поле label у ребра, которое соединяет текущие узлы
+     * Проверяем, соединяет ли ребро текущие узлы (независимо от порядка)
+     * @param label название нового ребра
+     **/
     const handleUpdateEdge = (label: string) => {
-        // Обновляем поле label у ребра
         setEdges(prevEdges => prevEdges.map((edge: { from: string; to: string; id: string; label: string }) => {
             if ((edge.from === currentEdge[0] && edge.to === currentEdge[1]) ||
                 (edge.to === currentEdge[0] && edge.from === currentEdge[1])) {
-                return { ...edge, label }; // Обновляем label
+                return { ...edge, label };
             }
             return edge; // Оставляем остальные ребра без изменений
         }));
     };
 
-    const isExistEdge = (susspend_edge: any) => {
-        return edges.filter((edge: { from: string; to: string; }) =>
-            (edge.from == susspend_edge[0] || edge.from == susspend_edge[1]) &&
-            (edge.to == susspend_edge[1] || edge.to == susspend_edge[0])).length > 0;
-    }
+    /**
+     * Проверяет, существует ли ребро между двумя узлами в массиве edges.
+     * Использует `find` для более эффективного поиска.
+     *
+     * @param suspend_edge Массив из двух узлов (from, to), для которых нужно проверить существование ребра.
+     * @returns True, если ребро существует, иначе False.
+     */
+    const isExistEdge = (suspend_edge: any) => {
+        return !!edges.find((edge: { from: string; to: string; }) => {
+            return (edge.from === suspend_edge[0] && edge.to === suspend_edge[1]) ||
+                (edge.from === suspend_edge[1] && edge.to === suspend_edge[0]);
+        });
+    };
 
+    /** добавляет новое ребро с уникальным идентификатором в массив edges
+     * @param newEdge ребро, которое мы хотим добавить в граф
+     * **/
     const handleConnectNodes = (newEdge: Edge) => {
         const newEdgeWithId = {
             ...newEdge,
@@ -174,9 +179,6 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
                 }}
                 style={{ height: '400px' }}
             />
-
-
-            <Button>test</Button>
         </div>
     );
 };
