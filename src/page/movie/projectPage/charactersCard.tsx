@@ -7,26 +7,21 @@ import './style.css'
 import pathConstant from "../../../routes/pathConstant";
 import {delete_hero_by_id, get_all_heros_project} from "../../../api/characters/basic";
 import '../../global.css';
+import PathConstants from "../../../routes/pathConstant";
 
-interface ProjectCard {
-    id: string;
-    key: string;
-    // src: string;
-    name: string
-    src: string;
-}
 interface HeroCard {
     id: string;
     key: string;
     // src: string;
     name: string;
-    src?: string;
+    src: string;
 }
 
 
 const CharactersCard = React.memo(() => {
+    const N_TOP_HEROS = 9;
     const navigate = useNavigate();
-    const [characterList, setCharacterList] = useState<ProjectCard[]>([]);
+    const [characterList, setCharacterList] = useState<HeroCard[]>([]);
     const location = useLocation();
     const { project_id } = location.state || {};
     const [isLoadData, setIsLoadData] = useState<boolean>(false);
@@ -35,7 +30,7 @@ const CharactersCard = React.memo(() => {
 
         const getAllHeros = async () => {
             try {
-                const response: any = await get_all_heros_project(project_id);
+                const response: any = await get_all_heros_project(project_id, N_TOP_HEROS);
 
                 const data = response.data.map((hero:HeroCard) => ({
                     id: hero.id,
@@ -79,15 +74,22 @@ const CharactersCard = React.memo(() => {
                 } })
     };
 
+    const showAllHeroesClick = () => {
+        navigate(PathConstants.ALL_HEROES_PAGE, {state: {project_id: project_id}});
+    }
+
     if (!isLoadData)
         return (<Spin />);
 
     return (
         <>
             <div className="p-4 container-card">
-                <h1 className="text-xl min-h-200 font-bold mb-4">Персонажи</h1>
+                <div className='flex justify-between'>
+                    <h1 className="text-xl min-h-200 font-bold mb-4">Персонажи</h1>
+                    <p onClick={showAllHeroesClick} className='text-[#fab005] hover:text-white'>Посмотреть всех</p>
+                </div>
                 <div className="div-card-seq grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {characterList.map((character, index) => (
+                    {characterList.slice(0, N_TOP_HEROS).map((character, index) => (
                         <Card
                             hoverable
                             className='effect-button-div bottom-card'
@@ -100,7 +102,7 @@ const CharactersCard = React.memo(() => {
                                 />
                                 <div
                                     style={{backgroundColor: 'rgba(0, 0, 0, 0.3)'}}
-                                    className="text-right absolute top-1 right-0">
+                                    className="text-right absolute top-0 right-0">
                                     <EditOutlined
                                         onClick={() => cardClickHandle(character.id, character.src)}
                                         className="text-white text-xl p-2" />

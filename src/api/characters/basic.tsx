@@ -8,11 +8,12 @@ function is_correct_data(value: any) {
     return value !== undefined;
 }
 
-async function get_all_heros_project(project_id: number): Promise<any> {
+async function get_all_heros_project(project_id: number, count_hero = 9): Promise<any> {
     try {
         return await axios.get(`${backendUrl}/api/projects/hero/select/`, {
             params: {
                 projectId: project_id,
+                N: count_hero,
             }
         });
     }catch (error){
