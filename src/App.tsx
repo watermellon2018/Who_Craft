@@ -17,6 +17,7 @@ import PathConstants from "./routes/pathConstant";
 import GenPosterPage from "./page/creation/poster/GenPosterPage";
 import EditGenImgPage from "./page/creation/edit/editGenImgPage";
 import AllHeroesPage from "./page/movie/characters/info/allHeroes";
+import HeroPage from "./page/hero/main";
 
 // https://ant.design/theme-editor#component-color настройка цветов
 const theme = {
@@ -120,6 +121,7 @@ function App() {
         { key: 'genPoster', path: PathConstants.GEN_POSTER, component: <GenPosterPage /> },
         { key: 'editGenImg', path: PathConstants.EDIT_GEN_IMG, component: <EditGenImgPage /> },
         { key: 'allHeroesPage', path: PathConstants.ALL_HEROES_PAGE, component: <AllHeroesPage /> },
+        { key: 'heroPage', path: PathConstants.HERO_PAGE, component: <HeroPage /> },
     ], []);
 
 

@@ -17,6 +17,7 @@ const PathConstants = {
     PROJECT_PAGE: '/project-list/project',
 
     ALL_HEROES_PAGE: '/project/heroes-list',
+    HERO_PAGE: '/project/hero',
 
 }
 export default PathConstants
