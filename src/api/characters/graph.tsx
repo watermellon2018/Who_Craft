@@ -38,6 +38,23 @@ async function add_edge_graph(edge: EdgeI, projectId: number): Promise<any> {
 }
 
 
+async function update_edge_graph_api(edge: EdgeI, projectId: number): Promise<any> {
+    const token = localStorage.getItem('userId');
+    try {
+        return await axios.post(`${backendUrl}/api/projects/hero/graph/update/`, {
+            data: {
+                label: edge.label,
+                from: edge.from,
+                to: edge.to,
+                token_user: token,
+                projectId: projectId,
+            }
+        });
+    }catch (error){
+        console.error('Error select all type of the relationship for project:', error);
+    }
+}
+
 async function select_edge_graph(projectId: number): Promise<any> {
     const token = localStorage.getItem('userId');
     try {
@@ -72,5 +89,6 @@ export {
     get_all_type_relationship,
     add_edge_graph,
     select_edge_graph,
-    delete_edge_graph_api
+    delete_edge_graph_api,
+    update_edge_graph_api,
 }

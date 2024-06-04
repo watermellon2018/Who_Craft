@@ -1,14 +1,11 @@
-import React, {useState, useEffect, useRef, useMemo} from 'react';
-import { Modal, Form, Input, Select, Button } from 'antd';
-
-import { v4 as uuidv4 } from 'uuid';
+import React, {useEffect, useState} from 'react';
+import {Button} from 'antd';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import Graph, { Network, Node, Edge } from 'react-graph-vis';
+import Graph, {Edge, Network, Node} from 'react-graph-vis';
 import './style.css'
 import {Simulate} from "react-dom/test-utils";
-import copy = Simulate.copy;
 import TypeRelationshipModal from "./typeRelateionModel";
 import {select_edge_graph} from "../../../../api/characters/graph";
 import {useLocation} from "react-router-dom";
@@ -46,6 +43,7 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
     const [edges, setEdges] = useState<Edge[]>([]);
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [currentEdge, setCurrentEdge] = useState<any>([]);
+    const [isCreate, setIsCreate] = useState<boolean>(false);
     const location = useLocation();
     const { project_id } = location.state;
 
@@ -109,6 +107,22 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
             edge.from !== currentEdge[0] && edge.to !== currentEdge[1] ));
     }
 
+    const handleUpdateEdge = (label: string) => {
+        // Обновляем поле label у ребра
+        setEdges(prevEdges => prevEdges.map((edge: { from: string; to: string; id: string; label: string }) => {
+            if ((edge.from === currentEdge[0] && edge.to === currentEdge[1]) ||
+                (edge.to === currentEdge[0] && edge.from === currentEdge[1])) {
+                return { ...edge, label }; // Обновляем label
+            }
+            return edge; // Оставляем остальные ребра без изменений
+        }));
+    };
+
+    const isExistEdge = (susspend_edge: any) => {
+        return edges.filter((edge: { from: string; to: string; }) =>
+            (edge.from == susspend_edge[0] || edge.from == susspend_edge[1]) &&
+            (edge.to == susspend_edge[1] || edge.to == susspend_edge[0])).length > 0;
+    }
 
     const handleConnectNodes = (newEdge: Edge) => {
         const newEdgeWithId = {
@@ -118,27 +132,6 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
         setEdges(prevEdges => [...prevEdges, newEdgeWithId]);
     };
 
-    // const events = {
-    //     selectEdge: (event: any) => {
-    //         const { edges: selectedEdges } = event;
-    //         if (selectedEdges.length > 0) {
-    //             const selectedEdge = edges.find(edge => edge.from === selectedEdges[0].from && edge.to === selectedEdges[0].to);
-    //             if (selectedEdge) {
-    //                 console.log("Selected Edge:", selectedEdge);
-    //             }
-    //         }
-    //     },
-    //     doubleClick: (event: any) => {
-    //         const { pointer: { canvas } } = event;
-    //         const newNodeId = (nodes.length + 1).toString();
-    //         // setNodeData([...nodes, { id: newNodeId, label: `Node ${newNodeId}` }]);
-    //         setEdges([...edges, { from: newNodeId, id: uuidv4(), to: canvas.toString(), label: 'test' }]);
-    //     }
-    // };
-
-    useEffect(() => {
-        console.log("Edges:", edges);
-    }, [edges]);
     return (
 
         <div className='graph-character'>
@@ -152,6 +145,8 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
                 fromNode={currentEdge[0]}
                 toNode={currentEdge[1]}
                 handleDeleteEdge={handleDeleteEdge}
+                isExist={isCreate}
+                handleUpdateEdge={handleUpdateEdge}
 
             />
 
@@ -166,7 +161,10 @@ const GraphEditor: React.FC<GraphEditorI> = ({nodes}) => {
                         if (network.getSelectedNodes().length === 2) {
                             const fromNode = network.getSelectedNodes()[1];
                             const toNode = selectedNodeId;
+                            const isExist = isExistEdge([fromNode, toNode])
+                            setIsCreate(isExist);
                             setIsVisible(true);
+
                             setCurrentEdge([fromNode, toNode])
 
                             network.unselectAll();
