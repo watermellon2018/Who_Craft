@@ -1,6 +1,24 @@
 .App {
   text-align: center;
 }
+.p-treenode-label {
+  color: white;
+}
+.p-tree-toggler {
+  color: white;
+}
+
+.p-tree-container {
+  height: inherit;
+}
+
+.ant-layout-sider {
+  background-color: rgb(27, 29, 34) !important;
+}
+
+.p-tree-toggler {
+  margin-right: 5px;
+}
 
 .App-logo {
   height: 40vmin;
@@ -35,4 +53,13 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+button {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+button:active {
+  transform: scale(0.95);
 }

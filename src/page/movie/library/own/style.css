@@ -1,0 +1,13 @@
+.library-projects-page .bottom-card {
+    background-color: transparent;
+    border: none;
+}
+.library-projects-page .ant-card-body {
+    padding: 6px 3px !important;
+}
+
+.projects-div .ant-card  {
+    width: inherit;
+    height: inherit;
+    min-width: inherit !important;
+}
